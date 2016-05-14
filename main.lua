@@ -4,10 +4,16 @@ require('TilemapCamera');
 require('Populator');
 inspect = require('lib/inspect');
 
-success = love.window.setMode( 800, 600 , {fullscreen = false})
 
 function love.load()
-   --TODO: Make hexagonal tilesets
+
+  --Initialize
+  local WINDOW_WIDTH = 800
+  local WINDOW_HEIGHT = 600
+  love.window.setMode( WINDOW_WIDTH, WINDOW_HEIGHT , {fullscreen = false})
+
+  --Load Tileset Sprites
+  --TODO: Make hexagonal tilesets
   Tileset = love.graphics.newImage('assets/countryside.png')
 
   local tileW, tileH = 32,32
@@ -16,6 +22,7 @@ function love.load()
   GrassQuad = love.graphics.newQuad(0,  0, tileW, tileH, tilesetW, tilesetH)
   BoxQuad = love.graphics.newQuad(32, 32, tileW, tileH, tilesetW, tilesetH)
 
+  --Setup Tilemap View
   viewedTilemap = Tilemap:new()
   populator = Populator:new()
 
@@ -24,10 +31,9 @@ function love.load()
   TilemapCamera = TilemapCamera:new(
     {
       target = viewedTilemap,
-      position = {x = 0, y = 0},
-      extent = {half_width = 400, half_height = 300}
+      position = {x = WINDOW_WIDTH / 2, y = WINDOW_HEIGHT / 2},
+      extent = {half_width = WINDOW_WIDTH / 2, half_height = WINDOW_HEIGHT / 2}
     })
-
 end
 
 function love.update(dt)
@@ -65,11 +71,6 @@ end
 
 function love.mousereleased(x, y, button)
   TilemapCamera:onMouseReleased(x,y,button)
-end
-
-function love.keypressed(k)
-  --TilemapCamera.position.y = TilemapCamera.position.y + 16
-
 end
 
 function love.focus(f)
