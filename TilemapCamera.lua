@@ -4,7 +4,8 @@ TilemapCamera = {
   extent = nil,
   target = nil,
   dragLocus = nil,
-  lastClick = nil
+  lastClick = nil,
+  keyboard_speed = 800
 }
 
 function TilemapCamera:new (o)
@@ -43,14 +44,37 @@ function TilemapCamera:onMouseReleased (x, y)
 end
 
 function TilemapCamera:onUpdate (dt)
-  --Camera Pan
+  local moved = false
+  --Mouse Pan
   if self.dragLocus ~= nil then
     self.position.x = self.dragLocus.camx + (self.dragLocus.x - love.mouse.getX())
     self.position.y = self.dragLocus.camy + (self.dragLocus.y - love.mouse.getY())
+    moved = true
+  end
+  --Keyboard Pan
+  if love.keyboard.isDown('w','a','s','d') then
+    if love.keyboard.isDown('w') then
+      self.position.y = self.position.y - (dt * self.keyboard_speed)
+    end
+    if love.keyboard.isDown('a') then
+      self.position.x = self.position.x - (dt * self.keyboard_speed)
+    end
+    if love.keyboard.isDown('s') then
+      self.position.y = self.position.y + (dt * self.keyboard_speed)
+    end
+    if love.keyboard.isDown('d') then
+      self.position.x = self.position.x + (dt * self.keyboard_speed)
+    end
+    moved = true
+  end
+  --bounds check
+  if moved then
     local topEdge = self.position.y - self.extent.half_height;
     local bottomEdge = self.position.y + self.extent.half_height;
     if topEdge < 16 then self.position.y = self.extent.half_height + 16 end
     if bottomEdge > self.target.num_rows * 32 then self.position.y = self.target.num_rows * 32 - self.extent.half_height end
+    self.position.y = math.floor(self.position.y)
+    self.position.x = math.floor(self.position.x)
   end
 end
 

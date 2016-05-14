@@ -16,7 +16,7 @@ function Populator:generateTileMapTerrainRandom (map)
     for i = 0, nr - 1 do
       --Randomly Determine terrain
       local terrain_type = "Grass";
-      --if math.random() > 0.25 then terrain_type = "Grass" else terrain_type = "Wood" end
+      if math.random() > 0.25 then terrain_type = "Grass" else terrain_type = "Wood" end
 
       --Figure out Array, Pixel, & Grid Coordinates
       local col = j

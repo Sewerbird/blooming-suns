@@ -69,6 +69,7 @@ end
 
 function love.keypressed(k)
   --TilemapCamera.position.y = TilemapCamera.position.y + 16
+
 end
 
 function love.focus(f)
