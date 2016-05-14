@@ -71,8 +71,13 @@ function TilemapCamera:onUpdate (dt)
   if moved then
     local topEdge = self.position.y - self.extent.half_height;
     local bottomEdge = self.position.y + self.extent.half_height;
+    local rightWorldEdge = self.target.num_cols * 32;
+    local leftWorldEdge = 0;
+
     if topEdge < 16 then self.position.y = self.extent.half_height + 16 end
     if bottomEdge > self.target.num_rows * 32 then self.position.y = self.target.num_rows * 32 - self.extent.half_height end
+    if self.position.x > rightWorldEdge then self.position.x = self.position.x - rightWorldEdge end
+    if self.position.x < leftWorldEdge then self.position.x = rightWorldEdge + self.position.x end
     self.position.y = math.floor(self.position.y)
     self.position.x = math.floor(self.position.x)
   end
