@@ -35,7 +35,8 @@ function Populator:generateTileMapTerrainRandom (map)
           row = row
         },
         owning_map = map,
-        idx = idx
+        idx = idx,
+        sprite = SpriteInstance:new({sprite = terrain_type})
       })
 
       --Figure my neighborhood

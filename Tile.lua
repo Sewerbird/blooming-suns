@@ -1,5 +1,6 @@
 -- Tile
 Tile = {
+  sprite = nil,
   position = nil,
   terrain_type = nil,
   construction_type = nil,
@@ -14,11 +15,18 @@ function Tile:new (o)
   return o
 end
 
+function Tile:draw (computed_position)
+  self.sprite.position = computed_position
+  self.sprite:draw()
+end
+
 function Tile:click ()
   if self.terrain_type == "Grass" then
     self.terrain_type = "Wood"
+    self.sprite = SpriteInstance:new({sprite = "Wood"})
   else
     self.terrain_type = "Grass"
+    self.sprite = SpriteInstance:new({sprite = "Grass"})
   end
 
   local my_neighbors = self.owning_map.terrain_connective_matrix[self.idx]['air']
@@ -27,6 +35,7 @@ function Tile:click ()
     local tgt = self.owning_map.tiles[k]
     if tgt ~= nil then
       tgt.terrain_type = self.terrain_type
+      tgt.sprite = SpriteInstance:new({sprite = self.terrain_type})
     end
   end
 end
