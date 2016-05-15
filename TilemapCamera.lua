@@ -45,6 +45,11 @@ end
 
 function TilemapCamera:onUpdate (dt)
   local moved = false
+  --Update tiles (for animation)
+  local seen = self:getSeen()
+  for i = 0, table.getn(seen) do
+    seen[i]:update(dt)
+  end
   --Mouse Pan
   if self.dragLocus ~= nil then
     self.position.x = self.dragLocus.camx + (self.dragLocus.x - love.mouse.getX())

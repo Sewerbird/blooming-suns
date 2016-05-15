@@ -15,6 +15,9 @@ function Tile:new (o)
   return o
 end
 
+function Tile:update (dt)
+  self.sprite:update(dt)
+end
 function Tile:draw (computed_position)
   self.sprite.position = computed_position
   self.sprite:draw()

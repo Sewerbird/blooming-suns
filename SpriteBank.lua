@@ -38,6 +38,9 @@ function SpriteBank:loadSprite (identifier, lua_spec)
   local tilesetW = self.spritesheets[my_ss].width
   local tilesetH = self.spritesheets[my_ss].height
 
+  --Set sprite speed
+  self.sprites[identifier].frame_duration = 0.5
+
   --Set sprite animations to quad references
   for k, v in pairs(self.sprites[identifier].animations) do
     for i, s in ipairs(self.sprites[identifier].animations[k]) do
