@@ -5,6 +5,7 @@ require('SpriteBank');
 require('Sprite');
 require('SpriteInstance');
 require('Populator');
+require('Unit');
 
 inspect = require('lib/inspect');
 
@@ -44,12 +45,12 @@ end
 function love.draw()
   local cam = TilemapCamera
   local toDraw = cam:getSeen()
-  for i = 0, table.getn(toDraw) do
+  for i = 0, table.getn(toDraw.tiles) do
     local computedPosition = {
-      x = toDraw[i].position.x - cam.position.x + cam.extent.half_width,
-      y = toDraw[i].position.y - cam.position.y + cam.extent.half_height
+      x = toDraw.tiles[i].position.x - cam.position.x + cam.extent.half_width,
+      y = toDraw.tiles[i].position.y - cam.position.y + cam.extent.half_height
     }
-    toDraw[i]:draw(computedPosition)
+    toDraw.tiles[i]:draw(computedPosition)
   end
 end
 

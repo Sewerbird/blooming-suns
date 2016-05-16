@@ -38,6 +38,12 @@ function Populator:generateTileMapTerrainRandom (map)
       })
       new_tile:setTerrain(terrain_type)
 
+      if math.random() < 0.1 then
+        local new_unit = Unit:new()
+        new_unit:setSprite("TestUnit")
+        new_tile:relocateUnit(new_unit)
+      end
+
       map.tiles[idx] = new_tile
 
       --Figure my neighborhood

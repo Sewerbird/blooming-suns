@@ -1,5 +1,5 @@
 -- Tile
-local TILE_SPRITE_ORDER = {"terrain_layer","fringe_layer","feature_layer","river_layer","road_layer","resource_layer"}
+local TILE_SPRITE_ORDER = {"terrain_layer","fringe_layer","feature_layer","river_layer","road_layer","resource_layer","unit_layer"}
 
 Tile = {
   --sprite layers
@@ -9,6 +9,9 @@ Tile = {
   river_layer = nil,
   road_layer = nil,
   resource_layer = nil,
+  unit_layer = nil,
+  --units
+  units = {},
   --core
   position = nil,
   terrain_type = nil,
@@ -33,6 +36,9 @@ end
 function Tile:draw (computed_position)--
   self.terrain_layer.position = computed_position
   self.terrain_layer:draw()
+  if self.unit_layer ~= nil then
+    self.unit_layer:draw(computed_position)
+  end
   --[[
   for i,v in ipairs(TILE_SPRITE_ORDER) do
     if self[v] ~= nil then
@@ -41,6 +47,11 @@ function Tile:draw (computed_position)--
     end
   end
   ]]
+end
+
+function Tile:relocateUnit(unit)
+  table.insert(self.units, unit)
+  self.unit_layer = self.units[1]
 end
 
 function Tile:setTerrain(type)
