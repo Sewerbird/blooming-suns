@@ -1,9 +1,15 @@
 -- Tile
-local TILE_SPRITE_ORDER = {"terrain","fringe","feature","river","road","resource"}
+local TILE_SPRITE_ORDER = {"terrain_layer","fringe_layer","feature_layer","river_layer","road_layer","resource_layer"}
 
 Tile = {
-  sprite = nil,
-  sprites = {},
+  --sprite layers
+  terrain_layer = nil,
+  fringe_layer = nil,
+  feature_layer = nil,
+  river_layer = nil,
+  road_layer = nil,
+  resource_layer = nil,
+  --core
   position = nil,
   terrain_type = nil,
   construction_type = nil,
@@ -25,11 +31,10 @@ function Tile:update (dt)--[[
 end
 
 function Tile:draw (computed_position)--
-  local v = "terrain"
   for i,v in ipairs(TILE_SPRITE_ORDER) do
-    if self.sprites[v] ~= nil then
-      self.sprites[v].position = computed_position
-      self.sprites[v]:draw()
+    if self[v] ~= nil then
+      self[v].position = computed_position
+      self[v]:draw()
     end
   end
 end
@@ -37,7 +42,7 @@ end
 function Tile:setTerrain(type)
   self.terrain_type = type
   --self.sprites.terrain = SpriteInstance:new({sprite = self.terrain_type})
-  self.sprites = {terrain = SpriteInstance:new({sprite = self.terrain_type})}
+  self.terrain_layer = SpriteInstance:new({sprite = self.terrain_type})
 end
 
 function Tile:click ()
