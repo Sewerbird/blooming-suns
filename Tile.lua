@@ -31,12 +31,16 @@ function Tile:update (dt)--[[
 end
 
 function Tile:draw (computed_position)--
+  self.terrain_layer.position = computed_position
+  self.terrain_layer:draw()
+  --[[
   for i,v in ipairs(TILE_SPRITE_ORDER) do
     if self[v] ~= nil then
       self[v].position = computed_position
       self[v]:draw()
     end
   end
+  ]]
 end
 
 function Tile:setTerrain(type)
@@ -44,6 +48,16 @@ function Tile:setTerrain(type)
   --self.sprites.terrain = SpriteInstance:new({sprite = self.terrain_type})
   self.terrain_layer = SpriteInstance:new({sprite = self.terrain_type})
 end
+
+--[[
+ setTerrainSprite()
+ setFringeSprite()
+ setFeatureSprite()
+ setRiverSprite()
+ setRoadSprite()
+ setResourceSprite()
+ ]]
+
 
 function Tile:click ()
   if self.terrain_type == "Grass" then
