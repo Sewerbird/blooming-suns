@@ -1,6 +1,9 @@
 -- Tile
+local TILE_SPRITE_ORDER = {"terrain","fringe","feature","river","road","resource"}
+
 Tile = {
   sprite = nil,
+  sprites = {},
   position = nil,
   terrain_type = nil,
   construction_type = nil,
@@ -15,30 +18,42 @@ function Tile:new (o)
   return o
 end
 
-function Tile:update (dt)
-  self.sprite:update(dt)
+function Tile:update (dt)--[[
+  for k,v in pairs(self.sprites) do
+    self.sprites[k]:update(dt)
+  end]]
 end
-function Tile:draw (computed_position)
-  self.sprite.position = computed_position
-  self.sprite:draw()
+
+function Tile:draw (computed_position)--
+  local v = "terrain"
+  for i,v in ipairs(TILE_SPRITE_ORDER) do
+    if self.sprites[v] ~= nil then
+      self.sprites[v].position = computed_position
+      self.sprites[v]:draw()
+    end
+  end
+end
+
+function Tile:setTerrain(type)
+  self.terrain_type = type
+  --self.sprites.terrain = SpriteInstance:new({sprite = self.terrain_type})
+  self.sprites = {terrain = SpriteInstance:new({sprite = self.terrain_type})}
 end
 
 function Tile:click ()
   if self.terrain_type == "Grass" then
-    self.terrain_type = "Wood"
-    self.sprite = SpriteInstance:new({sprite = "Wood"})
+    self:setTerrain("Wood")
   else
-    self.terrain_type = "Grass"
-    self.sprite = SpriteInstance:new({sprite = "Grass"})
+    self:setTerrain("Grass")
   end
 
+  --Change neighbors too using connective matrix
   local my_neighbors = self.owning_map.terrain_connective_matrix[self.idx]['air']
 
   for k,v in pairs(my_neighbors) do
     local tgt = self.owning_map.tiles[k]
     if tgt ~= nil then
-      tgt.terrain_type = self.terrain_type
-      tgt.sprite = SpriteInstance:new({sprite = self.terrain_type})
+      tgt:setTerrain(self.terrain_type)
     end
   end
 end

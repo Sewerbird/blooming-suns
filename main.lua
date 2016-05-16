@@ -5,6 +5,7 @@ require('SpriteBank');
 require('Sprite');
 require('SpriteInstance');
 require('Populator');
+
 inspect = require('lib/inspect');
 
 
@@ -35,7 +36,9 @@ function love.load()
 end
 
 function love.update(dt)
-  TilemapCamera:onUpdate(dt)
+  if not GLOBAL_PAUSE then
+    TilemapCamera:onUpdate(dt)
+  end
 end
 
 function love.draw()
@@ -61,8 +64,10 @@ end
 function love.focus(f)
   if not f then
     print("LOST FOCUS")
+    GLOBAL_PAUSE = true
   else
     print("GAINED FOCUS")
+    GLOBAL_PAUSE = false
   end
 end
 

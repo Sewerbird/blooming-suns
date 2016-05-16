@@ -24,10 +24,9 @@ function Populator:generateTileMapTerrainRandom (map)
       local idx = col * nr + row
       local px_x = col * map.tilesize --TODO: Make Pixel location accomodate truly hexagonal tiles
       local px_y = row * map.tilesize --TODO: Make Pixel location accomodate truly hexagonal tiles
-      if j % 2 == 0 then px_y = px_y + map.tilesize /2 end
+      if j % 2 == 0 then px_y = px_y + map.tilesize / 2 end
 
-      map.tiles[idx] = Tile:new({
-        terrain_type=terrain_type,
+      local new_tile = Tile:new({
         position = {
           x = px_x,
           y = px_y,
@@ -35,9 +34,11 @@ function Populator:generateTileMapTerrainRandom (map)
           row = row
         },
         owning_map = map,
-        idx = idx,
-        sprite = SpriteInstance:new({sprite = terrain_type})
+        idx = idx
       })
+      new_tile:setTerrain(terrain_type)
+
+      map.tiles[idx] = new_tile
 
       --Figure my neighborhood
       local N = idx - 1
