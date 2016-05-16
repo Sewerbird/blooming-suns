@@ -8,3 +8,7 @@ This is an attempt to work a 4X Strategy Game featuring detailed planet-side mec
 - Download & Install [LÖVE2D](https://love2d.org/) for your platform.
 - Checkout this repository with Git.
 - Run with `love .` in the repository root. You may have to set up an alias in your terminal.
+
+## Contributions
+
+Pull requests on this repository will be reviewed and merged upstream to Sewerbird/blooming-suns
