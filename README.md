@@ -15,3 +15,5 @@ This is an attempt to work a 4X Strategy Game featuring detailed planet-side mec
 - Feel free to find an existing issue and fix it. Make a pull request to submit: I'll include it if it doesn't break everything, is on the roadmap, and such.
 - This is a personal casual side project
 - Feel free to fork, although sewerbird/blooming-suns is the 'official' fork so far as I'm concerned
+
+Pull requests on forks will be reviewed and merged upstream to Sewerbird/blooming-suns

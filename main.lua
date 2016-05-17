@@ -9,13 +9,14 @@ require('Unit');
 
 inspect = require('lib/inspect');
 
+function love.conf(t) 
+  t.title = 'Sovereign of the Blooming Suns'
+  t.window.width = 800
+  t.window.height = 600
+  t.fullscreen = false
+end
 
 function love.load()
-
-  --Initialize
-  local WINDOW_WIDTH = 800
-  local WINDOW_HEIGHT = 600
-  love.window.setMode( WINDOW_WIDTH, WINDOW_HEIGHT , {fullscreen = false})
 
   --Load Tileset Sprites
   --TODO: Make hexagonal tilesets
@@ -31,8 +32,8 @@ function love.load()
   TilemapCamera = TilemapCamera:new(
     {
       target = viewedTilemap,
-      position = {x = WINDOW_WIDTH / 2, y = WINDOW_HEIGHT / 2},
-      extent = {half_width = WINDOW_WIDTH / 2, half_height = WINDOW_HEIGHT / 2}
+      position = {x = love.graphics.getWidth() / 2, y = love.graphics.getHeight() / 2},
+      extent = {half_width = love.graphics.getWidth() / 2, half_height = love.graphics.getHeight() / 2}
     })
 end
 
