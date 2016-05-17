@@ -1,23 +1,24 @@
 --Unit
-Unit = {
-  sprite = nil
-}
+Unit = {}
 
-function Unit:new (o)
-  o = o or {}
-  setmetatable(o, self)
-  self.__index = self
+Unit.new = function (init)
+  local init = init or {}
+  local self = {
+    sprite = init.sprite or nil
+  }
+  --reify
+  if self.sprite ~= nil then
+    self.sprite = SpriteInstance.new({sprite = self.sprite})
+  end
+
+  --members
+  self.update = function (dt)
+  end
+
+  self.draw = function (computed_position)
+    self.sprite.position = computed_position
+    self.sprite.draw()
+  end
+
   return self
-end
-
-function Unit:update (dt)
-end
-
-function Unit:setSprite (sprite_ref)
-  self.sprite = SpriteInstance:new({sprite = sprite_ref})
-end
-
-function Unit:draw (computed_position)
-  self.sprite.position = computed_position
-  self.sprite:draw()
 end
