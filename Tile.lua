@@ -25,6 +25,9 @@ Tile.new = function (init)
   }
 
   self.update = function (dt)
+    if self.units[1] ~= nil then
+      self.units[1].update(dt)
+    end
   end
 
   self.draw = function (computed_position)
@@ -53,14 +56,8 @@ Tile.new = function (init)
       self.setTerrain("Grass")
     end
 
-    --Change neighbors too using connective matrix
-    local my_neighbors = self.owning_map.terrain_connective_matrix[self.idx]['air']
-
-    for k,v in pairs(my_neighbors) do
-      local tgt = self.owning_map.tiles[k]
-      if tgt ~= nil then
-        tgt.setTerrain(self.terrain_type)
-      end
+    if self.units[1] ~= nil then
+      self.units[1].select()
     end
   end
 

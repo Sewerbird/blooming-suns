@@ -14,6 +14,12 @@ SpriteInstance.new = function (init)
     position = init.position or nil
   }
 
+  self.changeAnim = function (anim)
+    self.curr_anim = anim
+    self.curr_frame = 1
+    self.timer = 0
+  end
+
   self.update = function (dt)
     self.timer = self.timer + dt
     if self.timer > self.sprite_ref.frame_duration then
