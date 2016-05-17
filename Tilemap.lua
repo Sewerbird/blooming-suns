@@ -1,30 +1,29 @@
 -- Tilemap
-Tilemap = {
-  num_rows = 31, --MUST be Odd for current Adjacency logic
-  num_cols = 62,
-  tilesize = 32,
-  tiles = {},
-  terrain_connective_matrix = {}
-}
+Tilemap = {}
 
-function Tilemap:new (o)
-  o = o or {}
-  setmetatable(o, self)
-  self.__index = self
-  return o
-end
+Tilemap.new = function (init)
+  local init = init or {}
+  local self = {
+    num_rows = init.num_rows or 31, --MUST be Odd for current Adjacency logic
+    num_cols = init.num_cols or 62,
+    tilesize = init.tilesize or 32,
+    tiles = init.tiles or {},
+    terrain_connective_matrix = init.terrain_connective_matrix or {}
+  }
 
-function Tilemap:getTileAt (position)
-  local row, col
+  self.getTileAt = function (position)
+    local row, col
 
-  --TODO: Make Pixel location accomodate truly hexagonal tiles
-  row = (position.y / 32)
-  col = math.floor(position.x / 32)
+    --TODO: Make Pixel location accomodate truly hexagonal tiles
+    row = (position.y / 32)
+    col = math.floor(position.x / 32)
 
-  if col % 2 == 0 then
+      if col % 2 == 0 then
     row = row - 0.5
+    end
+
+    return self.tiles[col*self.num_rows+math.floor(row)]
   end
 
-  return self.tiles[col*self.num_rows+math.floor(row)]
+  return self
 end
-
