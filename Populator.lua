@@ -35,8 +35,11 @@ Populator.new = function (init)
         })
         new_tile.setTerrain(terrain_type)
 
-        if math.random() < 0.1 then
+        if math.random() < 0.05 then
           local new_unit = Unit.new({sprite = "TestUnit"})
+          new_tile.relocateUnit(new_unit)
+        elseif math.random() < 0.05 then
+          local new_unit = Unit.new({sprite = "TestSpaceUnit"})
           new_tile.relocateUnit(new_unit)
         end
 
