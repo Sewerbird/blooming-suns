@@ -14,6 +14,7 @@ ViewManager.new = function (init)
   end
 
   self.push = function (view)
+    self.activeView = #self.views+1
     self.views[#self.views+1] = view
   end
 
@@ -23,6 +24,7 @@ ViewManager.new = function (init)
 
   self.pop = function (view)
     local popped = self.views[#self.views]
+    self.activeView = #self.views - 1
     self.views[#self.views] = nil
     return popped
   end

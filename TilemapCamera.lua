@@ -7,6 +7,7 @@ TilemapCamera.new = function (init)
     position = init.position,
     extent = init.extent,
     target = init.target,
+    super = init.super,
     dragLocus = init.dragLocus,
     lastClick = init.lastClick,
     keyboard_speed = 800
@@ -95,9 +96,7 @@ TilemapCamera.new = function (init)
 
   self.doClick = function (x, y, button)
     local clickable = self.getSeenAt(x,y)
-    if clickable ~= nil then
-      clickable:click()
-    end
+    self.super.focus(clickable)
   end
 
   return self
