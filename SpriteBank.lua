@@ -41,8 +41,10 @@ SpriteBank.new = function (init)
     --Load Spritesheets First
     self.loadSpritesheet("countryside", "assets/tilesets/countryside.png", 64, 64)
     self.loadSpritesheet("noble", "assets/tilesets/noble.png", 32, 32)
+    self.loadSpritesheet("cadiz", "assets/tilesets/cadizship.png", 32, 32)
     --Load Sprites Next
     self.loadSprite("TestUnit", "assets/sprites/TestUnitSprite")
+    self.loadSprite("TestSpaceUnit", "assets/sprites/TestSpaceUnitSprite")
     self.loadSprite("Grass", "assets/sprites/GrassTileSprite")
     self.loadSprite("Wood", "assets/sprites/WoodTileSprite")
   end
