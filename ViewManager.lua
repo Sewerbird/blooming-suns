@@ -28,13 +28,25 @@ ViewManager.new = function (init)
   end
 
   self.onMousePressed = function (x, y, button)
-    local cam = self.views[1].camera
-    cam.onMousePressed(x,y,button)
+    local tgt_view = self.getClickedView(x, y)
+    if tgt_view ~= nil then tgt_view.onMousePressed(x, y, button) else print("Nothing clicked!")end
   end
 
   self.onMouseReleased = function (x, y, button)
-    local cam = self.views[1].camera
-    cam.onMouseReleased(x,y,button)
+    local tgt_view = self.getClickedView(x, y)
+    if tgt_view ~= nil then tgt_view.onMouseReleased(x, y, button) else print("Nothing clicked!") end
+  end
+
+  self.getClickedView = function (x, y)
+    local result = nil
+    for i,v in ipairs(self.views) do
+      local rect = v.rect
+      if x <= rect.x + rect.w and x >= rect.x and y <= rect.y + rect.h and y > rect.y then
+        result = i
+        break
+      end
+    end
+    return self.views[result] or nil
   end
 
   self.draw = function ()
