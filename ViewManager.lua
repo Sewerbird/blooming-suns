@@ -41,7 +41,8 @@ ViewManager.new = function (init)
 
   self.getClickedView = function (x, y)
     local result = nil
-    for i,v in ipairs(self.views) do
+    for i = 1 , #self.views do
+      local v = self.views[#self.views - (i - 1)]
       local rect = v.rect
       if x <= rect.x + rect.w and x >= rect.x and y <= rect.y + rect.h and y > rect.y then
         result = i
