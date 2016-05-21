@@ -45,6 +45,10 @@ function love.load()
 end
 
 function love.update(dt)
+  --Debug mouse-to-hex output
+  if love.keyboard.isDown('f') then
+    print(inspect(GlobalViewManager.views[GlobalViewManager.activeView].camera.target.pixel_to_hex({x = love.mouse.getX(), y = love.mouse.getY()})))
+  end
   if not GLOBAL_PAUSE then
     GlobalViewManager.update(dt)
   end

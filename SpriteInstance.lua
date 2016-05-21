@@ -36,7 +36,10 @@ SpriteInstance.new = function (init)
       self.sprite_ref.spritesheet.img,
       self.sprite_ref.animations[self.curr_anim][self.curr_frame],
       self.position.x,
-      self.position.y
+      self.position.y,
+      0, --rotation
+      self.sprite_ref.scale_x,
+      self.sprite_ref.scale_y
       )
   end
 

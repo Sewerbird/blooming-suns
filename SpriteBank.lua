@@ -25,6 +25,8 @@ SpriteBank.new = function (init)
     self.sprites[identifier].spritesheet = self.spritesheets[my_ss]
     local tilesetW = self.spritesheets[my_ss].width
     local tilesetH = self.spritesheets[my_ss].height
+    local scale_x = me.scale_x
+    local scale_y = me.scale_y
 
     --Set sprite speed
     self.sprites[identifier].frame_duration = 0.5

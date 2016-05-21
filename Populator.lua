@@ -11,17 +11,20 @@ Populator.new = function (init)
 
     for j = 0, nc - 1 do
       for i = 0, nr - 1 do
-        --Randomly Determine terrain
+        --TODO: Randomly Determine terrain
+        --[[
         local terrain_type = "Grass";
         if math.random() > 0.25 then terrain_type = "Grass" else terrain_type = "Wood" end
+        ]]
 
         --Figure out Array, Pixel, & Grid Coordinates
         local col = j
         local row = i
         local idx = col * nr + row
-        local px_x = (col * 3 / 4 ) * map.tilesize_x --TODO: Make Pixel location accomodate truly hexagonal tiles
-        local px_y = row * map.tilesize_y --TODO: Make Pixel location accomodate truly hexagonal tiles
-        if j % 2 == 0 then px_y = px_y + map.tilesize_y / 2 end
+        local size = map.hex_size
+
+        local px_x = size * 3/2 * col
+        local px_y = size * math.sqrt(3) * (row - 0.5 * (col % 2))
 
         local new_tile = Tile.new({
           position = {
