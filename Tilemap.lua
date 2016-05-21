@@ -6,7 +6,8 @@ Tilemap.new = function (init)
   local self = {
     num_rows = init.num_rows or 31, --MUST be Odd for current Adjacency logic
     num_cols = init.num_cols or 62,
-    tilesize = init.tilesize or 32,
+    tilesize_x = init.tilesize_x or 168,
+    tilesize_y = init.tilesize_y or 146,
     tiles = init.tiles or {},
     terrain_connective_matrix = init.terrain_connective_matrix or {}
   }
