@@ -41,16 +41,17 @@ SpriteBank.new = function (init)
 
   self.loadAll = function ()
     --Load Spritesheets First
-    self.loadSpritesheet("countryside", "assets/tilesets/countryside.png", 64, 64)
     self.loadSpritesheet("noble", "assets/tilesets/noble.png", 32, 32)
     self.loadSpritesheet("cadiz", "assets/tilesets/cadizship.png", 32, 32)
     self.loadSpritesheet("oceantile", "assets/tilesets/oceantile.png", 168, 146)
+    self.loadSpritesheet("dunetile", "assets/tilesets/dunetile.png", 168, 146)
+    self.loadSpritesheet("grasstile", "assets/tilesets/grasstile.png", 168, 146)
     --Load Sprites Next
     self.loadSprite("TestUnit", "assets/sprites/TestUnitSprite")
     self.loadSprite("TestSpaceUnit", "assets/sprites/TestSpaceUnitSprite")
-    self.loadSprite("Grass", "assets/sprites/GrassTileSprite")
-    self.loadSprite("Wood", "assets/sprites/WoodTileSprite")
     self.loadSprite("Ocean", "assets/sprites/OceanTileSprite")
+    self.loadSprite("Desert", "assets/sprites/DuneTileSprite")
+    self.loadSprite("Grass", "assets/sprites/GrassTileSprite")
   end
 
   return self

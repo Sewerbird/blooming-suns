@@ -1,6 +1,6 @@
---GrassTileSprite
+--DuneTileSprite
 local sprite = {
-  spritesheet = "grasstile", --filepath to spritesheet file
+  spritesheet = "dunetile", --filepath to spritesheet file
   sprite_name = nil, --name of this sprite
   frame_duration = nil, --speed of animation
   scale_x = 0.5,

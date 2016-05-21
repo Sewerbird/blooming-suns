@@ -12,10 +12,15 @@ Populator.new = function (init)
     for j = 0, nc - 1 do
       for i = 0, nr - 1 do
         --TODO: Randomly Determine terrain
-        --[[
+
         local terrain_type = "Grass";
-        if math.random() > 0.25 then terrain_type = "Grass" else terrain_type = "Wood" end
-        ]]
+        local rand = math.random()
+        if rand > 0.45 then
+          terrain_type = "Ocean"
+        elseif rand > 0.4 then
+          terrain_type = "Desert"
+        end
+
 
         --Figure out Array, Pixel, & Grid Coordinates
         local col = j
@@ -36,7 +41,7 @@ Populator.new = function (init)
           owning_map = map,
           idx = idx
         })
-        new_tile.setTerrain("Ocean")
+        new_tile.setTerrain(terrain_type)
 
         if math.random() < 0.05 then
           local new_unit = Unit.new({sprite = "TestUnit"})
