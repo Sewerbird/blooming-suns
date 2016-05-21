@@ -27,8 +27,15 @@ Tile.new = function (init)
   self.draw = function (computed_position)
     for i, v in ipairs(TILE_SPRITE_ORDER) do
       if self.slayers[v] ~= nil then
-        self.slayers[v].position = computed_position
-        self.slayers[v].draw(computed_position)
+        if v == "unit" then --center
+          self.slayers[v].position = computed_position
+          self.slayers[v].position.x = self.slayers[v].position.x + self.owning_map.tilesize_x / 2
+          self.slayers[v].position.y = self.slayers[v].position.y + self.owning_map.tilesize_y / 2
+          self.slayers[v].draw(computed_position, true)
+        else --from tl
+          self.slayers[v].position = computed_position
+          self.slayers[v].draw(computed_position)
+        end
       end
     end
   end
@@ -42,6 +49,9 @@ Tile.new = function (init)
     self.terrain_type = type
     --self.sprites.terrain = SpriteInstance.new({sprite = self.terrain_type})
     self.slayers.terrain = SpriteInstance.new({sprite = self.terrain_type})
+  end
+
+  self.onFocus = function ()
   end
 
   self.click = function ()

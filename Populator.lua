@@ -19,9 +19,9 @@ Populator.new = function (init)
         local col = j
         local row = i
         local idx = col * nr + row
-        local px_x = col * map.tilesize --TODO: Make Pixel location accomodate truly hexagonal tiles
-        local px_y = row * map.tilesize --TODO: Make Pixel location accomodate truly hexagonal tiles
-        if j % 2 == 0 then px_y = px_y + map.tilesize / 2 end
+        local px_x = (col * 3 / 4 ) * map.tilesize_x --TODO: Make Pixel location accomodate truly hexagonal tiles
+        local px_y = row * map.tilesize_y --TODO: Make Pixel location accomodate truly hexagonal tiles
+        if j % 2 == 0 then px_y = px_y + map.tilesize_y / 2 end
 
         local new_tile = Tile.new({
           position = {
@@ -33,7 +33,7 @@ Populator.new = function (init)
           owning_map = map,
           idx = idx
         })
-        new_tile.setTerrain(terrain_type)
+        new_tile.setTerrain("Ocean")
 
         if math.random() < 0.05 then
           local new_unit = Unit.new({sprite = "TestUnit"})

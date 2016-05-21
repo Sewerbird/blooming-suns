@@ -17,8 +17,12 @@ Unit.new = function (init)
     self.sprite.update(dt)
   end
 
-  self.draw = function (computed_position)
+  self.draw = function (computed_position, centered)
     self.sprite.position = computed_position
+    if centered == true then
+      self.sprite.position.x = self.sprite.position.x - 16 --TODO: offset by sprite size
+      self.sprite.position.y = self.sprite.position.y - 16 --TODO: offset by sprite size
+    end
     self.sprite.draw()
   end
 

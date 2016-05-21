@@ -30,15 +30,16 @@ TilemapView.new = function (init)
   end
 
   self.focus = function (unit)
-    if self.current_focus ~= nil then
-      self.unfocus()
+    if self.current_focus ~= nil or self.current_focus == unit then
+      self.current_focus.click()
+      self.current_focus = nil
+    else
+      if self.current_focus ~= nil then
+        self.current_focus.click()
+      end
+      self.current_focus = unit
+      self.current_focus.click()
     end
-    self.current_focus = unit
-    unit.click()
-  end
-
-  self.unfocus = function ()
-    self.current_focus.click()
   end
 
   return self
