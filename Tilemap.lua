@@ -23,9 +23,17 @@ Tilemap.new = function (init)
     return self.tiles[calc_hex.col*self.num_rows+math.floor(calc_hex.row)]
   end
 
+  self.getIdxAtCoord = function (coord)
+    return coord.col * self.num_rows + coord.row
+  end
+
+  self.getHexAtCoord = function (coord)
+    return self.tiles[getIdxAtCoord(coord)]
+  end
+
   self.pixel_to_hex = function (position)
     if position.x == nil or position.y == nil or position == nil then
-      print('oops: no hex found at pixel')
+      print('oops: no valid pixel provided')
       return {x = nil, y = nil}
     end
     local x = position.x

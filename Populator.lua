@@ -28,7 +28,7 @@ Populator.new = function (init)
         local idx = col * nr + row
         local size = map.hex_size
 
-        local px_x = size * 3/2 * col
+        local px_x = size * 3 / 2 * col
         local px_y = size * math.sqrt(3) * (row - 0.5 * (col % 2))
 
         local new_tile = Tile.new({
@@ -43,10 +43,11 @@ Populator.new = function (init)
         })
         new_tile.setTerrain(terrain_type)
 
-        if math.random() < 0.05 then
+        rand = math.random()
+        if rand < 0.05 then
           local new_unit = Unit.new({sprite = "TestUnit"})
           new_tile.relocateUnit(new_unit)
-        elseif math.random() < 0.05 then
+        elseif rand < 0.1 then
           local new_unit = Unit.new({sprite = "TestSpaceUnit"})
           new_tile.relocateUnit(new_unit)
         end

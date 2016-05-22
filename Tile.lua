@@ -42,13 +42,13 @@ Tile.new = function (init)
       end
     end
 
-    --[[ Debug sprite position
+    -- Debug sprite position
     local hex = self.owning_map.pixel_to_hex({x = self.position.x, y = self.position.y})
     love.graphics.print(
      self.position.col..", "..self.position.row.."\n::"..self.idx.."\n("..hex.col..","..hex.row..")",
      computed_position.x,
      computed_position.y)
-     ]]
+    -- ]]
   end
 
   self.relocateUnit = function(unit)

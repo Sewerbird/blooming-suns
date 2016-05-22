@@ -55,7 +55,9 @@ function love.update(dt)
 end
 
 function love.draw()
-  GlobalViewManager.draw()
+  if not GLOBAL_PAUSE then
+    GlobalViewManager.draw()
+  end
 end
 
 function love.mousepressed(x, y, button)

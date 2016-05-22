@@ -13,11 +13,61 @@ TilemapCamera.new = function (init)
     keyboard_speed = 800
   }
 
+  print(inspect(self))
 
   self.getSeen = function ()
-    local seen = {}
-    seen.tiles = self.target.tiles
-    seen.units = {}
+    local seen = {
+      tiles = {},
+      units = {},
+      indices = {}
+    }
+
+    --[[
+      I take advantage of the layout of the world map indices here and the fact the camera doesn't rotate.
+      The hexes are laid out in even-q arrangement:
+             04    12
+          00 05 08 13
+          01 06 09 14
+          02 07 10 15
+          03    11
+      So I can find the upper left corner (00) and the lower right (15) and all the hexes in between will
+      potentially be visible. This simplifies east-west seamless scrolling too, with negative indices used.
+
+      --TODO: On tall maps I can improve this with a more refined approach, but the performance
+      isn't so bad/critical on that part yet.
+    ]]
+    local ul,ur,lIdx,rIdx --extremum of camera view, in hex coords
+
+    ul = self.target.pixel_to_hex({x = self.position.x - self.extent.half_width, y = self.position.y - self.extent.half_height})
+    lr = self.target.pixel_to_hex({x = self.position.x + self.extent.half_width, y = self.position.y + self.extent.half_height})
+
+    lIdx = self.target.getIdxAtCoord(ul) - self.target.num_rows
+    rIdx = self.target.getIdxAtCoord(lr) + self.target.num_rows
+    local wIdx = nil
+    local eIdx = nil
+
+    if lIdx < 0 then --show far west tiles
+      wIdx = #self.target.tiles + lIdx
+      lIdx = 0
+    end
+    if rIdx > #self.target.tiles then --show far east tiles
+      eIdx = rIdx - #self.target.tiles
+      rIdx = #self.target.tiles
+    end
+
+    for i, v in ipairs(self.target.tiles) do
+      if (i >= lIdx and i <= rIdx) or     --normal case
+         (wIdx ~= nil and i >= wIdx and i <= #self.target.tiles) or   --near left end of map
+         (eIdx ~= nil and i <= eIdx and i > 0) then --near right end of map
+        table.insert(seen.tiles, v)
+      end
+    end
+
+    seen.indices.wIdx = wIdx
+    seen.indices.eIdx = eIdx
+    seen.indices.lIdx = lIdx
+    seen.indices.rIdx = rIdx
+
     return seen
   end
 
@@ -85,8 +135,11 @@ TilemapCamera.new = function (init)
       local rightWorldEdge = self.target.num_cols * self.target.tilesize_x * 3 /4;
       local leftWorldEdge = 0;
 
+
       if topEdge < self.target.tilesize_y / 2 then self.position.y = self.extent.half_height + self.target.tilesize_y /2 end
-      if bottomEdge > self.target.num_rows * self.target.tilesize_y then self.position.y = self.target.num_rows * self.target.tilesize_y - self.extent.half_height end
+      if bottomEdge > (self.target.num_rows - 1) * math.sqrt(3) * self.target.hex_size then
+        self.position.y = (self.target.num_rows - 1) * math.sqrt(3) * self.target.hex_size - self.extent.half_height
+      end
       if self.position.x > rightWorldEdge then self.position.x = self.position.x - rightWorldEdge end
       if self.position.x < leftWorldEdge then self.position.x = rightWorldEdge + self.position.x end
       self.position.y = math.floor(self.position.y)
