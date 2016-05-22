@@ -2,6 +2,7 @@ require('Tile');
 require('Tilemap');
 require('PlanetsideTilemapCameraComponent');
 require('PlanetsideTilemapView');
+require('AlertBoxView');
 require('SpriteBank');
 require('Sprite');
 require('SpriteInstance');
@@ -59,6 +60,10 @@ end
 
 function love.mousereleased(x, y, button)
   GlobalViewManager.onMouseReleased(x,y,button)
+end
+
+function love.keypressed(key)
+  GlobalViewManager.onKeyPressed(key)
 end
 
 function love.focus(f)

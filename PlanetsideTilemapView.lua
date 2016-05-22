@@ -7,26 +7,32 @@ PlanetsideTilemapView.new = function (init)
 
   self.current_focus = nil
 
+  --Components
+
   self.camera = PlanetsideTilemapCameraComponent.new(
     {
       target = self.model,
+      ui_rect = {x = 0, y = 0, w = self.rect.w, h = self.rect.h},
       position = {x = self.rect.w/ 2 + self.rect.x, y = self.rect.h/2 + self.rect.y},
       extent = {half_width = self.rect.w/2, half_height = self.rect.h/2},
       super = self
     })
 
+  --Events
   self.update = function (dt)
     self.camera.onUpdate(dt)
   end
 
   self.onMousePressed = function (x, y, button)
-    local cam = self.camera
-    cam.onMousePressed(x,y,button)
+    self.camera.onMousePressed(x,y,button)
   end
 
   self.onMouseReleased = function (x, y, button)
-    local cam = self.camera
-    cam.onMouseReleased(x,y,button)
+    self.camera.onMouseReleased(x,y,button)
+  end
+
+  self.onKeyPressed = function (key)
+
   end
 
   self.focus = function (unit)
@@ -43,6 +49,7 @@ PlanetsideTilemapView.new = function (init)
   end
 
   self.draw = function ()
+    --self.camera.draw()
     local toDraw = self.camera.getSeen()
     for i = 1, #toDraw.tiles do
       if toDraw.tiles[i] == nil then

@@ -94,7 +94,7 @@ PlanetsideTilemapCameraComponent.new = function (init)
   end
 
   self.onUpdate = function (dt)
-        local moved = false
+    local moved = false
     --Update tiles & units (for animation)
     local seen = self.getSeen()
     for i = 1, table.getn(seen.tiles) do
