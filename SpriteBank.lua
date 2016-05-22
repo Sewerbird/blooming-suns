@@ -40,6 +40,8 @@ SpriteBank.new = function (init)
   end
 
   self.loadAll = function ()
+    --TODO: Load Definitions From File
+
     --Load Spritesheets First
     self.loadSpritesheet("noble", "assets/tilesets/noble.png", 32, 32)
     self.loadSpritesheet("cadiz", "assets/tilesets/cadizship.png", 32, 32)
