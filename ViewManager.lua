@@ -53,30 +53,15 @@ ViewManager.new = function (init)
   end
 
   self.draw = function ()
-    local cam = self.views[1].camera
-    local toDraw = cam.getSeen()
-    for i = 1, #toDraw.tiles do
-      if toDraw.tiles[i] == nil then
-        print("nillable" .. i)
-      else
-        local computedPosition = {
-          x = toDraw.tiles[i].position.x - cam.position.x + cam.extent.half_width,
-          y = toDraw.tiles[i].position.y - cam.position.y + cam.extent.half_height
-        }
-        local idx = toDraw.tiles[i].idx
-        --East-West Tile Wrapping
-        if toDraw.indices.wIdx ~= nil and idx <= #cam.target.tiles and idx >= toDraw.indices.wIdx then
-          computedPosition.x = computedPosition.x - (cam.target.hex_size * cam.target.num_cols * 3 / 2)
-        elseif toDraw.indices.eIdx ~= nil and idx >= 0 and idx <= toDraw.indices.eIdx then
-          computedPosition.x = computedPosition.x + (cam.target.hex_size * cam.target.num_cols * 3 / 2)
-        end
-        toDraw.tiles[i].draw(computedPosition)
-      end
+    for i = 1, #self.views do
+      self.views[i].draw()
     end
   end
 
   self.update = function (dt)
-    self.views[1].update(dt)
+    for i = 1, #self.views do
+      self.views[i].update(dt)
+    end
   end
 
   return self

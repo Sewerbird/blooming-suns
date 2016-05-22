@@ -1,7 +1,7 @@
 require('Tile');
 require('Tilemap');
-require('TilemapCamera');
-require('TilemapView');
+require('PlanetsideTilemapCameraComponent');
+require('PlanetsideTilemapView');
 require('SpriteBank');
 require('Sprite');
 require('SpriteInstance');
@@ -12,13 +12,6 @@ require('ViewComponent');
 require('View');
 
 inspect = require('lib/inspect');
-
-function love.conf(t)
-  t.title = 'Sovereign of the Blooming Suns'
-  t.window.width = 800
-  t.window.height = 600
-  t.fullscreen = false
-end
 
 function love.load()
 
@@ -36,7 +29,7 @@ function love.load()
   populator.generateTileMapTerrainRandom(defaultTilemap)
 
   --Create Views
-  local def_view = TilemapView.new({
+  local def_view = PlanetsideTilemapView.new({
     model = defaultTilemap,
     rect = {x = 0, y = 0, w = love.graphics.getWidth(), h = love.graphics.getHeight()}
   })

@@ -1,13 +1,13 @@
 --TilemapView
-TilemapView = {}
+PlanetsideTilemapView = {}
 
-TilemapView.new = function (init)
+PlanetsideTilemapView.new = function (init)
   local init = init or {}
   local self = View.new(init)
 
   self.current_focus = nil
 
-  self.camera = TilemapCamera.new(
+  self.camera = PlanetsideTilemapCameraComponent.new(
     {
       target = self.model,
       position = {x = self.rect.w/ 2 + self.rect.x, y = self.rect.h/2 + self.rect.y},
@@ -39,6 +39,28 @@ TilemapView.new = function (init)
       end
       self.current_focus = unit
       self.current_focus.click()
+    end
+  end
+
+  self.draw = function ()
+    local toDraw = self.camera.getSeen()
+    for i = 1, #toDraw.tiles do
+      if toDraw.tiles[i] == nil then
+        print("nillable" .. i)
+      else
+        local computedPosition = {
+          x = toDraw.tiles[i].position.x - self.camera.position.x + self.camera.extent.half_width,
+          y = toDraw.tiles[i].position.y - self.camera.position.y + self.camera.extent.half_height
+        }
+        local idx = toDraw.tiles[i].idx
+        --East-West Tile Wrapping
+        if toDraw.indices.wIdx ~= nil and idx <= #self.camera.target.tiles and idx >= toDraw.indices.wIdx then
+          computedPosition.x = computedPosition.x - (self.camera.target.hex_size * self.camera.target.num_cols * 3 / 2)
+        elseif toDraw.indices.eIdx ~= nil and idx >= 0 and idx <= toDraw.indices.eIdx then
+          computedPosition.x = computedPosition.x + (self.camera.target.hex_size * self.camera.target.num_cols * 3 / 2)
+        end
+        toDraw.tiles[i].draw(computedPosition)
+      end
     end
   end
 

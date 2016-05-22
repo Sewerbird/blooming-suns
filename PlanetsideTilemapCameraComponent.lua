@@ -1,7 +1,7 @@
 -- TilemapCamera
-TilemapCamera = {}
+PlanetsideTilemapCameraComponent = {}
 
-TilemapCamera.new = function (init)
+PlanetsideTilemapCameraComponent.new = function (init)
   local init = init or {}
   local self = {
     position = init.position,
