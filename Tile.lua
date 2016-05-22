@@ -26,29 +26,31 @@ Tile.new = function (init)
 
   self.draw = function (computed_position)
 
+    --center
+    computed_position.x = computed_position.x - self.owning_map.tilesize_x / 2
+    computed_position.y = computed_position.y - self.owning_map.tilesize_y / 2
+
     for i, v in ipairs(TILE_SPRITE_ORDER) do
       if self.slayers[v] ~= nil then
-        if v == "unit" then --center
           self.slayers[v].position = computed_position
-          self.slayers[v].position.x = self.slayers[v].position.x + self.owning_map.tilesize_x / 2
-          self.slayers[v].position.y = self.slayers[v].position.y + self.owning_map.tilesize_y / 2
-          self.slayers[v].draw(computed_position, true)
-        else --from tl
-          self.slayers[v].position = computed_position
-          self.slayers[v].position.x = self.slayers[v].position.x - self.owning_map.tilesize_x / 2
-          self.slayers[v].position.y = self.slayers[v].position.y - self.owning_map.tilesize_y / 2
-          self.slayers[v].draw(computed_position)
-        end
+          local do_center = false
+          if v == "unit" then
+            do_center = true
+            computed_position.x = computed_position.x + self.owning_map.tilesize_x / 2
+            computed_position.y = computed_position.y + self.owning_map.tilesize_y / 2
+          end
+
+          self.slayers[v].draw(computed_position, do_center)
+          -- Debug sprite position
+          local hex = self.owning_map.pixel_to_hex({x = self.position.x, y = self.position.y})
+          love.graphics.print(
+           self.position.col..", "..self.position.row.."\n::"..self.idx.."\n("..hex.col..","..hex.row..")",
+           computed_position.x + self.owning_map.tilesize_x / 4,
+           computed_position.y + self.owning_map.tilesize_y / 4)
+          -- ]]
       end
     end
 
-    -- Debug sprite position
-    local hex = self.owning_map.pixel_to_hex({x = self.position.x, y = self.position.y})
-    love.graphics.print(
-     self.position.col..", "..self.position.row.."\n::"..self.idx.."\n("..hex.col..","..hex.row..")",
-     computed_position.x,
-     computed_position.y)
-    -- ]]
   end
 
   self.relocateUnit = function(unit)
