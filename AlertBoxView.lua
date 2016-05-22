@@ -9,8 +9,8 @@ AlertBoxView.new = function (init)
   self.alert = ViewComponent.new({
       main_text = "An alert!",
       button_text = "Okay",
-      ui_rect = {x = self.rect.w / 2 - 200, y = self.rect.h / 2 - 100, w = 400, h = 200},
-      background_color = {r = math.floor(math.random() * 255),g = math.floor(math.random() * 255), b = math.floor(math.random() * 255)},
+      ui_rect = {x = self.rect.w / 2 - 200, y = self.rect.h / 2 - 100, w = 400, h = 200, rx = 25, ry = 25},
+      background_color = {r = 10, g = 80, b = 120},
       super = self
     })
 
@@ -22,7 +22,7 @@ AlertBoxView.new = function (init)
 
   self.draw = function ()
     love.graphics.setColor(self.alert.background_color.r, self.alert.background_color.g, self.alert.background_color.b)
-    love.graphics.rectangle("fill", self.alert.ui_rect.x, self.alert.ui_rect.y, self.alert.ui_rect.w, self.alert.ui_rect.h)
+    love.graphics.rectangle("fill", self.alert.ui_rect.x, self.alert.ui_rect.y, self.alert.ui_rect.w, self.alert.ui_rect.h, self.alert.ui_rect.rx, self.alert.ui_rect.ry)
     love.graphics.reset()
   end
 

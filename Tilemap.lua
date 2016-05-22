@@ -19,8 +19,13 @@ Tilemap.new = function (init)
 
   self.getTileAt = function (position)
     local calc_hex = self.pixel_to_hex(position)
-
-    return self.tiles[calc_hex.col*self.num_rows+math.floor(calc_hex.row)]
+    local calc_idx = calc_hex.col*self.num_rows+math.floor(calc_hex.row)
+    if calc_idx <= 0 then
+      calc_idx = #self.tiles + calc_idx + 1
+    elseif calc_idx >= #self.tiles then
+      calc_idx = calc_idx - (#self.tiles + 1)
+    end
+    return self.tiles[calc_idx]
   end
 
   self.getIdxAtCoord = function (coord)

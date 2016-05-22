@@ -12,9 +12,17 @@ PlanetsideTilemapView.new = function (init)
   self.camera = PlanetsideTilemapCameraComponent.new(
     {
       target = self.model,
-      ui_rect = {x = 0, y = 0, w = self.rect.w, h = self.rect.h},
-      position = {x = self.rect.w/ 2 + self.rect.x, y = self.rect.h/2 + self.rect.y},
+      ui_rect = {x = 150, y = 0, w = self.rect.w - 150, h = self.rect.h},
+      position = {x = 0, y = 0},
       extent = {half_width = self.rect.w/2, half_height = self.rect.h/2},
+      super = self
+    })
+
+  self.sidebar = ViewComponent.new(
+    {
+      target = nil,
+      ui_rect = {x = 0, y = 100, w = 150, h = self.rect.h - 100, rx = 0, ry = 0},
+      background_color = {r = 100, g = 80, b = 120},
       super = self
     })
 
@@ -24,11 +32,15 @@ PlanetsideTilemapView.new = function (init)
   end
 
   self.onMousePressed = function (x, y, button)
-    self.camera.onMousePressed(x,y,button)
+    self.camera.onMousePressed(x - self.camera.ui_rect.x, y - self.camera.ui_rect.y,button)
   end
 
   self.onMouseReleased = function (x, y, button)
-    self.camera.onMouseReleased(x,y,button)
+    self.camera.onMouseReleased(x - self.camera.ui_rect.x, y - self.camera.ui_rect.y,button)
+  end
+
+  self.onMouseMoved = function (x, y)
+    self.camera.onMouseMoved(x - self.camera.ui_rect.x, y - self.camera.ui_rect.y)
   end
 
   self.onKeyPressed = function (key)
@@ -36,8 +48,12 @@ PlanetsideTilemapView.new = function (init)
   end
 
   self.focus = function (unit)
+    print('focus called on ' .. inspect(unit,{depth = 2}))
+    if unit == nil then return end
     if self.current_focus ~= nil or self.current_focus == unit then
-      self.current_focus.click()
+      if self.current_focus ~= nil then
+        self.current_focus.click()
+      end
       self.current_focus = nil
     else
       if self.current_focus ~= nil then
@@ -56,8 +72,8 @@ PlanetsideTilemapView.new = function (init)
         print("nillable" .. i)
       else
         local computedPosition = {
-          x = toDraw.tiles[i].position.x - self.camera.position.x + self.camera.extent.half_width,
-          y = toDraw.tiles[i].position.y - self.camera.position.y + self.camera.extent.half_height
+          x = toDraw.tiles[i].position.x - self.camera.position.x + self.camera.extent.half_width + self.camera.ui_rect.x,
+          y = toDraw.tiles[i].position.y - self.camera.position.y + self.camera.extent.half_height + self.camera.ui_rect.y
         }
         local idx = toDraw.tiles[i].idx
         --East-West Tile Wrapping
@@ -69,6 +85,9 @@ PlanetsideTilemapView.new = function (init)
         toDraw.tiles[i].draw(computedPosition)
       end
     end
+    love.graphics.setColor(self.sidebar.background_color.r, self.sidebar.background_color.g, self.sidebar.background_color.b)
+    love.graphics.rectangle("fill", self.sidebar.ui_rect.x, self.sidebar.ui_rect.y, self.sidebar.ui_rect.w, self.sidebar.ui_rect.h, self.sidebar.ui_rect.rx, self.sidebar.ui_rect.ry)
+    love.graphics.reset()
   end
 
   return self

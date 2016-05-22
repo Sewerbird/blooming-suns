@@ -1,9 +1,10 @@
--- TilemapCamera
+-- PlanetsideTilemapCameraComponent
 PlanetsideTilemapCameraComponent = {}
 
 PlanetsideTilemapCameraComponent.new = function (init)
   local init = init or {}
   local self = {
+    ui_rect = init.ui_rect,
     position = init.position,
     extent = init.extent,
     target = init.target,
@@ -93,6 +94,15 @@ PlanetsideTilemapCameraComponent.new = function (init)
     now = nil
   end
 
+  self.onMouseMoved = function (x, y)
+    --Mouse Pan
+    if self.dragLocus ~= nil then
+      self.position.x = self.dragLocus.camx + (self.dragLocus.x - x)
+      self.position.y = self.dragLocus.camy + (self.dragLocus.y - y)
+      moved = true
+    end
+  end
+
   self.onUpdate = function (dt)
     local moved = false
     --Update tiles & units (for animation)
@@ -104,12 +114,6 @@ PlanetsideTilemapCameraComponent.new = function (init)
       seen.units[i].update(dt)
     end
 
-    --Mouse Pan
-    if self.dragLocus ~= nil then
-      self.position.x = self.dragLocus.camx + (self.dragLocus.x - love.mouse.getX())
-      self.position.y = self.dragLocus.camy + (self.dragLocus.y - love.mouse.getY())
-      moved = true
-    end
     --Keyboard Pan
     if love.keyboard.isDown('w','a','s','d') then
       if love.keyboard.isDown('w') then

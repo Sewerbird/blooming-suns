@@ -69,7 +69,14 @@ ViewManager.new = function (init)
   end
 
   self.update = function (dt)
-    self.views[self.activeView].update(dt)
+    if self.views[self.activeView] ~= nil then
+      if self.views[self.activeView].onMouseMoved ~= nil then
+        local x = love.mouse.getX()
+        local y = love.mouse.getY()
+        self.views[self.activeView].onMouseMoved(x - self.views[self.activeView].rect.x,y - self.views[self.activeView].rect.y)
+      end
+      self.views[self.activeView].update(dt)
+    end
   end
 
   return self
