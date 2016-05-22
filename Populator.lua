@@ -15,10 +15,16 @@ Populator.new = function (init)
 
         local terrain_type = "Grass";
         local rand = math.random()
-        if rand > 0.45 then
+        if i <= 2 or nr - i  < 3 then
+          terrain_type = "Ice"
+        elseif (i <= 5 or nr - i < 6) and rand > 0.5 then
+          terrain_type = "Tundra"
+        elseif rand > 0.45 then
           terrain_type = "Ocean"
         elseif rand > 0.4 then
           terrain_type = "Desert"
+        elseif rand > 0.2 then
+          terrain_type = "Steppe"
         end
 
 
@@ -45,11 +51,14 @@ Populator.new = function (init)
 
         rand = math.random()
         if rand < 0.05 then
-          local new_unit = Unit.new({sprite = "TestUnit"})
-          new_tile.relocateUnit(new_unit)
+          if terrain_type == "Ocean" then
+            local new_unit = Unit.new({sprite = "TestSpaceUnit"})
+            new_tile.relocateUnit(new_unit)
+          else
+            local new_unit = Unit.new({sprite = "TestUnit"})
+            new_tile.relocateUnit(new_unit)
+          end
         elseif rand < 0.1 then
-          local new_unit = Unit.new({sprite = "TestSpaceUnit"})
-          new_tile.relocateUnit(new_unit)
         end
 
         map.tiles[idx] = new_tile

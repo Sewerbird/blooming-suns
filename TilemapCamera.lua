@@ -13,8 +13,6 @@ TilemapCamera.new = function (init)
     keyboard_speed = 800
   }
 
-  print(inspect(self))
-
   self.getSeen = function ()
     local seen = {
       tiles = {},
