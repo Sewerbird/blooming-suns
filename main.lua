@@ -1,3 +1,4 @@
+--game classes
 require('Tile');
 require('Tilemap');
 require('PlanetsideTilemapCameraComponent');
@@ -12,6 +13,8 @@ require('ViewManager');
 require('ViewComponent');
 require('View');
 
+--libs
+require('lib/astar');
 inspect = require('lib/inspect');
 
 function love.load()
@@ -36,6 +39,11 @@ function love.load()
   })
   GlobalViewManager.push(def_view)
 
+  --DEBUG: REMOVE
+  local path = def_view.model.astar:findPath({col = 0, row = 4, idx = 4}, {col = 4, row = 6, idx = 90})
+  print("###path###")
+  print(inspect(path.nodes,{depth=2}))
+  print("###/PATH###")
 end
 
 function love.update(dt)

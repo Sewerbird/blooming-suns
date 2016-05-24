@@ -14,7 +14,7 @@ PlanetsideTilemapView.new = function (init)
     {
       target = self.model,
       ui_rect = {x = 150, y = 20, w = self.rect.w - 150, h = self.rect.h - 50 - 20},
-      position = {x = 0, y = 0},
+      position = {x = 0, y = self.rect.h / 2},
       extent = {half_width = self.rect.w/2, half_height = self.rect.h/2},
       super = self
     })
@@ -99,7 +99,7 @@ PlanetsideTilemapView.new = function (init)
 
   self.focus = function (unit)
     print('focus called on ' .. inspect(unit,{depth = 2}))
-    if unit == nil then return end
+    --if unit == nil then return end
     if self.current_focus ~= nil or self.current_focus == unit then
       if self.current_focus ~= nil then
         self.current_focus.click()

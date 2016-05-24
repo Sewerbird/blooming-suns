@@ -36,6 +36,20 @@ Tilemap.new = function (init)
     return self.tiles[getIdxAtCoord(coord)]
   end
 
+  self.getHexAtIdx = function (idx)
+    return self.tiles[getTileAtIdx]
+  end
+
+  self.getCoordFromIdx = function (idx)
+  print("xx"..idx)
+  print("::"..inspect(self.tiles[idx],{depth=2}))
+    return {
+      col = self.tiles[idx].position.col,
+      row = self.tiles[idx].position.row,
+      idx = idx
+    }
+  end
+
   self.pixel_to_hex = function (position)
     if position.x == nil or position.y == nil or position == nil then
       print('oops: no valid pixel provided')
@@ -97,5 +111,69 @@ Tilemap.new = function (init)
     return {x = rx, y = ry, z = rz}
   end
 
+  --[[
+
+    A* Methods for lua-astar
+
+  ]]--
+
+
+  self.getNode = function (this, location)
+    -- Here you make sure the requested node is valid (i.e. on the map, not blocked)
+    -- if the location is not valid, return nil, otherwise return a new Node object
+    local idx = self.getIdxAtCoord(location)
+    local move_cost = 1
+
+    if idx < 0 or idx > #self.tiles then
+      return nil
+    else
+      return Node:new(location, move_cost, idx)
+    end
+  end
+
+  self.locationsAreEqual = function (this, a, b)
+    -- Here you check to see if two locations (not nodes) are equivalent
+    return a.idx == b.idx
+  end
+
+  self.getAdjacentNodes = function (this, curnode, dest)
+    -- Given a node, return a table containing all adjacent nodes
+    local result = {}
+
+    for i, v in pairs(self.terrain_connective_matrix[curnode.lid].air) do
+      print("QQ:"..i..","..tostring(v)..","..inspect(self.getCoordFromIdx(i)))
+      local coord = self.getCoordFromIdx(i)
+      print("XXZZ" .. inspect(coord))
+      local dN = self:getNode(coord)
+      local n = self._handleNode(this, dN.location, curnode)
+      print("ADJACENT:" .. n.lid)
+      table.insert(result, n)
+    end
+
+    return result
+  end
+
+  self._handleNode = function (this, location, fromnode)
+    -- Fetch a Node for the given location and set its parameters
+    local idx = self.getIdxAtCoord({col = location.col, row = location.row})
+    local n = Node:new(location, 0, idx)
+
+    if n ~= nil then
+      local dx = 1 -- math.max(x, destx) - math.min(x, destx)
+      local dy = 1 -- math.max(y, desty) - math.min(y, desty)
+      local emCost = dx + dy
+
+      n.mCost = 1 --n.mCost + fromnode.mCost
+      n.score = n.mCost + emCost
+      n.parent = fromnode
+      n.lid = idx
+
+      return n
+    end
+
+    return nil
+  end
+
+  self.astar = AStar(self)
   return self
 end
