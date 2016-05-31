@@ -33,16 +33,21 @@ function love.load()
   populator.generateTileMapTerrainRandom(defaultTilemap)
 
   --Create Views
-  local def_view = PlanetsideTilemapView.new({
+  def_view = PlanetsideTilemapView.new({
     model = defaultTilemap,
     rect = {x = 0, y = 0, w = love.graphics.getWidth(), h = love.graphics.getHeight()}
   })
   GlobalViewManager.push(def_view)
 
-  --DEBUG: REMOVE
-  local path = def_view.model.astar:findPath({col = 0, row = 4, idx = 4}, {col = 4, row = 6, idx = 90})
+  --DEBUG: Show TIles On Path
+  local path = def_view.model.astar:findPath({col = 0, row = 15, idx = 15}, {col = 30, row = 10, idx = 640})
+
   print("###path###")
-  print(inspect(path.nodes,{depth=2}))
+  print(inspect(path,{depth=2}))
+    for i, v in ipairs(path.nodes) do
+      print(v.lid)
+      def_view.model.tiles[v.lid].debug = true;
+    end
   print("###/PATH###")
 end
 

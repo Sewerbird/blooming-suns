@@ -99,7 +99,6 @@ function AStar:_handleNode(node, goal)
   self.open[node.lid] = nil
   self.closed[node.lid] = node.lid
 
-  print(inspect(node),{depth = 2})
   assert(node.location ~= nil, 'About to pass a node with nil location to getAdjacentNodes')
 
   local nodes = self.mh:getAdjacentNodes(node, goal)

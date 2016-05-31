@@ -98,7 +98,7 @@ PlanetsideTilemapView.new = function (init)
   end
 
   self.focus = function (unit)
-    print('focus called on ' .. inspect(unit,{depth = 2}))
+
     --if unit == nil then return end
     if self.current_focus ~= nil or self.current_focus == unit then
       if self.current_focus ~= nil then

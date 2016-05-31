@@ -41,13 +41,20 @@ Tilemap.new = function (init)
   end
 
   self.getCoordFromIdx = function (idx)
-  print("xx"..idx)
-  print("::"..inspect(self.tiles[idx],{depth=2}))
     return {
       col = self.tiles[idx].position.col,
       row = self.tiles[idx].position.row,
       idx = idx
     }
+  end
+
+  self.getHexDistance = function(a, b)
+    return math.abs(a.col - b.col) + math.abs(a.row - b.row)
+    --return self.getCubeDistance(self.hex_to_cube(a),self.hex_to_cube(b))
+  end
+
+  self.getCubeDistance = function (a, b)
+    return (math.abs(a.x - b.x) + math.abs(a.y - b.y) + math.abs(a.z - b.z)) / 2
   end
 
   self.pixel_to_hex = function (position)
@@ -136,37 +143,40 @@ Tilemap.new = function (init)
     return a.idx == b.idx
   end
 
-  self.getAdjacentNodes = function (this, curnode, dest)
+  self.getAdjacentNodes = function (this, curr, goal)
     -- Given a node, return a table containing all adjacent nodes
     local result = {}
 
-    for i, v in pairs(self.terrain_connective_matrix[curnode.lid].air) do
-      print("QQ:"..i..","..tostring(v)..","..inspect(self.getCoordFromIdx(i)))
+    print("--b--"..curr.lid)
+    for i, v in pairs(self.terrain_connective_matrix[curr.lid].air) do
       local coord = self.getCoordFromIdx(i)
-      print("XXZZ" .. inspect(coord))
-      local dN = self:getNode(coord)
-      local n = self._handleNode(this, dN.location, curnode)
-      print("ADJACENT:" .. n.lid)
+      local consideredN = self:getNode(coord)
+      local n = self:_handleNode(consideredN, goal, curr)
       table.insert(result, n)
     end
-
+    print("Returning"..inspect(result,{depth=3}))
     return result
   end
 
-  self._handleNode = function (this, location, fromnode)
+  self._handleNode = function (this, considered, goal, parent)
     -- Fetch a Node for the given location and set its parameters
-    local idx = self.getIdxAtCoord({col = location.col, row = location.row})
-    local n = Node:new(location, 0, idx)
+    local dstCol = goal.col
+    local dstRow = goal.row
+    local idx = self.getIdxAtCoord({col = dstCol, row = dstRow})
+    local n = Node:new(considered.location, 0, considered.location.idx)
 
     if n ~= nil then
-      local dx = 1 -- math.max(x, destx) - math.min(x, destx)
-      local dy = 1 -- math.max(y, desty) - math.min(y, desty)
-      local emCost = dx + dy
-
-      n.mCost = 1 --n.mCost + fromnode.mCost
+      --TODO: maybe just use euclidean distance if this gets too annoying, bugwise
+      --local emCost = math.abs(fromnode.location.col - n.location.col) + math.abs(fromnode.location.row - n.location.row)
+      --if fromnode.location.col % 2 ~= n.location.col % 2 then
+      --  emCost = emCost + 0.5
+      --end
+      local emCost = math.abs(self.getHexDistance(goal, n.location))
+      print("EMCOST IS "..emCost.." for "..n.lid)
+      n.mCost = n.mCost + considered.mCost
       n.score = n.mCost + emCost
-      n.parent = fromnode
-      n.lid = idx
+      n.parent = parent
+      n.lid = n.location.idx
 
       return n
     end
