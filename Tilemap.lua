@@ -172,6 +172,7 @@ Tilemap.new = function (init)
   end
 
   self._handleNode = function (this, considered, goal, parent)
+  print('handling node')
     -- Fetch a Node for the given location and set its parameters
     local dstCol = goal.col
     local dstRow = goal.row
@@ -185,8 +186,8 @@ Tilemap.new = function (init)
       --  emCost = emCost + 0.5
       --end
       local emCost = math.abs(self.getHexDistance(goal, n.location))
-      local emCost = math.min(math.abs(goal.col - self.num_cols - n.location.col),math.abs(goal.col - n.location.col)) + math.abs(goal.row - n.location.row)/2
-      n.mCost = n.mCost + considered.mCost
+      local emCost = math.min(math.min(math.abs(goal.col - self.num_cols - n.location.col),math.abs(n.location.col - self.num_cols - goal.col)),math.abs(goal.col - n.location.col)) + math.abs(goal.row - n.location.row)/2
+      n.mCost = 1 + parent.mCost
       n.score = n.mCost + emCost
       n.parent = parent
       n.lid = n.location.idx

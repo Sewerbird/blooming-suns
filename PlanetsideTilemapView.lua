@@ -90,7 +90,9 @@ PlanetsideTilemapView.new = function (init)
   end
 
   self.onMouseMoved = function (x, y)
-    self.camera.onMouseMoved(x - self.camera.ui_rect.x, y - self.camera.ui_rect.y)
+    local w_x = x - self.camera.ui_rect.x;
+    local w_y = y - self.camera.ui_rect.y
+    self.camera.onMouseMoved(w_x, w_y)
   end
 
   self.onKeyPressed = function (key)
@@ -98,17 +100,34 @@ PlanetsideTilemapView.new = function (init)
   end
 
   self.focus = function (unit)
-
     --if unit == nil then return end
-    if self.current_focus ~= nil or self.current_focus == unit then
+    if self.current_focus ~= nil and self.current_focus == unit then
       if self.current_focus ~= nil then
         self.current_focus.click()
       end
       self.current_focus = nil
+    elseif self.current_focus ~= nil and self.current_focus ~= unit then
+      local start = {row = self.current_focus.position.row, col = self.current_focus.position.col, idx = self.current_focus.idx}
+      local goal = {row = unit.position.row, col = unit.position.col, idx = unit.idx}
+      --DEBUG: Show TIles On Path
+      local path = self.model.astar:findPath(start, goal)
+
+      if path == nil then return end
+      print("###path###")
+      print(inspect(path,{depth=2}))
+        for i, v in ipairs(self.model.tiles) do
+          self.model.tiles[i].debug = false;
+        end
+        for i, v in ipairs(path.nodes) do
+          print(v.lid)
+          self.model.tiles[v.lid].debug = true;
+        end
+      print("###/PATH###  cost = " .. path:getTotalMoveCost())
     else
       if self.current_focus ~= nil then
         self.current_focus.click()
       end
+      print('focusing')
       self.current_focus = unit
       self.current_focus.click()
     end
