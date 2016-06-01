@@ -37,7 +37,12 @@ Tilemap.new = function (init)
   end
 
   self.getHexAtIdx = function (idx)
-    return self.tiles[getTileAtIdx]
+    if calc_idx <= 0 then
+      idx = #self.tiles + calc_idx + 1
+    elseif idx >= #self.tiles then
+      idx = (#self.tiles + 1)
+    end
+    return self.tiles[idx]
   end
 
   self.getCoordFromIdx = function (idx)
@@ -49,8 +54,18 @@ Tilemap.new = function (init)
   end
 
   self.getHexDistance = function(a, b)
-    --return math.abs(a.col - b.col) + math.abs(a.row - b.row)
     return self.getCubeDistance(self.hex_to_cube(a),self.hex_to_cube(b))
+  end
+
+  self.getCylindricalHexDistance = function(a, b)
+    if math.abs(a.col - b.col) > self.num_cols/2 then
+      --account for going 'the other way'
+      local v = self.getHexDistance({row = a.row, col = a.col - self.num_cols + 1}, {row = b.row, col= b.col - self.num_cols + 1})
+      print('trying other way ' .. v .. " (" .. b.col .. " to " .. (b.col - self.num_cols) .. ")")
+      return v
+    else
+      return self.getHexDistance(a,b)
+    end
   end
 
   self.getCubeDistance = function (a, b)
@@ -147,14 +162,12 @@ Tilemap.new = function (init)
     -- Given a node, return a table containing all adjacent nodes
     local result = {}
 
-    print("--b--"..curr.lid)
-    for i, v in pairs(self.terrain_connective_matrix[curr.lid].air) do
+    for i, v in pairs(self.terrain_connective_matrix[curr.lid].land) do
       local coord = self.getCoordFromIdx(i)
       local consideredN = self:getNode(coord)
       local n = self:_handleNode(consideredN, goal, curr)
       table.insert(result, n)
     end
-    print("Returning"..inspect(result,{depth=3}))
     return result
   end
 
@@ -172,7 +185,7 @@ Tilemap.new = function (init)
       --  emCost = emCost + 0.5
       --end
       local emCost = math.abs(self.getHexDistance(goal, n.location))
-      print("EMCOST IS "..emCost.." for "..n.lid)
+      local emCost = math.min(math.abs(goal.col - self.num_cols - n.location.col),math.abs(goal.col - n.location.col)) + math.abs(goal.row - n.location.row)/2
       n.mCost = n.mCost + considered.mCost
       n.score = n.mCost + emCost
       n.parent = parent
