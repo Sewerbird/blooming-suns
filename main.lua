@@ -40,7 +40,7 @@ function love.load()
   GlobalViewManager.push(def_view)
 
   --DEBUG: Show TIles On Path
-  local path = def_view.model.astar:findPath({col = 0, row = 15, idx = 15}, {col = 30, row = 10, idx = 640})
+  local path = def_view.model.astar:findPath({col = 0, row = 1, idx = 1}, {col = 30, row = 10, idx = 640})
 
   print("###path###")
   print(inspect(path,{depth=2}))

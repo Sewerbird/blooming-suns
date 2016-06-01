@@ -49,8 +49,8 @@ Tilemap.new = function (init)
   end
 
   self.getHexDistance = function(a, b)
-    return math.abs(a.col - b.col) + math.abs(a.row - b.row)
-    --return self.getCubeDistance(self.hex_to_cube(a),self.hex_to_cube(b))
+    --return math.abs(a.col - b.col) + math.abs(a.row - b.row)
+    return self.getCubeDistance(self.hex_to_cube(a),self.hex_to_cube(b))
   end
 
   self.getCubeDistance = function (a, b)
