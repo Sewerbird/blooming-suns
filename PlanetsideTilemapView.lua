@@ -111,6 +111,14 @@ PlanetsideTilemapView.new = function (init)
       self.current_focus = nil
     elseif self.current_focus ~= nil and self.current_focus ~= fhex then
       local start = {row = self.current_focus.position.row, col = self.current_focus.position.col, idx = self.current_focus.idx}
+      local f_unit = self.current_focus.units[1]
+      local path_append = false
+      if love.keyboard.isDown('lshift') or love.keyboard.isDown('rshift') then
+        path_append = true
+        start = f_unit.move_queue.tail()
+        print("FINAL IS" .. inspect(start))
+      end
+
       local goal = {row = fhex.position.row, col = fhex.position.col, idx = fhex.idx}
 
       --DEBUG: Show TIles On Path
@@ -118,7 +126,11 @@ PlanetsideTilemapView.new = function (init)
 
       if path == nil then return end
 
-      self.current_focus.units[1].setMoveQueue(path)
+      if path_append then
+        self.current_focus.units[1].appendMoveQueue(path)
+      else
+        self.current_focus.units[1].setMoveQueue(path)
+      end
 
       for i, v in ipairs(self.model.tiles) do
         self.model.tiles[i].debug = false;

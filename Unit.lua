@@ -28,6 +28,10 @@ Unit.new = function (init)
 
   self.setMoveQueue = function (path)
     self.move_queue = List.new()
+    self.appendMoveQueue(path)
+  end
+
+  self.appendMoveQueue = function (path)
     for i, j in ipairs(path.nodes) do
       self.move_queue.pushright(j.location)
     end
@@ -48,7 +52,7 @@ Unit.new = function (init)
       self.sprite.position.x = self.sprite.position.x - 16 --TODO: offset by sprite size
       self.sprite.position.y = self.sprite.position.y - 16 --TODO: offset by sprite size
       love.graphics.setColor(50,50,50)
-      love.graphics.rectangle("fill",self.sprite.position.x-3, self.sprite.position.y-3,38,38)
+      love.graphics.rectangle("fill",self.sprite.position.x-2, self.sprite.position.y-2,36,36)
       love.graphics.setColor(200,50,50)
       love.graphics.rectangle("fill",self.sprite.position.x, self.sprite.position.y,32,32)
       love.graphics.reset()
