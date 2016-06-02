@@ -47,6 +47,11 @@ Unit.new = function (init)
     if centered == true then
       self.sprite.position.x = self.sprite.position.x - 16 --TODO: offset by sprite size
       self.sprite.position.y = self.sprite.position.y - 16 --TODO: offset by sprite size
+      love.graphics.setColor(50,50,50)
+      love.graphics.rectangle("fill",self.sprite.position.x-3, self.sprite.position.y-3,38,38)
+      love.graphics.setColor(200,50,50)
+      love.graphics.rectangle("fill",self.sprite.position.x, self.sprite.position.y,32,32)
+      love.graphics.reset()
     end
     self.sprite.draw()
   end
