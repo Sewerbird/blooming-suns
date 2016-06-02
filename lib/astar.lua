@@ -95,13 +95,14 @@ function AStar:_tracePath(n)
   return Path(nodes, totalCost)
 end
 
-function AStar:_handleNode(node, goal)
+function AStar:_handleNode(node, goal, domain)
   self.open[node.lid] = nil
   self.closed[node.lid] = node.lid
 
+  assert(domain ~= nil, 'About to pass a node with no movement domain specified to getAdjacentNodes')
   assert(node.location ~= nil, 'About to pass a node with nil location to getAdjacentNodes')
 
-  local nodes = self.mh:getAdjacentNodes(node, goal)
+  local nodes = self.mh:getAdjacentNodes(node, goal, domain)
 
   for lid, n in pairs(nodes) do repeat
     if self.mh:locationsAreEqual(n.location, goal) then
@@ -123,7 +124,7 @@ function AStar:_handleNode(node, goal)
   return nil
 end
 
-function AStar:findPath(fromlocation, tolocation)
+function AStar:findPath(fromlocation, tolocation, domain)
   self.open = {}
   self.closed = {}
 
@@ -138,7 +139,7 @@ function AStar:findPath(fromlocation, tolocation)
   end
 
   while nextNode ~= nil do
-    local finish = self:_handleNode(nextNode, goal)
+    local finish = self:_handleNode(nextNode, goal, domain)
 
     if finish then
       return self:_tracePath(finish)

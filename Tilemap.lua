@@ -157,10 +157,9 @@ Tilemap.new = function (init)
     return a.idx == b.idx
   end
 
-  self.getAdjacentNodes = function (this, curr, goal)
+  self.getAdjacentNodes = function (this, curr, goal, domain)
     -- Given a node, return a table containing all adjacent nodes
     local result = {}
-    local domain = 'land'
 
     for i, v in pairs(self.terrain_connective_matrix[curr.lid][domain]) do
       local coord = self.getCoordFromIdx(i)

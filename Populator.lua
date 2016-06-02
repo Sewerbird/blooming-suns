@@ -52,10 +52,10 @@ Populator.new = function (init)
         rand = math.random()
         if rand < 0.05 then
           if terrain_type == "Ocean" then
-            local new_unit = Unit.new({sprite = "TestSpaceUnit"})
+            local new_unit = Unit.new({sprite = "TestSpaceUnit", move_domain = "sea"})
             new_tile.relocateUnit(new_unit)
           else
-            local new_unit = Unit.new({sprite = "TestUnit"})
+            local new_unit = Unit.new({sprite = "TestUnit", move_domain = "land"})
             new_tile.relocateUnit(new_unit)
           end
         elseif rand < 0.1 then
@@ -124,8 +124,7 @@ Populator.new = function (init)
     --Generate Land Connectedness Graph
     for i, v in pairs(map.tiles) do
       for j, k in pairs(map.terrain_connective_matrix[v.idx]['air']) do
-        if map.tiles[v.idx] ~= 'Ocean' and
-          map.tiles[j] ~= nil and map.tiles[j].terrain_type ~= 'Ocean' then
+        if map.tiles[j] ~= nil and map.tiles[j].terrain_type ~= 'Ocean' and map.tiles[v.idx].terrain_type ~= 'Ocean' then
           map.terrain_connective_matrix[v.idx]['land'][j] = true
         end
       end
@@ -133,7 +132,7 @@ Populator.new = function (init)
     --Generate Sea Connectedness Graph
     for i, v in pairs(map.tiles) do
       for j, k in pairs(map.terrain_connective_matrix[v.idx]['air']) do
-        if map.tiles[v.idx] == 'Ocean' and map.tiles[j].terrain_type == 'Ocean' then
+        if map.tiles[j] ~= nil and map.tiles[j].terrain_type == 'Ocean' and map.tiles[v.idx].terrain_type == 'Ocean' then
           map.terrain_connective_matrix[v.idx]['sea'][j] = true
         end
       end

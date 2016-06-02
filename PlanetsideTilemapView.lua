@@ -110,12 +110,12 @@ PlanetsideTilemapView.new = function (init)
       local start = {row = self.current_focus.position.row, col = self.current_focus.position.col, idx = self.current_focus.idx}
       local goal = {row = unit.position.row, col = unit.position.col, idx = unit.idx}
       --DEBUG: Show TIles On Path
-      local path = self.model.astar:findPath(start, goal)
+
+      local path = self.model.astar:findPath(start, goal, self.current_focus.units[1].move_domain)
 
       if path == nil then return end
 
       self.current_focus.units[1].setMoveQueue(path)
-      print("F::"..inspect(self.current_focus.units[1].move_queue))
 
       for i, v in ipairs(self.model.tiles) do
         self.model.tiles[i].debug = false;

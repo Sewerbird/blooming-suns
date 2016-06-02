@@ -7,7 +7,8 @@ Unit.new = function (init)
   local self = {
     sprite = init.sprite or nil,
     selected = false,
-    move_queue = nil
+    move_queue = nil,
+    move_domain = init.move_domain or 'land'
   }
   --reify
   if self.sprite ~= nil then
