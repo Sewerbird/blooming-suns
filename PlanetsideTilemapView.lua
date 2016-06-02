@@ -14,7 +14,7 @@ PlanetsideTilemapView.new = function (init)
     {
       target = self.model,
       ui_rect = {x = 150, y = 20, w = self.rect.w - 150, h = self.rect.h - 50 - 20},
-      position = {x = 0, y = 0},
+      position = {x = 0, y = self.rect.h / 2},
       extent = {half_width = self.rect.w/2, half_height = self.rect.h/2},
       super = self
     })
@@ -90,7 +90,9 @@ PlanetsideTilemapView.new = function (init)
   end
 
   self.onMouseMoved = function (x, y)
-    self.camera.onMouseMoved(x - self.camera.ui_rect.x, y - self.camera.ui_rect.y)
+    local w_x = x - self.camera.ui_rect.x;
+    local w_y = y - self.camera.ui_rect.y
+    self.camera.onMouseMoved(w_x, w_y)
   end
 
   self.onKeyPressed = function (key)
@@ -98,13 +100,29 @@ PlanetsideTilemapView.new = function (init)
   end
 
   self.focus = function (unit)
-    print('focus called on ' .. inspect(unit,{depth = 2}))
-    if unit == nil then return end
-    if self.current_focus ~= nil or self.current_focus == unit then
+    --if unit == nil then return end
+    if self.current_focus ~= nil and self.current_focus == unit then
       if self.current_focus ~= nil then
         self.current_focus.click()
       end
       self.current_focus = nil
+    elseif self.current_focus ~= nil and self.current_focus ~= unit then
+      local start = {row = self.current_focus.position.row, col = self.current_focus.position.col, idx = self.current_focus.idx}
+      local goal = {row = unit.position.row, col = unit.position.col, idx = unit.idx}
+      --DEBUG: Show TIles On Path
+
+      local path = self.model.astar:findPath(start, goal, self.current_focus.units[1].move_domain)
+
+      if path == nil then return end
+
+      self.current_focus.units[1].setMoveQueue(path)
+
+      for i, v in ipairs(self.model.tiles) do
+        self.model.tiles[i].debug = false;
+      end
+      for i, v in ipairs(path.nodes) do
+        self.model.tiles[v.lid].debug = true;
+      end
     else
       if self.current_focus ~= nil then
         self.current_focus.click()
@@ -118,9 +136,7 @@ PlanetsideTilemapView.new = function (init)
     --TODO: self.camera.draw()
     local toDraw = self.camera.getSeen()
     for i = 1, #toDraw.tiles do
-      if toDraw.tiles[i] == nil then
-        print("nillable" .. i)
-      else
+      if toDraw.tiles[i] ~= nil then
         local computedPosition = {
           x = toDraw.tiles[i].position.x - self.camera.position.x + self.camera.extent.half_width + self.camera.ui_rect.x,
           y = toDraw.tiles[i].position.y - self.camera.position.y + self.camera.extent.half_height + self.camera.ui_rect.y

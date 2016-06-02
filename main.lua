@@ -1,3 +1,4 @@
+--game classes
 require('Tile');
 require('Tilemap');
 require('PlanetsideTilemapCameraComponent');
@@ -12,6 +13,8 @@ require('ViewManager');
 require('ViewComponent');
 require('View');
 
+--libs
+require('lib/astar');
 inspect = require('lib/inspect');
 
 function love.load()
@@ -30,12 +33,11 @@ function love.load()
   populator.generateTileMapTerrainRandom(defaultTilemap)
 
   --Create Views
-  local def_view = PlanetsideTilemapView.new({
+  def_view = PlanetsideTilemapView.new({
     model = defaultTilemap,
     rect = {x = 0, y = 0, w = love.graphics.getWidth(), h = love.graphics.getHeight()}
   })
   GlobalViewManager.push(def_view)
-
 end
 
 function love.update(dt)

@@ -36,6 +36,41 @@ Tilemap.new = function (init)
     return self.tiles[getIdxAtCoord(coord)]
   end
 
+  self.getHexAtIdx = function (idx)
+    if calc_idx <= 0 then
+      idx = #self.tiles + calc_idx + 1
+    elseif idx >= #self.tiles then
+      idx = (#self.tiles + 1)
+    end
+    return self.tiles[idx]
+  end
+
+  self.getCoordFromIdx = function (idx)
+    return {
+      col = self.tiles[idx].position.col,
+      row = self.tiles[idx].position.row,
+      idx = idx
+    }
+  end
+
+  self.getHexDistance = function(a, b)
+    return self.getCubeDistance(self.hex_to_cube(a),self.hex_to_cube(b))
+  end
+
+  self.getCylindricalHexDistance = function(a, b)
+    if math.abs(a.col - b.col) > self.num_cols/2 then
+      --account for going 'the other way'
+      local v = self.getHexDistance({row = a.row, col = a.col - self.num_cols + 1}, {row = b.row, col= b.col - self.num_cols + 1})
+      return v
+    else
+      return self.getHexDistance(a,b)
+    end
+  end
+
+  self.getCubeDistance = function (a, b)
+    return (math.abs(a.x - b.x) + math.abs(a.y - b.y) + math.abs(a.z - b.z)) / 2
+  end
+
   self.pixel_to_hex = function (position)
     if position.x == nil or position.y == nil or position == nil then
       print('oops: no valid pixel provided')
@@ -97,5 +132,64 @@ Tilemap.new = function (init)
     return {x = rx, y = ry, z = rz}
   end
 
+  --[[
+
+    A* Methods for lua-astar
+
+  ]]--
+
+
+  self.getNode = function (this, location)
+    -- Here you make sure the requested node is valid (i.e. on the map, not blocked)
+    -- if the location is not valid, return nil, otherwise return a new Node object
+    local idx = self.getIdxAtCoord(location)
+    local move_cost = 1
+
+    if idx < 0 or idx > #self.tiles then
+      return nil
+    else
+      return Node:new(location, move_cost, idx)
+    end
+  end
+
+  self.locationsAreEqual = function (this, a, b)
+    -- Here you check to see if two locations (not nodes) are equivalent
+    return a.idx == b.idx
+  end
+
+  self.getAdjacentNodes = function (this, curr, goal, domain)
+    -- Given a node, return a table containing all adjacent nodes
+    local result = {}
+
+    for i, v in pairs(self.terrain_connective_matrix[curr.lid][domain]) do
+      local coord = self.getCoordFromIdx(i)
+      local consideredN = self:getNode(coord)
+      local n = self:_handleNode(consideredN, goal, curr)
+      table.insert(result, n)
+    end
+    return result
+  end
+
+  self._handleNode = function (this, considered, goal, parent)
+    -- Fetch a Node for the given location and set its parameters
+    local dstCol = goal.col
+    local dstRow = goal.row
+    local idx = self.getIdxAtCoord({col = dstCol, row = dstRow})
+    local n = Node:new(considered.location, 0, considered.location.idx)
+
+    if n ~= nil then
+      local emCost = math.min(math.min(math.abs(goal.col - self.num_cols - n.location.col),math.abs(n.location.col - self.num_cols - goal.col)),math.abs(goal.col - n.location.col)) + math.abs(goal.row - n.location.row)/2
+      n.mCost = 1 + parent.mCost
+      n.score = n.mCost + emCost
+      n.parent = parent
+      n.lid = n.location.idx
+
+      return n
+    end
+
+    return nil
+  end
+
+  self.astar = AStar(self)
   return self
 end
