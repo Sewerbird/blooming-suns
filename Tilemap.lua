@@ -61,7 +61,6 @@ Tilemap.new = function (init)
     if math.abs(a.col - b.col) > self.num_cols/2 then
       --account for going 'the other way'
       local v = self.getHexDistance({row = a.row, col = a.col - self.num_cols + 1}, {row = b.row, col= b.col - self.num_cols + 1})
-      print('trying other way ' .. v .. " (" .. b.col .. " to " .. (b.col - self.num_cols) .. ")")
       return v
     else
       return self.getHexDistance(a,b)
@@ -161,8 +160,9 @@ Tilemap.new = function (init)
   self.getAdjacentNodes = function (this, curr, goal)
     -- Given a node, return a table containing all adjacent nodes
     local result = {}
+    local domain = 'land'
 
-    for i, v in pairs(self.terrain_connective_matrix[curr.lid].land) do
+    for i, v in pairs(self.terrain_connective_matrix[curr.lid][domain]) do
       local coord = self.getCoordFromIdx(i)
       local consideredN = self:getNode(coord)
       local n = self:_handleNode(consideredN, goal, curr)
@@ -172,7 +172,6 @@ Tilemap.new = function (init)
   end
 
   self._handleNode = function (this, considered, goal, parent)
-  print('handling node')
     -- Fetch a Node for the given location and set its parameters
     local dstCol = goal.col
     local dstRow = goal.row
@@ -180,12 +179,6 @@ Tilemap.new = function (init)
     local n = Node:new(considered.location, 0, considered.location.idx)
 
     if n ~= nil then
-      --TODO: maybe just use euclidean distance if this gets too annoying, bugwise
-      --local emCost = math.abs(fromnode.location.col - n.location.col) + math.abs(fromnode.location.row - n.location.row)
-      --if fromnode.location.col % 2 ~= n.location.col % 2 then
-      --  emCost = emCost + 0.5
-      --end
-      local emCost = math.abs(self.getHexDistance(goal, n.location))
       local emCost = math.min(math.min(math.abs(goal.col - self.num_cols - n.location.col),math.abs(n.location.col - self.num_cols - goal.col)),math.abs(goal.col - n.location.col)) + math.abs(goal.row - n.location.row)/2
       n.mCost = 1 + parent.mCost
       n.score = n.mCost + emCost

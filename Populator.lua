@@ -118,16 +118,12 @@ Populator.new = function (init)
       for j, k in pairs(map.terrain_connective_matrix[i]['air']) do
         if j > #map.tiles then
           wrongConnects = wrongConnects + 1
-          print(i .. " wrongfully connects " .. j .. " as its " .. k)
         end
       end
     end
-    print("WRONG CONNECTS: " .. wrongConnects)
     --Generate Land Connectedness Graph
-    --print("MAP.TILES HAS SIZE" .. #map.tiles)
     for i, v in pairs(map.tiles) do
       for j, k in pairs(map.terrain_connective_matrix[v.idx]['air']) do
-        --print("#####" .. v.idx .. " - " .. j .. " % " .. tostring(k))
         if map.tiles[v.idx] ~= 'Ocean' and
           map.tiles[j] ~= nil and map.tiles[j].terrain_type ~= 'Ocean' then
           map.terrain_connective_matrix[v.idx]['land'][j] = true

@@ -113,21 +113,20 @@ PlanetsideTilemapView.new = function (init)
       local path = self.model.astar:findPath(start, goal)
 
       if path == nil then return end
-      print("###path###")
-      print(inspect(path,{depth=2}))
-        for i, v in ipairs(self.model.tiles) do
-          self.model.tiles[i].debug = false;
-        end
-        for i, v in ipairs(path.nodes) do
-          print(v.lid)
-          self.model.tiles[v.lid].debug = true;
-        end
-      print("###/PATH###  cost = " .. path:getTotalMoveCost())
+
+      self.current_focus.units[1].setMoveQueue(path)
+      print("F::"..inspect(self.current_focus.units[1].move_queue))
+
+      for i, v in ipairs(self.model.tiles) do
+        self.model.tiles[i].debug = false;
+      end
+      for i, v in ipairs(path.nodes) do
+        self.model.tiles[v.lid].debug = true;
+      end
     else
       if self.current_focus ~= nil then
         self.current_focus.click()
       end
-      print('focusing')
       self.current_focus = unit
       self.current_focus.click()
     end
@@ -137,9 +136,7 @@ PlanetsideTilemapView.new = function (init)
     --TODO: self.camera.draw()
     local toDraw = self.camera.getSeen()
     for i = 1, #toDraw.tiles do
-      if toDraw.tiles[i] == nil then
-        print("nillable" .. i)
-      else
+      if toDraw.tiles[i] ~= nil then
         local computedPosition = {
           x = toDraw.tiles[i].position.x - self.camera.position.x + self.camera.extent.half_width + self.camera.ui_rect.x,
           y = toDraw.tiles[i].position.y - self.camera.position.y + self.camera.extent.half_height + self.camera.ui_rect.y

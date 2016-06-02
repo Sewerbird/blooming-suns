@@ -38,17 +38,6 @@ function love.load()
     rect = {x = 0, y = 0, w = love.graphics.getWidth(), h = love.graphics.getHeight()}
   })
   GlobalViewManager.push(def_view)
-
-  --DEBUG: Show TIles On Path
-  local path = def_view.model.astar:findPath({col = 1, row = 4, idx = 25}, {col = 17, row = 9, idx = 366})
-
-  print("###path###")
-  print(inspect(path,{depth=2}))
-    for i, v in ipairs(path.nodes) do
-      print(v.lid)
-      def_view.model.tiles[v.lid].debug = true;
-    end
-  print("###/PATH###")
 end
 
 function love.update(dt)
