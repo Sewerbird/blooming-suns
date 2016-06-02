@@ -52,10 +52,10 @@ Populator.new = function (init)
         rand = math.random()
         if rand < 0.05 then
           if terrain_type == "Ocean" then
-            local new_unit = Unit.new({sprite = "TestSpaceUnit", move_domain = "sea"})
+            local new_unit = Unit.new({sprite = "TestSpaceUnit", move_domain = "sea", location = {idx = idx, row = row, col = col}})
             new_tile.relocateUnit(new_unit)
           else
-            local new_unit = Unit.new({sprite = "TestUnit", move_domain = "land"})
+            local new_unit = Unit.new({sprite = "TestUnit", move_domain = "land", location = {idx = idx, row = row, col = col}})
             new_tile.relocateUnit(new_unit)
           end
         elseif rand < 0.1 then

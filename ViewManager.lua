@@ -46,7 +46,8 @@ ViewManager.new = function (init)
     elseif key == "y" then
       self.pop()
     end
-    --TODO: self.activeView.onKeyPressed(key)
+    --TODO:
+    self.views[self.activeView].onKeyPressed(key)
   end
 
   self.getClickedView = function (x, y)

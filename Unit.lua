@@ -6,6 +6,7 @@ Unit.new = function (init)
   local init = init or {}
   local self = {
     sprite = init.sprite or nil,
+    location = init.location or nil,
     selected = false,
     move_queue = nil,
     move_domain = init.move_domain or 'land'
@@ -13,6 +14,16 @@ Unit.new = function (init)
   --reify
   if self.sprite ~= nil then
     self.sprite = SpriteInstance.new({sprite = self.sprite})
+  end
+
+  self.hasMoveOrder = function ()
+    return self.move_queue and self.move_queue.length() > 0
+  end
+
+  self.performMoveOrder = function ()
+    local tgt = self.move_queue.popleft()
+    print("MOVING TO " .. inspect(tgt))
+    self.location = tgt
   end
 
   self.setMoveQueue = function (path)

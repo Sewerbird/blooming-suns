@@ -96,7 +96,10 @@ PlanetsideTilemapView.new = function (init)
   end
 
   self.onKeyPressed = function (key)
-
+    print('on key pressed, planetside activated' .. key)
+    if key == 'space' then
+      self.executeNextOrder()
+    end
   end
 
   self.focus = function (fhex)
@@ -129,6 +132,20 @@ PlanetsideTilemapView.new = function (init)
       end
       self.current_focus = fhex
       self.current_focus.click()
+    end
+  end
+
+  self.executeNextOrder = function ()
+    if self.current_focus ~= nil then
+      --Unit is focused: does it have a move command?
+      if self.current_focus.units[1].hasMoveOrder() then
+        print("EXECUTING ORDER")
+        local moving_unit = self.current_focus.units[1]
+        self.current_focus.delocateUnit(moving_unit)
+        moving_unit.performMoveOrder()
+        self.model.tiles[moving_unit.location.idx].relocateUnit(moving_unit)
+        self.current_focus = self.model.tiles[moving_unit.location.idx]
+      end
     end
   end
 

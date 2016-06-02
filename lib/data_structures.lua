@@ -37,5 +37,9 @@ List.new = function(init)
     return value
   end
 
+  self.length = function ()
+    return self.last - self.first + 1
+  end
+
   return self;
 end

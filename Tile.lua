@@ -61,6 +61,11 @@ Tile.new = function (init)
 
   end
 
+  self.delocateUnit = function(unit)
+    table.remove(self.units, 1)
+    self.slayers.unit = nil
+  end
+
   self.relocateUnit = function(unit)
     table.insert(self.units, unit)
     self.slayers.unit = self.units[1]
