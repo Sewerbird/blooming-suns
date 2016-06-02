@@ -17,12 +17,11 @@ Unit.new = function (init)
   end
 
   self.hasMoveOrder = function ()
-    return self.move_queue and self.move_queue.length() > 0
+    return self.move_queue ~= nil and self.move_queue.length() > 0
   end
 
   self.performMoveOrder = function ()
     local tgt = self.move_queue.popleft()
-    print("MOVING TO " .. inspect(tgt))
     self.location = tgt
   end
 

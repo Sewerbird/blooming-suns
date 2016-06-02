@@ -96,7 +96,6 @@ PlanetsideTilemapView.new = function (init)
   end
 
   self.onKeyPressed = function (key)
-    print('on key pressed, planetside activated' .. key)
     if key == 'space' then
       self.executeNextOrder()
     end
@@ -113,10 +112,9 @@ PlanetsideTilemapView.new = function (init)
       local start = {row = self.current_focus.position.row, col = self.current_focus.position.col, idx = self.current_focus.idx}
       local f_unit = self.current_focus.units[1]
       local path_append = false
-      if love.keyboard.isDown('lshift') or love.keyboard.isDown('rshift') then
+      if (love.keyboard.isDown('lshift') or love.keyboard.isDown('rshift')) and f_unit.hasMoveOrder() then
         path_append = true
         start = f_unit.move_queue.tail()
-        print("FINAL IS" .. inspect(start))
       end
 
       local goal = {row = fhex.position.row, col = fhex.position.col, idx = fhex.idx}
@@ -151,7 +149,6 @@ PlanetsideTilemapView.new = function (init)
     if self.current_focus ~= nil then
       --Unit is focused: does it have a move command?
       if self.current_focus.units[1].hasMoveOrder() then
-        print("EXECUTING ORDER")
         local moving_unit = self.current_focus.units[1]
         self.current_focus.delocateUnit(moving_unit)
         moving_unit.performMoveOrder()

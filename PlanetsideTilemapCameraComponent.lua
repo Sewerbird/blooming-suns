@@ -54,10 +54,10 @@ PlanetsideTilemapCameraComponent.new = function (init)
       rIdx = #self.target.tiles
     end
 
-    for i, v in ipairs(self.target.tiles) do
+    for i, v in pairs(self.target.tiles) do
       if (i >= lIdx and i <= rIdx) or     --normal case
          (wIdx ~= nil and i >= wIdx and i <= #self.target.tiles) or   --near left end of map
-         (eIdx ~= nil and i <= eIdx and i > 0) then --near right end of map
+         (eIdx ~= nil and i <= eIdx and i >= 0) then --near right end of map
         table.insert(seen.tiles, v)
       end
     end
