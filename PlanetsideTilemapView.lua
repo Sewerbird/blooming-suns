@@ -99,16 +99,16 @@ PlanetsideTilemapView.new = function (init)
 
   end
 
-  self.focus = function (unit)
+  self.focus = function (fhex)
     --if unit == nil then return end
-    if self.current_focus ~= nil and self.current_focus == unit then
+    if self.current_focus ~= nil and self.current_focus == fhex then
       if self.current_focus ~= nil then
         self.current_focus.click()
       end
       self.current_focus = nil
-    elseif self.current_focus ~= nil and self.current_focus ~= unit then
+    elseif self.current_focus ~= nil and self.current_focus ~= fhex then
       local start = {row = self.current_focus.position.row, col = self.current_focus.position.col, idx = self.current_focus.idx}
-      local goal = {row = unit.position.row, col = unit.position.col, idx = unit.idx}
+      local goal = {row = fhex.position.row, col = fhex.position.col, idx = fhex.idx}
       --DEBUG: Show TIles On Path
 
       local path = self.model.astar:findPath(start, goal, self.current_focus.units[1].move_domain)
@@ -123,11 +123,11 @@ PlanetsideTilemapView.new = function (init)
       for i, v in ipairs(path.nodes) do
         self.model.tiles[v.lid].debug = true;
       end
-    else
+    elseif #fhex.units > 0 then
       if self.current_focus ~= nil then
         self.current_focus.click()
       end
-      self.current_focus = unit
+      self.current_focus = fhex
       self.current_focus.click()
     end
   end

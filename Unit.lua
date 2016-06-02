@@ -17,12 +17,9 @@ Unit.new = function (init)
 
   self.setMoveQueue = function (path)
     self.move_queue = List.new()
-    print(inspect(path.nodes))
     for i, j in ipairs(path.nodes) do
-      print("Inserting" .. inspect(j.location))
       self.move_queue.pushright(j.location)
     end
-    print("XXXX:" .. inspect(self.move_queue))
   end
 
   self.clearMoveQueue = function ()

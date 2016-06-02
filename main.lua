@@ -51,6 +51,7 @@ function love.update(dt)
 end
 
 function love.draw()
+  love.graphics.print(collectgarbage('count'), 10,10)
   if not GLOBAL_PAUSE then
     GlobalViewManager.draw()
   end
