@@ -112,8 +112,8 @@ PlanetsideTilemapView.new = function (init)
     elseif self.current_focus ~= nil and self.current_focus ~= fhex then
       local start = {row = self.current_focus.position.row, col = self.current_focus.position.col, idx = self.current_focus.idx}
       local goal = {row = fhex.position.row, col = fhex.position.col, idx = fhex.idx}
-      --DEBUG: Show TIles On Path
 
+      --DEBUG: Show TIles On Path
       local path = self.model.astar:findPath(start, goal, self.current_focus.units[1].move_domain)
 
       if path == nil then return end
@@ -145,6 +145,12 @@ PlanetsideTilemapView.new = function (init)
         moving_unit.performMoveOrder()
         self.model.tiles[moving_unit.location.idx].relocateUnit(moving_unit)
         self.current_focus = self.model.tiles[moving_unit.location.idx]
+        for i, v in ipairs(self.model.tiles) do
+          self.model.tiles[i].debug = false;
+        end
+        for i = moving_unit.move_queue.first , moving_unit.move_queue.last do
+          self.model.tiles[moving_unit.move_queue[i].idx].debug = true;
+        end
       end
     end
   end
