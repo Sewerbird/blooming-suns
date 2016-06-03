@@ -52,9 +52,10 @@ PlanetsideTilemapView.new = function (init)
       super = self
     })
 
-  self.minimap = ViewComponent.new(
+  self.minimap = PlanetsideMinimapComponent.new(
     {
-      target = nil,
+      target = self.model,
+      tracked_camera = self.camera,
       description = "Minimap",
       ui_rect = {x = 0, y = 20, w = 125, h = 100, rx = 0, ry = 0},
       background_color = {r = 140, g = 110, b = 170, a = uicruft_alpha},
@@ -195,6 +196,7 @@ PlanetsideTilemapView.new = function (init)
     love.graphics.setColor(255,255,255)
     love.graphics.print(self.minimap.description, self.minimap.ui_rect.x + 25, self.minimap.ui_rect.y + self.minimap.ui_rect.h/2)
     love.graphics.reset()
+    self.minimap.onDraw()
     --TODO: self.titlebar.draw()
     love.graphics.setColor(self.titlebar.background_color.r, self.titlebar.background_color.g, self.titlebar.background_color.b, uicruft_alpha)
     love.graphics.rectangle("fill", self.titlebar.ui_rect.x, self.titlebar.ui_rect.y, self.titlebar.ui_rect.w, self.titlebar.ui_rect.h, self.titlebar.ui_rect.rx, self.titlebar.ui_rect.ry)

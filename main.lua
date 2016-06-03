@@ -3,6 +3,7 @@ require('Tile');
 require('Tilemap');
 require('PlanetsideTilemapCameraComponent');
 require('PlanetsideTilemapView');
+require('PlanetsideMinimapComponent');
 require('AlertBoxView');
 require('SpriteBank');
 require('Sprite');

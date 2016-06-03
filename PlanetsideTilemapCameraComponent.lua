@@ -14,12 +14,8 @@ PlanetsideTilemapCameraComponent.new = function (init)
     keyboard_speed = 800
   }
 
-  self.getSeen = function ()
-    local seen = {
-      tiles = {},
-      units = {},
-      indices = {}
-    }
+  self.getSeenMetadata = function ()
+    local metadata = {}
 
     --[[
       I take advantage of the layout of the world map indices here and the fact the camera doesn't rotate.
@@ -35,6 +31,7 @@ PlanetsideTilemapCameraComponent.new = function (init)
       --TODO: On tall maps I can improve this with a more refined approach, but the performance
       isn't so bad/critical on that part yet.
     ]]
+
     local ul,ur,lIdx,rIdx --extremum of camera view, in hex coords
 
     ul = self.target.pixel_to_hex({x = self.position.x - self.extent.half_width, y = self.position.y - self.extent.half_height})
@@ -54,18 +51,33 @@ PlanetsideTilemapCameraComponent.new = function (init)
       rIdx = #self.target.tiles
     end
 
+    metadata.wIdx = wIdx
+    metadata.eIdx = eIdx
+    metadata.lIdx = lIdx
+    metadata.rIdx = rIdx
+    metadata.ul = ul
+    metadata.lr = lr
+
+    return metadata
+
+  end
+
+  self.getSeen = function ()
+    local seen = {
+      tiles = {},
+      units = {},
+      indices = {}
+    }
+
+    seen.indices = self.getSeenMetadata()
+
     for i, v in pairs(self.target.tiles) do
-      if (i >= lIdx and i <= rIdx) or     --normal case
-         (wIdx ~= nil and i >= wIdx and i <= #self.target.tiles) or   --near left end of map
-         (eIdx ~= nil and i <= eIdx and i >= 0) then --near right end of map
+      if (i >= seen.indices.lIdx and i <= seen.indices.rIdx) or     --normal case
+         (seen.indices.wIdx ~= nil and i >= seen.indices.wIdx and i <= #self.target.tiles) or   --near left end of map
+         (seen.indices.eIdx ~= nil and i <= seen.indices.eIdx and i >= 0) then --near right end of map
         table.insert(seen.tiles, v)
       end
     end
-
-    seen.indices.wIdx = wIdx
-    seen.indices.eIdx = eIdx
-    seen.indices.lIdx = lIdx
-    seen.indices.rIdx = rIdx
 
     return seen
   end

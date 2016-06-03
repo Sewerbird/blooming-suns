@@ -14,7 +14,15 @@ Tilemap.new = function (init)
     tilesize_y = init.tilesize_y or 73,
     hex_size = init.hex_size or 42, --MUST be half of tilesize_x
     tiles = init.tiles or {},
-    terrain_connective_matrix = init.terrain_connective_matrix or {}
+    terrain_connective_matrix = init.terrain_connective_matrix or {},
+    terrain_type_minimap_colors = init.terrain_type_minimap_colors or {
+      Ocean = {0, 125, 255},
+      Ice = {190, 210, 230},
+      Grass = {100, 200, 50},
+      Tundra = {150, 200, 70},
+      Steppe = {200, 200, 10},
+      Desert = {240, 240, 0}
+    }
   }
 
   self.getTileAt = function (position)
