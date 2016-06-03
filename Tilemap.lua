@@ -19,7 +19,7 @@ Tilemap.new = function (init)
       Ocean = {0, 125, 255},
       Ice = {190, 210, 230},
       Grass = {100, 200, 50},
-      Tundra = {150, 200, 70},
+      Tundra = {150, 200, 170},
       Steppe = {200, 200, 10},
       Desert = {240, 240, 0}
     }

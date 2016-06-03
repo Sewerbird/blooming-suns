@@ -22,12 +22,21 @@ PlanetsideMinimapComponent.new = function (init)
   end
 
   self.onDraw = function ()
+    --Background
+    love.graphics.setColor(self.background_color)
+    love.graphics.rectangle("fill", self.ui_rect.x, self.ui_rect.y, self.ui_rect.w, self.ui_rect.h, self.ui_rect.rx, self.ui_rect.ry)
+    love.graphics.setColor(255,255,255)
+    love.graphics.print(self.description, self.ui_rect.x + 25, self.ui_rect.y + self.ui_rect.h/2)
+    love.graphics.reset()
+    --Foreground
+    --TODO: cache this image... doesn't tend to change
     local toDraw = self.target
     local scale_x = self.ui_rect.w / toDraw.num_cols
     local scale_y = self.ui_rect.h / toDraw.num_rows
     local metadata = self.tracked_camera.getSeenMetadata()
 
     for i = 0, #toDraw.tiles do
+      --Draws an offset grid of rectangles for each tile on the planet. Scaled.
       local computedPosition = {
         x = (toDraw.tiles[i].position.col * scale_x) + self.ui_rect.x,
         y = (toDraw.tiles[i].position.row * scale_y) + self.ui_rect.y
@@ -35,23 +44,22 @@ PlanetsideMinimapComponent.new = function (init)
       local color = toDraw.terrain_type_minimap_colors[toDraw.tiles[i].terrain_type]
       if color == nil then color = {255,125,255} end
 
---[[
-      if (i >= metadata.lIdx and i <= metadata.rIdx) or     --normal case
-         (metadata.wIdx ~= nil and i == metadata.wIdx and i == #self.target.tiles) or   --near left end of map
-         (metadata.eIdx ~= nil and i == metadata.eIdx and i == 0) then --near right end of map
-        --table.insert(seen.tiles, v)
-        color = {255,255,255}
-      end]]--
-
       love.graphics.setColor(color)
-      love.graphics.rectangle("fill",computedPosition.x, computedPosition.y, scale_x, scale_y)
+      local offset = 0
+      if toDraw.tiles[i].position.col % 2 == 0 then offset = scale_y/2 end
+      love.graphics.rectangle("fill",computedPosition.x, computedPosition.y + offset, scale_x, scale_y)
       love.graphics.reset()
     end
-
+    --View Quadrangle
     love.graphics.setColor({255,255,255})
     local boxW = metadata.lr.col - metadata.ul.col
     local boxH = metadata.lr.row - metadata.ul.row
     love.graphics.rectangle("line", scale_x * metadata.ul.col + self.ui_rect.x, scale_y * metadata.ul.row + self.ui_rect.y, scale_x * boxW, scale_y * boxH)
+    love.graphics.reset()
+    --Frame
+    love.graphics.setLineWidth(math.max(scale_x,scale_y))
+    love.graphics.setColor({20,20,20})
+    love.graphics.rectangle("line", self.ui_rect.x, self.ui_rect.y, self.ui_rect.w, self.ui_rect.h)
     love.graphics.reset()
 
   end

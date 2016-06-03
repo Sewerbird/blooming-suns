@@ -1,6 +1,7 @@
 --game classes
 require('Tile');
 require('Tilemap');
+require('PlanetsideTilemapInspectorComponent');
 require('PlanetsideTilemapCameraComponent');
 require('PlanetsideTilemapView');
 require('PlanetsideMinimapComponent');
@@ -21,7 +22,6 @@ inspect = require('lib/inspect');
 function love.load()
 
   --Load Tileset Sprites
-  --TODO: Make hexagonal tilesets
   GlobalSpriteBank = SpriteBank.new()
   GlobalSpriteBank.loadAll()
 
@@ -43,16 +43,12 @@ end
 
 function love.update(dt)
   --Debug mouse-to-hex output
-  if love.keyboard.isDown('f') then
-    print(inspect(GlobalViewManager.views[GlobalViewManager.activeView].camera.target.pixel_to_hex({x = love.mouse.getX(), y = love.mouse.getY()})))
-  end
   if not GLOBAL_PAUSE then
     GlobalViewManager.update(dt)
   end
 end
 
 function love.draw()
-  love.graphics.print(collectgarbage('count'), 10,10)
   if not GLOBAL_PAUSE then
     GlobalViewManager.draw()
   end

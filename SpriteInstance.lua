@@ -7,7 +7,7 @@ SpriteInstance.new = function (init)
     print("Sprite instance without sprite ref: " .. inspect(init))
   end
   local self = {
-    sprite_ref = GlobalSpriteBank.sprites[init.sprite],
+    sprite_ref = init.sprite_ref or GlobalSpriteBank.sprites[init.sprite],
     curr_anim = init.curr_anim or "idle",
     curr_frame = init.curr_frame or 1,
     timer = init.timer or 0,

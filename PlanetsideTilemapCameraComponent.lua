@@ -115,6 +115,26 @@ PlanetsideTilemapCameraComponent.new = function (init)
     end
   end
 
+  self.onDraw = function()
+    local toDraw = self.getSeen()
+    for i = 1, #toDraw.tiles do
+      if toDraw.tiles[i] ~= nil then
+        local computedPosition = {
+          x = toDraw.tiles[i].position.x - self.position.x + self.extent.half_width + self.ui_rect.x,
+          y = toDraw.tiles[i].position.y - self.position.y + self.extent.half_height + self.ui_rect.y
+        }
+        local idx = toDraw.tiles[i].idx
+        --East-West Tile Wrapping
+        if toDraw.indices.wIdx ~= nil and idx <= #self.target.tiles and idx >= toDraw.indices.wIdx then
+          computedPosition.x = computedPosition.x - (self.target.hex_size * self.target.num_cols * 3 / 2)
+        elseif toDraw.indices.eIdx ~= nil and idx >= 0 and idx <= toDraw.indices.eIdx then
+          computedPosition.x = computedPosition.x + (self.target.hex_size * self.target.num_cols * 3 / 2)
+        end
+        toDraw.tiles[i].draw(computedPosition)
+      end
+    end
+  end
+
   self.onUpdate = function (dt)
     local moved = false
     --Update tiles & units (for animation)

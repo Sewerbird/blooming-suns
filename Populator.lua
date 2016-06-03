@@ -19,7 +19,7 @@ Populator.new = function (init)
           terrain_type = "Ice"
         elseif (i <= 5 or nr - i < 6) and rand > 0.5 then
           terrain_type = "Tundra"
-        elseif rand > 0.45 then
+        elseif rand > 0.245 then
           terrain_type = "Ocean"
         elseif rand > 0.4 then
           terrain_type = "Desert"
