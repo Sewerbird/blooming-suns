@@ -116,7 +116,7 @@ PlanetsideTilemapView.new = function (init)
     elseif self.current_focus ~= nil and self.current_focus ~= fhex then
       --TODO: The unit movement logic belongs in a gamestate mutator
       local start = {row = self.current_focus.position.row, col = self.current_focus.position.col, idx = self.current_focus.idx}
-      local f_unit = self.current_focus.units[1]
+      local f_unit = self.current_focus.units.head()
       local path_append = false
       if (love.keyboard.isDown('lshift') or love.keyboard.isDown('rshift')) and f_unit.hasMoveOrder() then
         path_append = true
@@ -125,14 +125,17 @@ PlanetsideTilemapView.new = function (init)
 
       local goal = {row = fhex.position.row, col = fhex.position.col, idx = fhex.idx}
 
-      local path = self.model.astar:findPath(start, goal, self.current_focus.units[1].move_domain)
+      local path = self.model.astar:findPath(start, goal, self.current_focus.units.head().move_domain)
 
       if path == nil then return end
 
-      if path_append then
-        self.current_focus.units[1].appendMoveQueue(path)
-      else
-        self.current_focus.units[1].setMoveQueue(path)
+      for i = self.current_focus.units.first, self.current_focus.units.last do
+        --TODO: fix appending paths to movequeus in katamari-situations
+        if false and path_append then
+          self.current_focus.units[i].appendMoveQueue(path)
+        else
+          self.current_focus.units[i].setMoveQueue(path)
+        end
       end
 
       for i, v in ipairs(self.model.tiles) do
@@ -141,7 +144,8 @@ PlanetsideTilemapView.new = function (init)
       for i, v in ipairs(path.nodes) do
         self.model.tiles[v.lid].debug = true;
       end
-    elseif #fhex.units > 0 then
+    elseif fhex.units.length() > 0 then
+      print('a')
       if self.current_focus ~= nil then
         self.current_focus.click()
       end
@@ -154,19 +158,24 @@ PlanetsideTilemapView.new = function (init)
   self.executeNextOrder = function ()
     if self.current_focus ~= nil then
       --TODO: this logic shouldn't live in the view, but in a gamestate mutator
-      if self.current_focus.units[1].hasMoveOrder() then
-        local moving_unit = self.current_focus.units[1]
-        self.current_focus.delocateUnit(moving_unit)
-        moving_unit.performMoveOrder()
-        self.model.tiles[moving_unit.location.idx].relocateUnit(moving_unit)
-        self.current_focus = self.model.tiles[moving_unit.location.idx]
-        for i, v in ipairs(self.model.tiles) do
-          self.model.tiles[i].debug = false;
-        end
-        for i = moving_unit.move_queue.first , moving_unit.move_queue.last do
-          self.model.tiles[moving_unit.move_queue[i].idx].debug = true;
+      for i, v in ipairs(self.model.tiles) do
+        self.model.tiles[i].debug = false;
+      end
+      local movedTo = nil
+      for j = self.current_focus.units.first, self.current_focus.units.last do
+        if self.current_focus.units[j].hasMoveOrder() then
+          local moving_unit = self.current_focus.units[j]
+          self.current_focus.delocateUnit(moving_unit)
+          moving_unit.performMoveOrder()
+          movedTo = moving_unit.location.idx
+          self.model.tiles[moving_unit.location.idx].relocateUnit(moving_unit)
+          for i = moving_unit.move_queue.first , moving_unit.move_queue.last do
+            self.model.tiles[moving_unit.move_queue[i].idx].debug = true;
+          end
         end
       end
+      self.current_focus = self.model.tiles[movedTo]
+      self.inspector.target = self.current_focus
     end
   end
 

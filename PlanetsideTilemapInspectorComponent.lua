@@ -29,12 +29,17 @@ PlanetsideTilemapInspectorComponent.new = function (init)
     love.graphics.reset()
 
     if self.target == nil then return end
-    local lclSprite = SpriteInstance.new({sprite = self.target.units[1].sprite, sprite_ref = self.target.units[1].sprite.sprite_ref})
-    lclSprite.position = self.ui_rect
-    lclSprite.draw()
+    local offset = 0
+    for i = self.target.units.first, self.target.units.last do
+      local lclSprite = SpriteInstance.new({sprite = self.target.units[i].sprite, sprite_ref = self.target.units[i].sprite.sprite_ref})
+      lclSprite.position = { x = self.ui_rect.x, y = self.ui_rect.y + offset}
+      offset = offset + 32
+      lclSprite.draw()
+    end
   end
 
   self.inspect = function (target)
+    print('inspecting' .. inspect(target,{depth=2}))
     self.target = target
   end
 

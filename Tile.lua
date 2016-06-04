@@ -15,7 +15,8 @@ Tile.new = function (init)
     terrain_type = init.terrain_type,
     construction_type = init.construction_type,
     owning_map = init.owning_map,
-    idx = init.idx
+    idx = init.idx,
+    units = List.new()
   }
 
   self.update = function (dt)
@@ -62,13 +63,16 @@ Tile.new = function (init)
   end
 
   self.delocateUnit = function(unit)
-    table.remove(self.units, 1)
+    --todo: do my index, not as queue
+    --table.remove(self.units, #self.units)
     self.slayers.unit = nil
+    return self.units.popleft()
   end
 
   self.relocateUnit = function(unit)
-    table.insert(self.units, unit)
-    self.slayers.unit = self.units[1]
+    self.units.pushright(unit)
+    --table.insert(self.units, unit)
+    self.slayers.unit = self.units.head()
   end
 
   self.setTerrain = function (type)
@@ -81,8 +85,9 @@ Tile.new = function (init)
   end
 
   self.click = function ()
-    if self.units[1] ~= nil then
-      self.units[1].select()
+    print('b')
+    if self.units.head() ~= nil then
+      self.units.head().select()
     end
   end
 

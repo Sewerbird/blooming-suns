@@ -41,6 +41,10 @@ List.new = function(init)
     return self.last - self.first + 1
   end
 
+  self.head = function ()
+    return self[self.first]
+  end
+
   self.tail = function ()
     return self[self.last]
   end

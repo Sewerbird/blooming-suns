@@ -21,9 +21,9 @@ Populator.new = function (init)
           terrain_type = "Tundra"
         elseif rand > 0.245 then
           terrain_type = "Ocean"
-        elseif rand > 0.4 then
+        elseif rand > 0.22 then
           terrain_type = "Desert"
-        elseif rand > 0.2 then
+        elseif rand > 0.18 then
           terrain_type = "Steppe"
         end
 
