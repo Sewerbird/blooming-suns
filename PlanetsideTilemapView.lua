@@ -118,10 +118,13 @@ PlanetsideTilemapView.new = function (init)
       local start = {row = self.current_focus.position.row, col = self.current_focus.position.col, idx = self.current_focus.idx}
       local f_unit = self.current_focus.units.head()
       local path_append = false
+        --TODO: fix appending paths to movequeus in katamari-situations
+      --[[
       if (love.keyboard.isDown('lshift') or love.keyboard.isDown('rshift')) and f_unit.hasMoveOrder() then
         path_append = true
         start = f_unit.move_queue.tail()
       end
+      ]]--
 
       local goal = {row = fhex.position.row, col = fhex.position.col, idx = fhex.idx}
 
@@ -130,8 +133,7 @@ PlanetsideTilemapView.new = function (init)
       if path == nil then return end
 
       for i = self.current_focus.units.first, self.current_focus.units.last do
-        --TODO: fix appending paths to movequeus in katamari-situations
-        if false and path_append then
+        if path_append then
           self.current_focus.units[i].appendMoveQueue(path)
         else
           self.current_focus.units[i].setMoveQueue(path)
