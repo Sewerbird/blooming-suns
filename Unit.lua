@@ -1,7 +1,7 @@
 require('lib/data_structures')
 --Unit
 Unit = {}
-
+IDX_CNTR = 0
 Unit.new = function (init)
   local init = init or {}
   local self = {
@@ -9,8 +9,12 @@ Unit.new = function (init)
     location = init.location or nil,
     selected = false,
     move_queue = nil,
-    move_domain = init.move_domain or 'land'
+    move_domain = init.move_domain or 'land',
+    owner = 'Hazat',
+    backColor = {200,50,50},
+    idx = init.idx or IDX_CNTR + 1
   }
+  IDX_CNTR = IDX_CNTR + 1
   --reify
   if self.sprite ~= nil then
     self.sprite = SpriteInstance.new({sprite = self.sprite})
@@ -50,12 +54,14 @@ Unit.new = function (init)
     if centered == true then
       self.sprite.position.x = self.sprite.position.x - 16 --TODO: offset by sprite size
       self.sprite.position.y = self.sprite.position.y - 16 --TODO: offset by sprite size
-      love.graphics.setColor(50,50,50)
-      love.graphics.rectangle("fill",self.sprite.position.x-2, self.sprite.position.y-2,36,36)
-      love.graphics.setColor(200,50,50)
-      love.graphics.rectangle("fill",self.sprite.position.x, self.sprite.position.y,32,32)
-      love.graphics.reset()
     end
+    --Draw backing
+    love.graphics.setColor(50,50,50)
+    love.graphics.rectangle("fill",self.sprite.position.x-2, self.sprite.position.y-2,36,36)
+    love.graphics.setColor(self.backColor)
+    love.graphics.rectangle("fill",self.sprite.position.x, self.sprite.position.y,32,32)
+    love.graphics.reset()
+    --Draw Sprite
     self.sprite.draw()
   end
 

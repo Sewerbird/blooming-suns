@@ -1,4 +1,5 @@
 --game classes
+require('Stack');
 require('Tile');
 require('Tilemap');
 require('PlanetsideTilemapInspectorComponent');

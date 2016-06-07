@@ -16,7 +16,9 @@ Tile.new = function (init)
     construction_type = init.construction_type,
     owning_map = init.owning_map,
     idx = init.idx,
-    units = List.new()
+    stack = Stack.new(),
+    --units = List.new(),
+    selection = List.new()
   }
 
   self.update = function (dt)
@@ -65,14 +67,17 @@ Tile.new = function (init)
   self.delocateUnit = function(unit)
     --todo: do my index, not as queue
     --table.remove(self.units, #self.units)
-    self.slayers.unit = nil
-    return self.units.popleft()
+    local result = self.stack.popUnit(unit)
+    self.slayers.unit = self.stack.head()
+    return result
   end
 
   self.relocateUnit = function(unit)
-    self.units.pushright(unit)
+    local ls = List.new()
+    ls.pushright(unit)
+    self.stack.addAllToStack(ls)
     --table.insert(self.units, unit)
-    self.slayers.unit = self.units.head()
+    self.slayers.unit = self.stack.head()
   end
 
   self.setTerrain = function (type)
@@ -85,10 +90,12 @@ Tile.new = function (init)
   end
 
   self.click = function ()
-    print('b')
+    --todo: reenable blinking
+    --[[
     if self.units.head() ~= nil then
       self.units.head().select()
     end
+    ]]--
   end
 
   return self

@@ -116,7 +116,7 @@ PlanetsideTilemapView.new = function (init)
     elseif self.current_focus ~= nil and self.current_focus ~= fhex then
       --TODO: The unit movement logic belongs in a gamestate mutator
       local start = {row = self.current_focus.position.row, col = self.current_focus.position.col, idx = self.current_focus.idx}
-      local f_unit = self.current_focus.units.head()
+      local f_unit = self.current_focus.stack.head()
       local path_append = false
         --TODO: fix appending paths to movequeus in katamari-situations
       --[[
@@ -128,17 +128,18 @@ PlanetsideTilemapView.new = function (init)
 
       local goal = {row = fhex.position.row, col = fhex.position.col, idx = fhex.idx}
 
-      local path = self.model.astar:findPath(start, goal, self.current_focus.units.head().move_domain)
+      local path = self.model.astar:findPath(start, goal, self.current_focus.stack.head().move_domain)
 
       if path == nil then return end
 
-      for i = self.current_focus.units.first, self.current_focus.units.last do
+      local fn = function (unit)
         if path_append then
-          self.current_focus.units[i].appendMoveQueue(path)
+          unit.appendMoveQueue(path)
         else
-          self.current_focus.units[i].setMoveQueue(path)
+          unit.setMoveQueue(path)
         end
       end
+      self.current_focus.stack.forEach(fn)
 
       for i, v in ipairs(self.model.tiles) do
         self.model.tiles[i].debug = false;
@@ -146,7 +147,7 @@ PlanetsideTilemapView.new = function (init)
       for i, v in ipairs(path.nodes) do
         self.model.tiles[v.lid].debug = true;
       end
-    elseif fhex.units.length() > 0 then
+    elseif fhex.stack.size() > 0 then
       print('a')
       if self.current_focus ~= nil then
         self.current_focus.click()
@@ -164,10 +165,11 @@ PlanetsideTilemapView.new = function (init)
         self.model.tiles[i].debug = false;
       end
       local movedTo = nil
-      for j = self.current_focus.units.first, self.current_focus.units.last do
-        if self.current_focus.units[j].hasMoveOrder() then
-          local moving_unit = self.current_focus.units[j]
-          self.current_focus.delocateUnit(moving_unit)
+      --for j = self.current_focus.units.first, self.current_focus.units.last do
+      local fn = function (unit)
+        if unit.hasMoveOrder() then
+          local moving_unit = unit
+          moving_unit = self.current_focus.delocateUnit(moving_unit)
           moving_unit.performMoveOrder()
           movedTo = moving_unit.location.idx
           self.model.tiles[moving_unit.location.idx].relocateUnit(moving_unit)
@@ -176,6 +178,8 @@ PlanetsideTilemapView.new = function (init)
           end
         end
       end
+      self.current_focus.stack.forEach(fn)
+
       self.current_focus = self.model.tiles[movedTo]
       self.inspector.target = self.current_focus
     end

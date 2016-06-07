@@ -9,8 +9,8 @@ List.new = function(init)
 
   self.pushleft = function(value)
     local first = self.first - 1
-    list.first = first
-    list[first] = value
+    self.first = first
+    self[first] = value
   end
 
   self.pushright = function (value)
