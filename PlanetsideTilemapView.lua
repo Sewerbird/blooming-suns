@@ -86,16 +86,18 @@ PlanetsideTilemapView.new = function (init)
 
   self.onMousePressed = function (x, y, button)
     self.camera.onMousePressed(x - self.camera.ui_rect.x, y - self.camera.ui_rect.y,button)
+    self.inspector.onMousePressed(x - self.inspector.ui_rect.x, y - self.inspector.ui_rect.y,button)
   end
 
   self.onMouseReleased = function (x, y, button)
+    print("OMR view")
     self.camera.onMouseReleased(x - self.camera.ui_rect.x, y - self.camera.ui_rect.y,button)
+    self.inspector.onMouseReleased(x - self.inspector.ui_rect.x, y - self.inspector.ui_rect.y,button)
   end
 
   self.onMouseMoved = function (x, y)
-    local w_x = x - self.camera.ui_rect.x;
-    local w_y = y - self.camera.ui_rect.y
-    self.camera.onMouseMoved(w_x, w_y)
+    self.camera.onMouseMoved(x - self.camera.ui_rect.x, y - self.camera.ui_rect.y)
+    self.inspector.onMouseMoved(x - self.inspector.ui_rect.x, y - self.inspector.ui_rect.y,button)
   end
 
   self.onKeyPressed = function (key)

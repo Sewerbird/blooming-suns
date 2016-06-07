@@ -7,6 +7,7 @@ PlanetsideTilemapInspectorComponent.new = function (init)
   local self = {
     target = init.target or nil,
     selector_tiles = {},
+    selector_tile_array = {rows = 8, cols = 4},
     description = "Inspector",
     ui_rect = init.ui_rect or {x = 125, y = 20, h = 25, w = 25, rx = 0, ry = 0},
     background_color = init.background_color or {200, 150, 190},
@@ -14,9 +15,27 @@ PlanetsideTilemapInspectorComponent.new = function (init)
   }
 
   self.onMousePressed = function (x, y, button)
+    for i, tile in ipairs(self.selector_tiles) do
+      local tgt_rect = tile.ui_rect
+      if tgt_rect.x < x and tgt_rect.w + tgt_rect.x > x and tgt_rect.y < y and tgt_rect.h + tgt_rect.y > y then
+        tile.onMousePressed()
+      end
+    end
   end
 
   self.onMouseReleased = function (x, y)
+    print("OMR inspector")
+    for i, tile in ipairs(self.selector_tiles) do
+      local tgt_rect = tile.ui_rect
+      print('::' .. inspect(tgt_rect,{depth=2}) .. '::::' .. x .. ',' .. y)
+        print('xxxx' .. tgt_rect.x .. ' ' .. tgt_rect.y .. ' ' .. tgt_rect.w .. ' ' .. tgt_rect.h)
+      if tgt_rect.x - self.ui_rect.x < x and tgt_rect.y - self.ui_rect.y < y and tgt_rect.x - self.ui_rect.x + tgt_rect.w > x and tgt_rect.y - self.ui_rect.y + tgt_rect.h > y then
+        tile.onMouseReleased()
+      end
+    end
+  end
+
+  self.onMouseMoved = function (x,y)
   end
 
   self.onUpdate = function (dt)
@@ -32,48 +51,36 @@ PlanetsideTilemapInspectorComponent.new = function (init)
 
     if self.target == nil then return end
 
-    local offset = 0
-    --for i = self.target.stack.first, self.target.units.last do
-    local fn = function(tgt_unit)
-      --local tgt_unit = self.target.units[i]
-      local lclSprite = SpriteInstance.new({sprite = tgt_unit.sprite, sprite_ref = tgt_unit.sprite.sprite_ref})
-      lclSprite.position = { x = self.ui_rect.x, y = self.ui_rect.y + offset}
-      offset = offset + 32
-      --Draw backing
-      love.graphics.setColor(tgt_unit.backColor)
-      love.graphics.rectangle("fill",lclSprite.position.x, lclSprite.position.y,32,32)
-      love.graphics.reset()
-      --Draw selection status
-      if self.target.stack.isUnitSelected(tgt_unit.idx) then
-        love.graphics.setColor({255,255,255,100})
-        love.graphics.rectangle("fill",lclSprite.position.x, lclSprite.position.y, 32, 32)
-        love.graphics.reset()
-      end
-      lclSprite.draw()
-      --Draw inactive status
-      if self.target.stack.isUnitInactive(tgt_unit.idx) then
-        love.graphics.setColor({0,0,0,100})
-        love.graphics.rectangle("fill",lclSprite.position.x, lclSprite.position.y, 32, 32)
-        love.graphics.reset()
-      end
+    for i, v in ipairs(self.selector_tiles) do
+      v.draw()
     end
-
-    self.target.stack.forEach(fn)
   end
 
   self.inspect = function (target)
-    print('inspecting' .. inspect(target,{depth=2}))
     self.target = target
 
     local showUnitTileSelectorElements = function (unit)
-      local selector_tile = PlanetsideTilemapInspectorUnitSelectorTileComponent.new()
+      print("Creatinging tileselector element")
+      local selector_tile = PlanetsideTilemapInspectorUnitSelectorTileComponent.new({
+        target = unit,
+        ui_rect = {w = 32, h = 32},
+        super = self
+      })
       table.insert(self.selector_tiles, selector_tile)
     end
     self.target.stack.forEach(showUnitTileSelectorElements)
+
+    for i, tile in ipairs(self.selector_tiles) do
+      local xcoord = (((i-1) % self.selector_tile_array.cols) * self.selector_tiles[i].ui_rect.w) + self.ui_rect.x
+      local ycoord = (math.floor((i-1) / self.selector_tile_array.cols) * self.selector_tiles[i].ui_rect.h) + self.ui_rect.y
+
+      self.selector_tiles[i].ui_rect.x = xcoord
+      self.selector_tiles[i].ui_rect.y = ycoord
+    end
   end
 
   self.uninspect = function ()
-    self.selector_tiles = nil
+    self.selector_tiles = {}
     self.target = nil
   end
 
@@ -82,6 +89,43 @@ end
 
 PlanetsideTilemapInspectorUnitSelectorTileComponent.new = function(init)
   local init = init or {}
-  local self = {}
+  local self = {
+    target = init.target or nil,
+    ui_rect = init.ui_rect or nil,
+    super = init.super or nil
+  }
+
+  self.draw = function()
+    local tgt_unit = self.target
+    local lclSprite = SpriteInstance.new({sprite = tgt_unit.sprite, sprite_ref = tgt_unit.sprite.sprite_ref})
+    lclSprite.position = self.ui_rect
+    --Draw backing
+    love.graphics.setColor(tgt_unit.backColor)
+    love.graphics.rectangle("fill",lclSprite.position.x, lclSprite.position.y,32,32)
+    love.graphics.reset()
+    --Draw selection status
+    if self.super.target.stack.isUnitSelected(tgt_unit.idx) then
+      love.graphics.setColor({255,255,255,100})
+      love.graphics.rectangle("fill",lclSprite.position.x, lclSprite.position.y, 32, 32)
+      love.graphics.reset()
+    end
+    lclSprite.draw()
+    --Draw inactive status
+    if self.super.target.stack.isUnitInactive(tgt_unit.idx) then
+      love.graphics.setColor({0,0,0,100})
+      love.graphics.rectangle("fill",lclSprite.position.x, lclSprite.position.y, 32, 32)
+      love.graphics.reset()
+    end
+  end
+
+  self.onMouseReleased = function (x, y)
+    print("OMR tile")
+    local tgt_stack = self.super.target.stack
+    if tgt_stack.isUnitSelected(self.target.idx) then
+      tgt_stack.deselectUnit(self.target.idx)
+    else
+      tgt_stack.selectUnit(self.target.idx)
+    end
+  end
   return self
 end

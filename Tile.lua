@@ -34,9 +34,6 @@ Tile.new = function (init)
     computed_position.y = computed_position.y - self.owning_map.tilesize_y / 2
 
 
-    if self.debug == true then
-      love.graphics.setColor(255,125,125)
-    end
     for i, v in ipairs(TILE_SPRITE_ORDER) do
       if self.slayers[v] ~= nil then
           self.slayers[v].position = computed_position
@@ -48,7 +45,7 @@ Tile.new = function (init)
           end
 
           self.slayers[v].draw(computed_position, do_center)
-          -- Debug sprite position
+          --[[ Debug sprite position
           local hex = self.owning_map.pixel_to_hex({x = self.position.x, y = self.position.y})
           local distanceFromIDXOne = ""--def_view.model.astar:findPath(hex, {col = 0, row = 1, idx = 1}).totalCost
           love.graphics.print(
@@ -59,6 +56,8 @@ Tile.new = function (init)
       end
     end
     if self.debug == true then
+      love.graphics.setColor(125,255,125)
+      love.graphics.circle("fill", computed_position.x + self.owning_map.tilesize_x / 2, computed_position.y + self.owning_map.tilesize_y /2 , 15)
       love.graphics.reset()
     end
 
