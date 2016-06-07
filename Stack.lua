@@ -17,7 +17,6 @@ Stack.new = function(init)
       self.units[unit.idx] = unit
       self.stack_size = self.stack_size + 1
     end
-    print("STACK SIZE IS NOW " .. self.stack_size)
   end
 
   self.popUnit = function(unit)
@@ -36,7 +35,6 @@ Stack.new = function(init)
   self.popSelected = function()
     local result = List.new()
     for i, v in pairs(self.units) do
-      print("Popping " .. i .. " -- " .. tostring(v))
       result.pushleft(v)
       self.units[i] = nil
       self.stack_size = self.stack_size - 1

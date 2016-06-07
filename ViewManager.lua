@@ -57,7 +57,6 @@ ViewManager.new = function (init)
       local rect = v.rect
       if x <= rect.x + rect.w and x >= rect.x and y <= rect.y + rect.h and y > rect.y then
         result = #self.views - (i - 1)
-        print("Clicked on view" .. result .. inspect(self.views[result],{depth = 1}))
         break
       end
     end

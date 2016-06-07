@@ -24,11 +24,8 @@ PlanetsideTilemapInspectorComponent.new = function (init)
   end
 
   self.onMouseReleased = function (x, y)
-    print("OMR inspector")
     for i, tile in ipairs(self.selector_tiles) do
       local tgt_rect = tile.ui_rect
-      print('::' .. inspect(tgt_rect,{depth=2}) .. '::::' .. x .. ',' .. y)
-        print('xxxx' .. tgt_rect.x .. ' ' .. tgt_rect.y .. ' ' .. tgt_rect.w .. ' ' .. tgt_rect.h)
       if tgt_rect.x - self.ui_rect.x < x and tgt_rect.y - self.ui_rect.y < y and tgt_rect.x - self.ui_rect.x + tgt_rect.w > x and tgt_rect.y - self.ui_rect.y + tgt_rect.h > y then
         tile.onMouseReleased()
       end
@@ -57,10 +54,10 @@ PlanetsideTilemapInspectorComponent.new = function (init)
   end
 
   self.inspect = function (target)
+    self.uninspect()
     self.target = target
 
     local showUnitTileSelectorElements = function (unit)
-      print("Creatinging tileselector element")
       local selector_tile = PlanetsideTilemapInspectorUnitSelectorTileComponent.new({
         target = unit,
         ui_rect = {w = 32, h = 32},
@@ -119,7 +116,6 @@ PlanetsideTilemapInspectorUnitSelectorTileComponent.new = function(init)
   end
 
   self.onMouseReleased = function (x, y)
-    print("OMR tile")
     local tgt_stack = self.super.target.stack
     if tgt_stack.isUnitSelected(self.target.idx) then
       tgt_stack.deselectUnit(self.target.idx)

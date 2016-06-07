@@ -90,7 +90,6 @@ PlanetsideTilemapView.new = function (init)
   end
 
   self.onMouseReleased = function (x, y, button)
-    print("OMR view")
     self.camera.onMouseReleased(x - self.camera.ui_rect.x, y - self.camera.ui_rect.y,button)
     self.inspector.onMouseReleased(x - self.inspector.ui_rect.x, y - self.inspector.ui_rect.y,button)
   end
@@ -150,7 +149,6 @@ PlanetsideTilemapView.new = function (init)
         self.model.tiles[v.lid].debug = true;
       end
     elseif fhex.stack.size() > 0 then
-      print('a')
       if self.current_focus ~= nil then
         self.current_focus.click()
       end
@@ -182,8 +180,9 @@ PlanetsideTilemapView.new = function (init)
       end
       self.current_focus.stack.forEach(fn)
 
+      if movedTo == nil then return end
       self.current_focus = self.model.tiles[movedTo]
-      self.inspector.target = self.current_focus
+      self.inspector.inspect(self.current_focus)
     end
   end
 
