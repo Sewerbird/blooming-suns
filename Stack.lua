@@ -26,6 +26,7 @@ Stack.new = function(init)
         self.units[unit.idx] = nil
         self.selection[unit.idx] = nil
         self.inactive[unit.idx] = nil
+        self.stack_size = self.stack_size - 1
         return result
       end
     end
