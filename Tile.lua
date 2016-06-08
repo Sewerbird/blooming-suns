@@ -22,8 +22,8 @@ Tile.new = function (init)
   }
 
   self.update = function (dt)
-    if self.units[1] ~= nil then
-      self.units[1].update(dt)
+    if self.stack.head() ~= nil then
+      self.stack.head().update(dt)
     end
   end
 
@@ -91,9 +91,17 @@ Tile.new = function (init)
   end
 
   self.onFocus = function ()
+    --self.stack.focus()
+  end
+
+  self.onUnfocus = function ()
+    --self.stack.unfocus()
   end
 
   self.click = function ()
+    if self.stack.head() ~= nil then
+      self.stack.head().select()
+    end
     --todo: reenable blinking
     --[[
     if self.units.head() ~= nil then

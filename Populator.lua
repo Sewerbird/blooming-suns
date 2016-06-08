@@ -5,6 +5,17 @@ Populator.new = function (init)
   local init = init or {}
   local self = {}
 
+  self.generateGameState = function()
+    local gamestate = Gamestate.new()
+    gamestate.addTilemap(1, Tilemap.new())
+    self.generateTileMapTerrainRandom(gamestate.getTilemap(1))
+    gamestate.addPlayer('Hazat', Player.new())
+    gamestate.addPlayer('Hawkwood', Player.new())
+    gamestate.setPlayerOrder('Hazat', 'Hawkwood')
+
+    return gamestate
+  end
+
   self.generateTileMapTerrainRandom = function (map)
     local nr = map.num_rows
     local nc = map.num_cols
@@ -51,14 +62,32 @@ Populator.new = function (init)
 
         rand = math.random()
         if rand < 0.05 then
+          local r_owner = "Hazat"
+          local owner_color = {200,50,50}
+          if math.random() > 0.5 then
+            r_owner = "Hawkwood"
+            owner_color = {50,50,200}
+          end
+
           if terrain_type == "Ocean" then
-            local new_unit = Unit.new({sprite = "TestSpaceUnit", move_domain = "sea", location = {idx = idx, row = row, col = col}})
+            local new_unit = Unit.new({
+              sprite = "TestSpaceUnit",
+              move_domain = "sea",
+              location = {idx = idx, row = row, col = col},
+              owner = r_owner,
+              backColor = owner_color
+            })
             new_tile.relocateUnit(new_unit)
           else
-            local new_unit = Unit.new({sprite = "TestUnit", move_domain = "land", location = {idx = idx, row = row, col = col}})
+            local new_unit = Unit.new({
+              sprite = "TestUnit",
+              move_domain = "land",
+              location = {idx = idx, row = row, col = col},
+              owner = r_owner,
+              backColor = owner_color
+            })
             new_tile.relocateUnit(new_unit)
           end
-        elseif rand < 0.1 then
         end
 
         map.tiles[idx] = new_tile

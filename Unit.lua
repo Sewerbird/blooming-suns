@@ -1,4 +1,3 @@
-require('lib/data_structures')
 --Unit
 Unit = {}
 IDX_CNTR = 0
@@ -10,8 +9,8 @@ Unit.new = function (init)
     selected = false,
     move_queue = nil,
     move_domain = init.move_domain or 'land',
-    owner = 'Hazat',
-    backColor = {200,50,50},
+    owner = init.owner or 'Hazat',
+    backColor = init.backColor or {200,50,50},
     idx = init.idx or IDX_CNTR + 1,
     health = 100 - math.floor(math.random() * 50)
   }

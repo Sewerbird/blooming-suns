@@ -1,4 +1,6 @@
 --game classes
+require('Player');
+require('Gamestate');
 require('Stack');
 require('Tile');
 require('Tilemap');
@@ -18,6 +20,7 @@ require('View');
 
 --libs
 require('lib/astar');
+require('lib/data_structures')
 inspect = require('lib/inspect');
 
 function love.load()
@@ -30,13 +33,11 @@ function love.load()
   GlobalViewManager = ViewManager.new()
 
   --Create Gamestate
-  local defaultTilemap = Tilemap.new()
-  local populator = Populator.new()
-  populator.generateTileMapTerrainRandom(defaultTilemap)
+  GlobalGameState = Populator.new().generateGameState()
 
   --Create Views
-  def_view = PlanetsideTilemapView.new({
-    model = defaultTilemap,
+  local def_view = PlanetsideTilemapView.new({
+    model = GlobalGameState.getTilemap(1),
     rect = {x = 0, y = 0, w = love.graphics.getWidth(), h = love.graphics.getHeight()}
   })
   GlobalViewManager.push(def_view)
