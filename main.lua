@@ -12,9 +12,9 @@ require('src/ui/component/PlanetsideTilemapInspectorComponent');
 require('src/ui/component/PlanetsideTilemapCameraComponent');
 require('src/ui/component/PlanetsideMinimapComponent');
 require('src/ui/component/ImmediateButtonComponent');
-require('src/ui/view/AlertBoxView');
+require('src/ui/component/ViewComponent');
 require('src/ui/view/PlanetsideTilemapView');
-require('src/ui/view/ViewComponent');
+require('src/ui/view/AlertBoxView');
 require('src/ui/view/View');
 require('src/ui/ViewManager');
 

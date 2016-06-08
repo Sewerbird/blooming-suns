@@ -13,9 +13,9 @@ PlanetsideTilemapView.new = function (init)
   self.camera = PlanetsideTilemapCameraComponent.new(
     {
       target = self.model,
-      ui_rect = {x = 150, y = 20, w = self.rect.w - 150, h = self.rect.h - 50 - 20},
-      position = {x = 0, y = self.rect.h / 2},
-      extent = {half_width = self.rect.w/2, half_height = self.rect.h/2},
+      ui_rect = {x = 150, y = 20, w = self.ui_rect.w - 150, h = self.ui_rect.h - 50 - 20},
+      position = {x = 0, y = self.ui_rect.h / 2},
+      extent = {half_width = self.ui_rect.w/2, half_height = self.ui_rect.h/2},
       super = self
     })
 
@@ -23,7 +23,7 @@ PlanetsideTilemapView.new = function (init)
     {
       target = nil,
       description = "Inspector DONE",
-      ui_rect = {x = 0, y = 20 + 100, w = 150, h = self.rect.h - 100 - 20 - 50, rx = 0, ry = 0},
+      ui_rect = {x = 0, y = 20 + 100, w = 150, h = self.ui_rect.h - 100 - 20 - 50, rx = 0, ry = 0},
       background_color = {100, 80, 120},
       super = self
     })
@@ -31,7 +31,7 @@ PlanetsideTilemapView.new = function (init)
   self.commandpanel = PlanetsideTilemapCommandPanelComponent.new({
       target = nil,
       description = "Commands",
-      ui_rect = {x = 0, y = self.rect.h - 50, w = 150, h = 50, rx = 0, ry = 0},
+      ui_rect = {x = 0, y = self.ui_rect.h - 50, w = 150, h = 50, rx = 0, ry = 0},
       background_color = {50, 10, 70},
       super = self
     })
@@ -40,7 +40,7 @@ PlanetsideTilemapView.new = function (init)
     {
       target = nil,
       description = "Titlebar",
-      ui_rect = {x = 0, y = 0, w = self.rect.w, h = 20, rx = 0, ry = 0},
+      ui_rect = {x = 0, y = 0, w = self.ui_rect.w, h = 20, rx = 0, ry = 0},
       background_color = {110, 90, 140},
       super = self
     })
@@ -49,7 +49,7 @@ PlanetsideTilemapView.new = function (init)
     {
       target = nil,
       description = "Resourcebar",
-      ui_rect = {x = 150, y = self.rect.h - 50, w = self.rect.w - 150, h = 50},
+      ui_rect = {x = 150, y = self.ui_rect.h - 50, w = self.ui_rect.w - 150, h = 50},
       background_color = {110, 90, 140},
       super = self
     })

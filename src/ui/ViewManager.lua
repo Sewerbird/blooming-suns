@@ -54,7 +54,7 @@ ViewManager.new = function (init)
     local result = nil
     for i = 1 , #self.views do
       local v = self.views[#self.views - (i - 1)]
-      local rect = v.rect
+      local rect = v.ui_rect
       if x <= rect.x + rect.w and x >= rect.x and y <= rect.y + rect.h and y > rect.y then
         result = #self.views - (i - 1)
         break
@@ -74,7 +74,7 @@ ViewManager.new = function (init)
       if self.views[self.activeView].onMouseMoved ~= nil then
         local x = love.mouse.getX()
         local y = love.mouse.getY()
-        self.views[self.activeView].onMouseMoved(x - self.views[self.activeView].rect.x,y - self.views[self.activeView].rect.y)
+        self.views[self.activeView].onMouseMoved(x - self.views[self.activeView].ui_rect.x,y - self.views[self.activeView].ui_rect.y)
       end
       self.views[self.activeView].update(dt)
     end
