@@ -27,7 +27,7 @@ PlanetsideTilemapCommandPanelComponent.new = function (init)
   --Subcomponents
   self.endTurnButton = ImmediateButtonComponent.new({
     sprite = SpriteInstance.new({sprite = "EndTurn_UI"}),
-    ui_rect = self.ui_rect,
+    ui_rect = {x = self.ui_rect.x, y = self.ui_rect.y, w = 56, h = 52},
     callback = self.promptEndTurn
   })
 
