@@ -91,7 +91,6 @@ PlanetsideTilemapView.new = function (init)
   }
 
   --Events
-  --TODO: emit events to all/some components, not just the camera
   self.update = function (dt)
     self.camera.onUpdate(dt)
   end
@@ -105,8 +104,6 @@ PlanetsideTilemapView.new = function (init)
         component.onMousePressed(x - component.ui_rect.x, y - component.ui_rect.y, button)
       end
     end
-    --self.camera.onMousePressed(x - self.camera.ui_rect.x, y - self.camera.ui_rect.y,button)
-    --self.inspector.onMousePressed(x - self.inspector.ui_rect.x, y - self.inspector.ui_rect.y,button)
   end
 
   self.onMouseReleased = function (x, y, button)
@@ -118,8 +115,6 @@ PlanetsideTilemapView.new = function (init)
         component.onMouseReleased(x - component.ui_rect.x, y - component.ui_rect.y, button)
       end
     end
-    --self.camera.onMouseReleased(x - self.camera.ui_rect.x, y - self.camera.ui_rect.y,button)
-    --self.inspector.onMouseReleased(x - self.inspector.ui_rect.x, y - self.inspector.ui_rect.y,button)
   end
 
   self.onMouseMoved = function (x, y)

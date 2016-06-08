@@ -28,7 +28,7 @@
 --  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 --  THE SOFTWARE.
 
-require 'middleclass'
+require 'lib/middleclass'
 Path = class('Path')
 function Path:initialize(nodes, totalCost)
   self.nodes = nodes

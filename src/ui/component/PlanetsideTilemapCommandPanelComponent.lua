@@ -40,7 +40,6 @@ PlanetsideTilemapCommandPanelComponent.new = function (init)
     x = x + self.ui_rect.x
     y = y + self.ui_rect.y
     for i, v in ipairs(self.buttons) do
-      print("lllll" .. x .. ',' .. y .. ' --- ' .. inspect(v.ui_rect))
       local tgt_rect = v.ui_rect
       if tgt_rect.x < x and tgt_rect.x + tgt_rect.w > x and tgt_rect.y < y and tgt_rect.y + tgt_rect.h > y then
         v.onClick(x, y, button)
