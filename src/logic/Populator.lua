@@ -71,7 +71,7 @@ Populator.new = function (init)
 
           if terrain_type == "Ocean" then
             local new_unit = Unit.new({
-              sprite = "TestSpaceUnit",
+              sprite = "TestSeaUnit",
               move_domain = "sea",
               location = {idx = idx, row = row, col = col},
               owner = r_owner,
