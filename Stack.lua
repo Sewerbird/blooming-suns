@@ -55,6 +55,15 @@ Stack.new = function(init)
     self.selection[idx] = true
   end
 
+  self.growSelectionBasedOnMoveQueue = function(idx)
+    local cmp = self.units[idx].serializeMoveQueue()
+    for i, v in pairs(self.units) do
+      if v.serializeMoveQueue() == cmp then
+        self.selectUnit(i)
+      end
+    end
+  end
+
   self.deselectUnit = function(idx)
     self.selection[idx] = nil
   end

@@ -78,6 +78,17 @@ PlanetsideTilemapView.new = function (init)
       background_color = {230, 190, 220}
     })
 
+  self.components = {
+    self.camera,
+    self.inspector,
+    self.commandpanel,
+    self.titlebar,
+    self.resourcebar,
+    self.minimap,
+    self.spacesidebutton,
+    self.blastoffbutton
+  }
+
   --Events
   --TODO: emit events to all/some components, not just the camera
   self.update = function (dt)
@@ -85,13 +96,29 @@ PlanetsideTilemapView.new = function (init)
   end
 
   self.onMousePressed = function (x, y, button)
-    self.camera.onMousePressed(x - self.camera.ui_rect.x, y - self.camera.ui_rect.y,button)
-    self.inspector.onMousePressed(x - self.inspector.ui_rect.x, y - self.inspector.ui_rect.y,button)
+    for i, component in ipairs(self.components) do
+      if (component.ui_rect.x < x and
+        component.ui_rect.x + component.ui_rect.w > x and
+        component.ui_rect.y < y and
+        component.ui_rect.y + component.ui_rect.h > y) then
+        component.onMousePressed(x - component.ui_rect.x, y - component.ui_rect.y, button)
+      end
+    end
+    --self.camera.onMousePressed(x - self.camera.ui_rect.x, y - self.camera.ui_rect.y,button)
+    --self.inspector.onMousePressed(x - self.inspector.ui_rect.x, y - self.inspector.ui_rect.y,button)
   end
 
   self.onMouseReleased = function (x, y, button)
-    self.camera.onMouseReleased(x - self.camera.ui_rect.x, y - self.camera.ui_rect.y,button)
-    self.inspector.onMouseReleased(x - self.inspector.ui_rect.x, y - self.inspector.ui_rect.y,button)
+    for i, component in ipairs(self.components) do
+      if (component.ui_rect.x < x and
+        component.ui_rect.x + component.ui_rect.w > x and
+        component.ui_rect.y < y and
+        component.ui_rect.y + component.ui_rect.h > y) then
+        component.onMouseReleased(x - component.ui_rect.x, y - component.ui_rect.y, button)
+      end
+    end
+    --self.camera.onMouseReleased(x - self.camera.ui_rect.x, y - self.camera.ui_rect.y,button)
+    --self.inspector.onMouseReleased(x - self.inspector.ui_rect.x, y - self.inspector.ui_rect.y,button)
   end
 
   self.onMouseMoved = function (x, y)

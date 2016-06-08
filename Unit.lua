@@ -41,6 +41,15 @@ Unit.new = function (init)
     end
   end
 
+  self.serializeMoveQueue = function ()
+    local result = ""
+    if self.move_queue == nil then return result end
+    for i, j in ipairs(self.move_queue) do
+      result = result .. j.idx .. '|'
+    end
+    return result
+  end
+
   self.clearMoveQueue = function ()
     self.move_queue = nil
   end

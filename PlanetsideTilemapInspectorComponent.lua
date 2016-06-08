@@ -70,6 +70,7 @@ PlanetsideTilemapInspectorComponent.new = function (init)
     for i, tile in ipairs(self.selector_tiles) do
       if i == 1 and not self.target.stack.hasSelection() then
         self.target.stack.selectUnit(self.selector_tiles[1].target.idx)
+        self.target.stack.growSelectionBasedOnMoveQueue(self.selector_tiles[1].target.idx)
       end
       local xcoord = (((i-1) % self.selector_tile_array.cols) * self.selector_tiles[i].ui_rect.w) + self.ui_rect.x
       local ycoord = (math.floor((i-1) / self.selector_tile_array.cols) * self.selector_tiles[i].ui_rect.h) + self.ui_rect.y
