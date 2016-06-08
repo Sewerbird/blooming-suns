@@ -24,6 +24,17 @@ Gamestate.new = function(init)
     end
   end
 
+  self.removePlayer = function (idx)
+    self.players[idx] = nil
+    local new_turn_order = {}
+    for i, player in ipairs(self.turn_order) do
+      if player ~= idx then
+        table.insert(new_turn_order)
+      end
+    end
+    self.setPlayerOrder(new_turn_order)
+  end
+
   self.setPlayerOrder = function (player_idx_order)
     self.turn_order = player_idx_order
   end

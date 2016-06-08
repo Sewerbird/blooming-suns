@@ -11,16 +11,21 @@ PlanetsideTilemapCommandPanelComponent.new = function (init)
     super = init.super or nil
   }
 
+  --Logic
   self.endTurn = function ()
     GlobalGameState.nextTurn()
   end
 
+  --Subcomponents
   self.endTurnButton = ImmediateButtonComponent.new({
     sprite = SpriteInstance.new({sprite = "EndTurn_UI"}),
     ui_rect = self.ui_rect,
     callback = self.endTurn
   })
 
+  self.buttons = {self.endTurnButton}
+
+  --Events
   self.onDraw = function ()
     love.graphics.setColor(self.background_color)
     love.graphics.rectangle("fill",self.ui_rect.x, self.ui_rect.y, self.ui_rect.w, self.ui_rect.h)
@@ -28,11 +33,20 @@ PlanetsideTilemapCommandPanelComponent.new = function (init)
     self.endTurnButton.onDraw()
   end
 
-  self.onMousePressed = function ()
+  self.onMousePressed = function (x, y, button)
   end
 
-  self.onMouseReleased = function ()
-    self.endTurn()
+  self.onMouseReleased = function (x, y, button)
+    x = x + self.ui_rect.x
+    y = y + self.ui_rect.y
+    for i, v in ipairs(self.buttons) do
+      print("lllll" .. x .. ',' .. y .. ' --- ' .. inspect(v.ui_rect))
+      local tgt_rect = v.ui_rect
+      if tgt_rect.x < x and tgt_rect.x + tgt_rect.w > x and tgt_rect.y < y and tgt_rect.y + tgt_rect.h > y then
+        v.onClick(x, y, button)
+        break;
+      end
+    end
   end
 
   return self
