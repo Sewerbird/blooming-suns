@@ -13,7 +13,15 @@ PlanetsideTilemapCommandPanelComponent.new = function (init)
 
   --Logic
   self.promptEndTurn = function ()
-    GlobalGameState.nextTurn()
+    local nxt_turn = function ()
+      GlobalViewManager.pop()
+      GlobalGameState.nextTurn()
+    end
+    GlobalViewManager.push(ConfirmationView.new({
+      prompt_text = "End Your Turn?",
+      confirm_callback = nxt_turn,
+      cancel_callback = GlobalViewManager.pop
+    }))
   end
 
   --Subcomponents
