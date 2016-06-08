@@ -43,6 +43,13 @@ Stack.new = function(init)
     return result
   end
 
+  self.hasSelection = function()
+    for i, v in pairs(self.selection) do
+      return true
+    end
+    return false
+  end
+
   self.selectUnit = function(idx)
     self.selection[idx] = true
   end
