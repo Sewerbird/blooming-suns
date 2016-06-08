@@ -11,7 +11,7 @@ Stack.new = function(init)
     stack_size = 0
   }
 
-  self.addAllToStack = function (unitList)
+  self.addAllToStack = function (unitList, isSelected)
     while unitList.length() > 0 do
       local unit = unitList.popright()
       self.units[unit.idx] = unit

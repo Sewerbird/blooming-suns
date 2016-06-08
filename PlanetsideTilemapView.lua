@@ -134,9 +134,9 @@ PlanetsideTilemapView.new = function (init)
       if path == nil then return end
 
       local fn = function (unit)
-        if path_append then
+        if path_append and self.current_focus.stack.isUnitSelected(unit.idx) then
           unit.appendMoveQueue(path)
-        else
+        elseif self.current_focus.stack.isUnitSelected(unit.idx) then
           unit.setMoveQueue(path)
         end
       end
@@ -167,12 +167,13 @@ PlanetsideTilemapView.new = function (init)
       local movedTo = nil
       --for j = self.current_focus.units.first, self.current_focus.units.last do
       local fn = function (unit)
-        if unit.hasMoveOrder() then
+        if unit.hasMoveOrder() and self.current_focus.stack.isUnitSelected(unit.idx) then
           local moving_unit = unit
           moving_unit = self.current_focus.delocateUnit(moving_unit)
           moving_unit.performMoveOrder()
           movedTo = moving_unit.location.idx
           self.model.tiles[moving_unit.location.idx].relocateUnit(moving_unit)
+          self.model.tiles[moving_unit.location.idx].stack.selectUnit(moving_unit.idx)
           for i = moving_unit.move_queue.first , moving_unit.move_queue.last do
             self.model.tiles[moving_unit.move_queue[i].idx].debug = true;
           end
