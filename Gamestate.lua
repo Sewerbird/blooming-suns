@@ -45,7 +45,14 @@ Gamestate.new = function(init)
     else
       self.current_player = self.turn_order[nxt]
     end
-    print("CURRENT_PLAYER IS " .. self.current_player)
+    print("CURRENT_PLAYER IS NOW " .. self.current_player)
+    self.startTurn()
+  end
+
+  self.startTurn = function ()
+    print("Turn Begun: Running Processes...")
+    print("--> No Processes")
+    print("Turn Processing Complete!")
   end
 
   return self
