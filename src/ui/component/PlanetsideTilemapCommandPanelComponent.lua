@@ -12,7 +12,7 @@ PlanetsideTilemapCommandPanelComponent.new = function (init)
   }
 
   --Logic
-  self.endTurn = function ()
+  self.promptEndTurn = function ()
     GlobalGameState.nextTurn()
   end
 
@@ -20,7 +20,7 @@ PlanetsideTilemapCommandPanelComponent.new = function (init)
   self.endTurnButton = ImmediateButtonComponent.new({
     sprite = SpriteInstance.new({sprite = "EndTurn_UI"}),
     ui_rect = self.ui_rect,
-    callback = self.endTurn
+    callback = self.promptEndTurn
   })
 
   self.buttons = {self.endTurnButton}

@@ -15,6 +15,7 @@ ViewManager.new = function (init)
 
   self.push = function (view)
     self.activeView = #self.views+1
+    view.view_manager = self
     table.insert(self.views,view)
   end
 
