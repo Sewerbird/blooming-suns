@@ -106,13 +106,17 @@ PlanetsideTilemapInspectorUnitSelectorTileComponent.new = function(init)
       love.graphics.rectangle("fill",lclSprite.position.x, lclSprite.position.y, 32, 32)
       love.graphics.reset()
     end
-    lclSprite.draw()
     --Draw inactive status
     if self.super.target.stack.isUnitInactive(tgt_unit.idx) then
       love.graphics.setColor({0,0,0,100})
       love.graphics.rectangle("fill",lclSprite.position.x, lclSprite.position.y, 32, 32)
       love.graphics.reset()
     end
+    lclSprite.draw()
+    --Draw health bar
+    love.graphics.setColor({0,255,125})
+    love.graphics.rectangle("fill",lclSprite.position.x, lclSprite.position.y + 32 - 2, 32 * (tgt_unit.health / 100), 2)
+    love.graphics.reset()
   end
 
   self.onMouseReleased = function (x, y)

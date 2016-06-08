@@ -45,14 +45,22 @@ Tile.new = function (init)
           end
 
           self.slayers[v].draw(computed_position, do_center)
-          --[[ Debug sprite position
-          local hex = self.owning_map.pixel_to_hex({x = self.position.x, y = self.position.y})
-          local distanceFromIDXOne = ""--def_view.model.astar:findPath(hex, {col = 0, row = 1, idx = 1}).totalCost
-          love.graphics.print(
-           self.position.col..", "..self.position.row.."\n::"..self.idx.."\n(".. "." ..")"..distanceFromIDXOne,
-           computed_position.x + self.owning_map.tilesize_x / 4,
-           computed_position.y + self.owning_map.tilesize_y / 4)
-          -- ]]
+          --Draw stack size
+          if v == "unit" then
+            --love.graphics.setColor({0,0,0})
+            --love.graphics.rectangle("fill",computed_position.x + 32 - 9, computed_position.y, 9, 9)
+            --love.graphics.reset()
+            love.graphics.setColor({255,255,255})
+            love.graphics.print(self.stack.size(),computed_position.x + 32 -9, computed_position.y)
+          else
+            -- Debug sprite position
+            local hex = self.owning_map.pixel_to_hex({x = self.position.x, y = self.position.y})
+            love.graphics.print(
+             self.position.col..", "..self.position.row.."\n::"..self.idx,
+             computed_position.x + self.owning_map.tilesize_x / 4,
+             computed_position.y + self.owning_map.tilesize_y / 4)
+            -- ]]
+          end
       end
     end
     if self.debug == true then
@@ -65,7 +73,6 @@ Tile.new = function (init)
 
   self.delocateUnit = function(unit)
     --todo: do my index, not as queue
-    --table.remove(self.units, #self.units)
     local result = self.stack.popUnit(unit)
     self.slayers.unit = self.stack.head()
     return result
@@ -75,13 +82,11 @@ Tile.new = function (init)
     local ls = List.new()
     ls.pushright(unit)
     self.stack.addAllToStack(ls)
-    --table.insert(self.units, unit)
     self.slayers.unit = self.stack.head()
   end
 
   self.setTerrain = function (type)
     self.terrain_type = type
-    --self.sprites.terrain = SpriteInstance.new({sprite = self.terrain_type})
     self.slayers.terrain = SpriteInstance.new({sprite = self.terrain_type})
   end
 

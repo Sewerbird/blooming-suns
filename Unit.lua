@@ -12,7 +12,8 @@ Unit.new = function (init)
     move_domain = init.move_domain or 'land',
     owner = 'Hazat',
     backColor = {200,50,50},
-    idx = init.idx or IDX_CNTR + 1
+    idx = init.idx or IDX_CNTR + 1,
+    health = 100 - math.floor(math.random() * 50)
   }
   IDX_CNTR = IDX_CNTR + 1
   --reify
@@ -63,6 +64,10 @@ Unit.new = function (init)
     love.graphics.reset()
     --Draw Sprite
     self.sprite.draw()
+    --Draw health bar
+    love.graphics.setColor({0,255,125})
+    love.graphics.rectangle("fill",self.sprite.position.x, self.sprite.position.y + 32 - 2, 32 * (self.health / 100), 2)
+    love.graphics.reset()
   end
 
   self.select = function ()
