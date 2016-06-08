@@ -170,9 +170,9 @@ PlanetsideTilemapCameraComponent.new = function (init)
       local leftWorldEdge = 0;
 
 
-      if topEdge < self.target.tilesize_y / 2 then self.position.y = self.extent.half_height + self.target.tilesize_y /2 end
-      if bottomEdge > (self.target.num_rows - 1) * math.sqrt(3) * self.target.hex_size then
-        self.position.y = (self.target.num_rows - 1) * math.sqrt(3) * self.target.hex_size - self.extent.half_height
+      if topEdge < -self.target.tilesize_y / 2 then self.position.y = self.extent.half_height - self.target.tilesize_y /2 end
+      if bottomEdge > self.target.num_rows * math.sqrt(3) * self.target.hex_size then
+        self.position.y = self.target.num_rows * math.sqrt(3) * self.target.hex_size - self.extent.half_height
       end
       if self.position.x > rightWorldEdge then self.position.x = self.position.x - rightWorldEdge end
       if self.position.x < leftWorldEdge then self.position.x = rightWorldEdge + self.position.x end
