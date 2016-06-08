@@ -11,7 +11,7 @@ Populator.new = function (init)
     self.generateTileMapTerrainRandom(gamestate.getTilemap(1))
     gamestate.addPlayer('Hazat', Player.new())
     gamestate.addPlayer('Hawkwood', Player.new())
-    gamestate.setPlayerOrder('Hazat', 'Hawkwood')
+    gamestate.setPlayerOrder({'Hazat', 'Hawkwood'})
 
     return gamestate
   end

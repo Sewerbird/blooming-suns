@@ -28,11 +28,12 @@ PlanetsideTilemapView.new = function (init)
       super = self
     })
 
-  self.commandpanel = ViewComponent.new({
+  self.commandpanel = PlanetsideTilemapCommandPanelComponent.new({
       target = nil,
       description = "Commands",
       ui_rect = {x = 0, y = self.rect.h - 50, w = 150, h = 50, rx = 0, ry = 0},
-      background_color = {50, 10, 70}
+      background_color = {50, 10, 70},
+      super = self
     })
 
   self.titlebar = ViewComponent.new(
