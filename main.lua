@@ -30,6 +30,7 @@ require('src/resource/SpriteInstance');
 require('lib/astar');
 require('lib/data_structures')
 inspect = require('lib/inspect');
+__ = require('lib/underscore');
 
 function love.load()
 

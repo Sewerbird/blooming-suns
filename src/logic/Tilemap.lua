@@ -5,6 +5,79 @@
 ]]
 Tilemap = {}
 
+Pathfinder = {}
+
+Pathfinder.new = function(init)
+  local init = init or {}
+  local self = {
+    tilemap = init.ref or nil,
+    avoidOther = init.avoidOther or false
+  }
+
+  --[[
+
+    A* Methods for lua-astar
+
+  ]]--
+
+
+  self.getNode = function (this, location)
+    -- Here you make sure the requested node is valid (i.e. on the map, not blocked)
+    -- if the location is not valid, return nil, otherwise return a new Node object
+    local idx = self.tilemap.getIdxAtCoord(location)
+    local move_cost = 1
+
+    if idx < 0 or idx > #self.tilemap.tiles then
+      return nil
+    else
+      return Node:new(location, move_cost, idx)
+    end
+  end
+
+  self.locationsAreEqual = function (this, a, b)
+    -- Here you check to see if two locations (not nodes) are equivalent
+    return a.idx == b.idx
+  end
+
+  self.getAdjacentNodes = function (this, curr, goal, domain)
+    -- Given a node, return a table containing all adjacent nodes
+    local result = {}
+
+    for i, v in pairs(self.tilemap.terrain_connective_matrix[curr.lid][domain]) do
+      local coord = self.tilemap.getCoordFromIdx(i)
+      local consideredN = self:getNode(coord)
+      local n = self:_handleNode(consideredN, goal, curr)
+      table.insert(result, n)
+    end
+    return result
+  end
+
+  self._handleNode = function (this, considered, goal, parent)
+    -- Fetch a Node for the given location and set its parameters
+    local dstCol = goal.col
+    local dstRow = goal.row
+    local idx = self.tilemap.getIdxAtCoord({col = dstCol, row = dstRow})
+    local n = Node:new(considered.location, 0, considered.location.idx)
+
+    if n ~= nil then
+      if self.avoidOther == true then
+
+      end
+      local emCost = math.min(math.min(math.abs(goal.col - self.tilemap.num_cols - n.location.col),math.abs(n.location.col - self.tilemap.num_cols - goal.col)),math.abs(goal.col - n.location.col)) + math.abs(goal.row - n.location.row)/2
+      n.mCost = 1 + parent.mCost
+      n.score = n.mCost + emCost
+      n.parent = parent
+      n.lid = n.location.idx
+
+      return n
+    end
+
+    return nil
+  end
+
+  return self
+end
+
 Tilemap.new = function (init)
   local init = init or {}
   local self = {
@@ -140,64 +213,7 @@ Tilemap.new = function (init)
     return {x = rx, y = ry, z = rz}
   end
 
-  --[[
-
-    A* Methods for lua-astar
-
-  ]]--
-
-
-  self.getNode = function (this, location)
-    -- Here you make sure the requested node is valid (i.e. on the map, not blocked)
-    -- if the location is not valid, return nil, otherwise return a new Node object
-    local idx = self.getIdxAtCoord(location)
-    local move_cost = 1
-
-    if idx < 0 or idx > #self.tiles then
-      return nil
-    else
-      return Node:new(location, move_cost, idx)
-    end
-  end
-
-  self.locationsAreEqual = function (this, a, b)
-    -- Here you check to see if two locations (not nodes) are equivalent
-    return a.idx == b.idx
-  end
-
-  self.getAdjacentNodes = function (this, curr, goal, domain)
-    -- Given a node, return a table containing all adjacent nodes
-    local result = {}
-
-    for i, v in pairs(self.terrain_connective_matrix[curr.lid][domain]) do
-      local coord = self.getCoordFromIdx(i)
-      local consideredN = self:getNode(coord)
-      local n = self:_handleNode(consideredN, goal, curr)
-      table.insert(result, n)
-    end
-    return result
-  end
-
-  self._handleNode = function (this, considered, goal, parent)
-    -- Fetch a Node for the given location and set its parameters
-    local dstCol = goal.col
-    local dstRow = goal.row
-    local idx = self.getIdxAtCoord({col = dstCol, row = dstRow})
-    local n = Node:new(considered.location, 0, considered.location.idx)
-
-    if n ~= nil then
-      local emCost = math.min(math.min(math.abs(goal.col - self.num_cols - n.location.col),math.abs(n.location.col - self.num_cols - goal.col)),math.abs(goal.col - n.location.col)) + math.abs(goal.row - n.location.row)/2
-      n.mCost = 1 + parent.mCost
-      n.score = n.mCost + emCost
-      n.parent = parent
-      n.lid = n.location.idx
-
-      return n
-    end
-
-    return nil
-  end
-
-  self.astar = AStar(self)
+  self.directPathfinder = AStar(Pathfinder.new({ref = self}));
+  self.avoidPathfinder = AStar(Pathfinder.new({ref = self, avoidOther = true}));
   return self
 end

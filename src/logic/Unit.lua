@@ -12,7 +12,8 @@ Unit.new = function (init)
     owner = init.owner or 'Hazat',
     backColor = init.backColor or {200,50,50},
     idx = init.idx or IDX_CNTR + 1,
-    health = 100 - math.floor(math.random() * 50)
+    health = 100 - math.floor(math.random() * 50),
+    curr_movepoints = 5
   }
   IDX_CNTR = IDX_CNTR + 1
   --reify
@@ -24,8 +25,13 @@ Unit.new = function (init)
     return self.move_queue ~= nil and self.move_queue.length() > 0
   end
 
-  self.performMoveOrder = function ()
+  self.getNextMove = function ()
+    return self.move_queue.head()
+  end
+
+  self.performMoveOrder = function (cost)
     local tgt = self.move_queue.popleft()
+    self.curr_movepoints = self.curr_movepoints - (cost or 1)
     self.location = tgt
   end
 

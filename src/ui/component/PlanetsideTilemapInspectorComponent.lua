@@ -121,6 +121,9 @@ PlanetsideTilemapInspectorUnitSelectorTileComponent.new = function(init)
     love.graphics.setColor({0,255,125})
     love.graphics.rectangle("fill",lclSprite.position.x, lclSprite.position.y + 32 - 2, 32 * (tgt_unit.health / 100), 2)
     love.graphics.reset()
+    --Draw remaining move points
+    love.graphics.setColor({255,255,255})
+    love.graphics.print(tgt_unit.curr_movepoints,lclSprite.position.x + 32 -9, lclSprite.position.y)
   end
 
   self.onMouseReleased = function (x, y)

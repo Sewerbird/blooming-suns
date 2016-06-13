@@ -137,7 +137,7 @@ PlanetsideTilemapView.new = function (init)
       end
       self.current_focus = nil
       self.inspector.uninspect()
-    elseif self.current_focus ~= nil and self.current_focus ~= fhex then
+    elseif self.current_focus ~= nil and self.current_focus ~= fhex and self.current_focus.stack.getOwner() == GlobalGameState.current_player then
       --TODO: The unit movement logic belongs in a gamestate mutator
       local start = {row = self.current_focus.position.row, col = self.current_focus.position.col, idx = self.current_focus.idx}
       local f_unit = self.current_focus.stack.head()
@@ -152,18 +152,17 @@ PlanetsideTilemapView.new = function (init)
 
       local goal = {row = fhex.position.row, col = fhex.position.col, idx = fhex.idx}
 
-      local path = self.model.astar:findPath(start, goal, self.current_focus.stack.head().move_domain)
+      local path = self.model.avoidPathfinder:findPath(start, goal, self.current_focus.stack.head().move_domain)
 
       if path == nil then return end
 
-      local fn = function (unit)
+      self.current_focus.stack.forEach(function (unit)
         if path_append and self.current_focus.stack.isUnitSelected(unit.idx) then
           unit.appendMoveQueue(path)
         elseif self.current_focus.stack.isUnitSelected(unit.idx) then
           unit.setMoveQueue(path)
         end
-      end
-      self.current_focus.stack.forEach(fn)
+      end)
 
       for i, v in ipairs(self.model.tiles) do
         self.model.tiles[i].debug = false;
@@ -182,16 +181,33 @@ PlanetsideTilemapView.new = function (init)
   end
 
   self.executeNextOrder = function ()
-    if self.current_focus ~= nil then
+    if self.current_focus ~= nil and self.current_focus.stack.getOwner() == GlobalGameState.current_player then
       --TODO: this logic shouldn't live in the view, but in a gamestate mutator
       for i, v in ipairs(self.model.tiles) do
         self.model.tiles[i].debug = false;
       end
+
       local movedTo = nil
-      --for j = self.current_focus.units.first, self.current_focus.units.last do
-      local fn = function (unit)
+      local move_cost = 1
+      local stack_can_move = true
+
+      local can_move_list = self.current_focus.stack.forEachSelected(function (unit)
+        if unit.hasMoveOrder() and self.current_focus.stack.isUnitSelected(unit.idx) and unit.curr_movepoints < move_cost then
+          stack_can_move = false
+        end
+      end)
+
+
+      if not stack_can_move then return end
+
+      self.current_focus.stack.forEachSelected(function (unit)
         if unit.hasMoveOrder() and self.current_focus.stack.isUnitSelected(unit.idx) then
           local moving_unit = unit
+          --check destination is empty/friendly
+          local dest_owner = self.model.tiles[moving_unit.getNextMove().idx].stack.getOwner()
+          if dest_owner ~= nil and dest_owner ~= unit.owner then
+            return
+          end
           moving_unit = self.current_focus.delocateUnit(moving_unit)
           moving_unit.performMoveOrder()
           movedTo = moving_unit.location.idx
@@ -201,8 +217,7 @@ PlanetsideTilemapView.new = function (init)
             self.model.tiles[moving_unit.move_queue[i].idx].debug = true;
           end
         end
-      end
-      self.current_focus.stack.forEach(fn)
+      end)
 
       if movedTo == nil then return end
       self.current_focus = self.model.tiles[movedTo]

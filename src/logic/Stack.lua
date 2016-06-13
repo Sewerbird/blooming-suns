@@ -98,11 +98,32 @@ Stack.new = function(init)
     return self.stack_size
   end
 
-  self.forEach = function (func)
-    for i, v in pairs(self.units) do
-      func(v)
+  self.forEachSelected = function (func)
+    local results = List.new()
+    for i, v in pairs(self.selection) do
+      results.pushright(func(self.units[i]))
     end
+    return results
   end
 
+  self.forEach = function (func)
+    local results = List.new()
+    for i, v in pairs(self.units) do
+      results.pushright(func(v))
+    end
+    return results
+  end
+
+  self.getOwner = function ()
+    local owner = nil
+    for i, v in pairs(self.units) do
+      if owner == nil then
+        owner = v.owner
+      elseif owner ~= nil and v.owner ~= nil and owner ~= v.owner then
+        error("Units of different players in same stack!" .. inspect(self))
+      end
+    end
+    return owner
+  end
   return self
 end
