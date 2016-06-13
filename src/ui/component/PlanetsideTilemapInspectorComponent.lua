@@ -57,20 +57,19 @@ PlanetsideTilemapInspectorComponent.new = function (init)
     self.uninspect()
     self.target = target
 
-    local showUnitTileSelectorElements = function (unit)
+    self.target.stack.forEach(function (unit)
       local selector_tile = PlanetsideTilemapInspectorUnitSelectorTileComponent.new({
         target = unit,
         ui_rect = {w = 32, h = 32},
         super = self
       })
       table.insert(self.selector_tiles, selector_tile)
-    end
-    self.target.stack.forEach(showUnitTileSelectorElements)
+    end)
 
     for i, tile in ipairs(self.selector_tiles) do
       if i == 1 and not self.target.stack.hasSelection() then
-        self.target.stack.selectUnit(self.selector_tiles[1].target.idx)
-        self.target.stack.growSelectionBasedOnMoveQueue(self.selector_tiles[1].target.idx)
+        self.target.stack.selectUnit(self.selector_tiles[1].target.uid)
+        self.target.stack.growSelectionBasedOnMoveQueue(self.selector_tiles[1].target.uid)
       end
       local xcoord = (((i-1) % self.selector_tile_array.cols) * self.selector_tiles[i].ui_rect.w) + self.ui_rect.x
       local ycoord = (math.floor((i-1) / self.selector_tile_array.cols) * self.selector_tiles[i].ui_rect.h) + self.ui_rect.y
@@ -105,13 +104,13 @@ PlanetsideTilemapInspectorUnitSelectorTileComponent.new = function(init)
     love.graphics.rectangle("fill",lclSprite.position.x, lclSprite.position.y,32,32)
     love.graphics.reset()
     --Draw selection status
-    if self.super.target.stack.isUnitSelected(tgt_unit.idx) then
+    if self.super.target.stack.isUnitSelected(tgt_unit.uid) then
       love.graphics.setColor({255,255,255,100})
       love.graphics.rectangle("fill",lclSprite.position.x, lclSprite.position.y, 32, 32)
       love.graphics.reset()
     end
     --Draw inactive status
-    if self.super.target.stack.isUnitInactive(tgt_unit.idx) then
+    if self.super.target.stack.isUnitInactive(tgt_unit.uid) then
       love.graphics.setColor({0,0,0,100})
       love.graphics.rectangle("fill",lclSprite.position.x, lclSprite.position.y, 32, 32)
       love.graphics.reset()
@@ -128,10 +127,10 @@ PlanetsideTilemapInspectorUnitSelectorTileComponent.new = function(init)
 
   self.onMouseReleased = function (x, y)
     local tgt_stack = self.super.target.stack
-    if tgt_stack.isUnitSelected(self.target.idx) then
-      tgt_stack.deselectUnit(self.target.idx)
+    if tgt_stack.isUnitSelected(self.target.uid) then
+      tgt_stack.deselectUnit(self.target.uid)
     else
-      tgt_stack.selectUnit(self.target.idx)
+      tgt_stack.selectUnit(self.target.uid)
     end
   end
   return self

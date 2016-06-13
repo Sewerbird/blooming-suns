@@ -17,8 +17,7 @@ Tile.new = function (init)
     owning_map = init.owning_map,
     idx = init.idx,
     stack = Stack.new(),
-    --units = List.new(),
-    selection = List.new()
+    selection = {}
   }
 
   self.update = function (dt)
@@ -72,16 +71,13 @@ Tile.new = function (init)
   end
 
   self.delocateUnit = function(unit)
-    --todo: do my index, not as queue
-    local result = self.stack.popUnit(unit)
+    local result = self.stack.removeUnit(unit.uid)
     self.slayers.unit = self.stack.head()
     return result
   end
 
   self.relocateUnit = function(unit)
-    local ls = List.new()
-    ls.pushright(unit)
-    self.stack.addAllToStack(ls)
+    self.stack.addUnit(unit)
     self.slayers.unit = self.stack.head()
   end
 
@@ -102,12 +98,6 @@ Tile.new = function (init)
     if self.stack.head() ~= nil then
       self.stack.head().select()
     end
-    --todo: reenable blinking
-    --[[
-    if self.units.head() ~= nil then
-      self.units.head().select()
-    end
-    ]]--
   end
 
   return self

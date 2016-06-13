@@ -1,9 +1,12 @@
 --Unit
 Unit = {}
 IDX_CNTR = 0
+UUID_CNTR = 0
+
 Unit.new = function (init)
   local init = init or {}
   local self = {
+    uid = UUID_CNTR,
     sprite = init.sprite or nil,
     location = init.location or nil,
     selected = false,
@@ -15,6 +18,7 @@ Unit.new = function (init)
     health = 100 - math.floor(math.random() * 50),
     curr_movepoints = 5
   }
+  UUID_CNTR = UUID_CNTR + 1
   IDX_CNTR = IDX_CNTR + 1
   --reify
   if self.sprite ~= nil then

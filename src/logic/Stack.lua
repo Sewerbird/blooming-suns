@@ -8,88 +8,129 @@ Stack.new = function(init)
     units = {},
     selection = {},
     inactive = {},
+    unit_index = {},
+    selection_index = {},
+    inactive_index = {},
     stack_size = 0
   }
 
-  self.addAllToStack = function (unitList, isSelected)
-    while unitList.length() > 0 do
-      local unit = unitList.popright()
-      self.units[unit.idx] = unit
-      self.stack_size = self.stack_size + 1
-    end
+  self.addUnit = function(unit)
+    table.insert(self.units, unit)
+    self.unit_index[unit.uid] = true
+    self.stack_size = self.stack_size + 1
   end
 
-  self.popUnit = function(unit)
-    for i, v in pairs(self.units) do
-      if unit.idx == i then
-        local result = v
-        self.units[unit.idx] = nil
-        self.selection[unit.idx] = nil
-        self.inactive[unit.idx] = nil
+  self.removeUnit = function(uid)
+    for i, v in ipairs(self.units) do
+      if uid == v.uid then
+        local unit = table.remove(self.units, i)
+        self.unit_index[uid] = nil
+        self.selection_index[uid] = nil
+        self.inactive_index[uid] = nil
         self.stack_size = self.stack_size - 1
-        return result
+        return unit
       end
     end
-    return nil
   end
 
-  self.popSelected = function()
-    local result = List.new()
-    for i, v in pairs(self.units) do
-      result.pushleft(v)
-      self.units[i] = nil
-      self.stack_size = self.stack_size - 1
+  self.getUnit = function(uid)
+    if self.unit_index[uid] == nil then
+      error("No unit with uid " .. uid .. " found.\n")
+      return nil
     end
 
-    return result
+    for i, v in ipairs(self.units) do
+      if uid == v.uid then
+        return v
+      end
+    end
   end
 
-  self.hasSelection = function()
-    for i, v in pairs(self.selection) do
-      return true
+  self.selectUnit = function(uid)
+    if self.isUnitSelected(uid) == false and self.getUnit(uid) ~= nil then
+      table.insert(self.selection, uid)
+      self.selection_index[uid] = true
+    end
+  end
+
+  self.deselectUnit = function(uid)
+    if self.isUnitSelected(uid) == false then return false end
+
+    for i, v in ipairs(self.selection) do
+      if uid == v then
+        table.remove(self.selection, i)
+        self.selection_index[uid] = nil
+        return true
+      end
     end
     return false
   end
 
-  self.selectUnit = function(idx)
-    self.selection[idx] = true
+  self.hasSelection = function()
+    return #self.selection > 0
   end
 
-  self.growSelectionBasedOnMoveQueue = function(idx)
-    local cmp = self.units[idx].serializeMoveQueue()
-    for i, v in pairs(self.units) do
+  self.isUnitSelected = function(uid)
+    if self.unit_index[uid] == nil then
+      error("No unit with uid " .. uid .. " found." .. inspect(self.unit_index, {depth = 2}))
+      return false
+    end
+    return self.selection_index[uid] == true
+  end
+
+  self.growSelectionBasedOnMoveQueue = function(uid)
+    local cmp = self.getUnit(uid).serializeMoveQueue()
+    for i, v in ipairs(self.units) do
       if v.serializeMoveQueue() == cmp then
-        self.selectUnit(i)
+        self.selectUnit(v.uid)
       end
     end
   end
 
-  self.deselectUnit = function(idx)
-    self.selection[idx] = nil
+  self.clearSelection = function()
+    self.selection = {}
+    self.selection_index = {}
   end
 
-  self.deactivateUnit = function(idx)
-    self.inactive[idx] = true
+  self.deactivateUnit = function(uid)
+    if self.unit_index[uid] == nil then
+      error("No unit with uid " .. uid .. " found.\n");
+      return nil
+    end
+
+    if self.getUnit(uid) ~= nil and self.isUnitActive(uid) then
+      table.insert(self.inactive, uid)
+      self.inactive_index[uid] = uid
+    end
   end
 
-  self.activateUnit = function(idx)
-    self.inactive[idx] = nil
+  self.activateUnit = function(uid)
+    if self.unit_index[uid] == nil then
+      error("No unit with uid " .. uid .. " found.\n");
+      return nil
+    end
+
+    for i, v in ipairs(self.inactive) do
+      if uid == v then
+        table.remove(self.inactive, i)
+        self.inactive_index[uid] = nil
+        return true
+      end
+    end
+    return false
   end
 
-  self.isUnitSelected = function(idx)
-    return self.selection[idx] == true
+
+  self.isUnitInactive = function(uid)
+    return self.inactive_index[uid] == true
   end
 
-  self.isUnitInactive = function(idx)
-    return self.inactive[idx] == true
-  end
-
-  self.isUnitActive = function(idx)
-    return self.inactive[idx] ~= true and self.selection[idx] ~= true
+  self.isUnitActive = function(uid)
+    return self.inactive_index[uid] ~= true and self.selection_index[uid] ~= true
   end
 
   self.head = function()
-    for i, v in pairs(self.units) do
+    for i, v in ipairs(self.units) do
       return v
     end
   end
@@ -100,15 +141,15 @@ Stack.new = function(init)
 
   self.forEachSelected = function (func)
     local results = List.new()
-    for i, v in pairs(self.selection) do
-      results.pushright(func(self.units[i]))
+    for i, uid in ipairs(self.selection) do
+      results.pushright(func(self.getUnit(uid)))
     end
     return results
   end
 
   self.forEach = function (func)
     local results = List.new()
-    for i, v in pairs(self.units) do
+    for i, v in ipairs(self.units) do
       results.pushright(func(v))
     end
     return results

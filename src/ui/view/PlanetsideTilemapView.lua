@@ -125,6 +125,8 @@ PlanetsideTilemapView.new = function (init)
   self.onKeyPressed = function (key)
     if key == 'space' then
       self.executeNextOrder()
+    elseif key == 'i' and self.current_focus ~= nil then
+      print(inspect(self.current_focus))
     end
   end
 
@@ -157,9 +159,9 @@ PlanetsideTilemapView.new = function (init)
       if path == nil then return end
 
       self.current_focus.stack.forEach(function (unit)
-        if path_append and self.current_focus.stack.isUnitSelected(unit.idx) then
+        if path_append and self.current_focus.stack.isUnitSelected(unit.uid) then
           unit.appendMoveQueue(path)
-        elseif self.current_focus.stack.isUnitSelected(unit.idx) then
+        elseif self.current_focus.stack.isUnitSelected(unit.uid) then
           unit.setMoveQueue(path)
         end
       end)
@@ -192,7 +194,7 @@ PlanetsideTilemapView.new = function (init)
       local stack_can_move = true
 
       local can_move_list = self.current_focus.stack.forEachSelected(function (unit)
-        if unit.hasMoveOrder() and self.current_focus.stack.isUnitSelected(unit.idx) and unit.curr_movepoints < move_cost then
+        if unit.hasMoveOrder() and self.current_focus.stack.isUnitSelected(unit.uid) and unit.curr_movepoints < move_cost then
           stack_can_move = false
         end
       end)
@@ -201,7 +203,7 @@ PlanetsideTilemapView.new = function (init)
       if not stack_can_move then return end
 
       self.current_focus.stack.forEachSelected(function (unit)
-        if unit.hasMoveOrder() and self.current_focus.stack.isUnitSelected(unit.idx) then
+        if unit.hasMoveOrder() and self.current_focus.stack.isUnitSelected(unit.uid) then
           local moving_unit = unit
           --check destination is empty/friendly
           local dest_owner = self.model.tiles[moving_unit.getNextMove().idx].stack.getOwner()
@@ -212,7 +214,7 @@ PlanetsideTilemapView.new = function (init)
           moving_unit.performMoveOrder()
           movedTo = moving_unit.location.idx
           self.model.tiles[moving_unit.location.idx].relocateUnit(moving_unit)
-          self.model.tiles[moving_unit.location.idx].stack.selectUnit(moving_unit.idx)
+          self.model.tiles[moving_unit.location.idx].stack.selectUnit(moving_unit.uid)
           for i = moving_unit.move_queue.first , moving_unit.move_queue.last do
             self.model.tiles[moving_unit.move_queue[i].idx].debug = true;
           end
@@ -220,6 +222,7 @@ PlanetsideTilemapView.new = function (init)
       end)
 
       if movedTo == nil then return end
+      self.current_focus.stack.clearSelection()
       self.current_focus = self.model.tiles[movedTo]
       self.inspector.inspect(self.current_focus)
     end

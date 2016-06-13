@@ -60,6 +60,7 @@ Populator.new = function (init)
         })
         new_tile.setTerrain(terrain_type)
 
+        --Make a random stack of units maybe
         rand = math.random()
         if rand < 0.05 then
           local r_owner = "Hazat"
@@ -68,25 +69,26 @@ Populator.new = function (init)
             r_owner = "Hawkwood"
             owner_color = {50,50,200}
           end
-
-          if terrain_type == "Ocean" then
-            local new_unit = Unit.new({
-              sprite = "TestSeaUnit",
-              move_domain = "sea",
-              location = {idx = idx, row = row, col = col},
-              owner = r_owner,
-              backColor = owner_color
-            })
-            new_tile.relocateUnit(new_unit)
-          else
-            local new_unit = Unit.new({
-              sprite = "TestUnit",
-              move_domain = "land",
-              location = {idx = idx, row = row, col = col},
-              owner = r_owner,
-              backColor = owner_color
-            })
-            new_tile.relocateUnit(new_unit)
+          for i = 1 , math.floor(math.random() * 5) + 1 do
+            if terrain_type == "Ocean" then
+              local new_unit = Unit.new({
+                sprite = "TestSeaUnit",
+                move_domain = "sea",
+                location = {idx = idx, row = row, col = col},
+                owner = r_owner,
+                backColor = owner_color
+              })
+              new_tile.relocateUnit(new_unit)
+            else
+              local new_unit = Unit.new({
+                sprite = "TestUnit",
+                move_domain = "land",
+                location = {idx = idx, row = row, col = col},
+                owner = r_owner,
+                backColor = owner_color
+              })
+              new_tile.relocateUnit(new_unit)
+            end
           end
         end
 

@@ -4,7 +4,7 @@ SpriteInstance = {}
 SpriteInstance.new = function (init)
   local init = init or {}
   if init.sprite == nil then
-    print("Sprite instance without sprite ref: " .. inspect(init))
+    error("Sprite instance without sprite ref: " .. inspect(init))
   end
   local self = {
     sprite_ref = init.sprite_ref or GlobalSpriteBank.sprites[init.sprite],
