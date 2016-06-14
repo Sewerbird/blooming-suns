@@ -195,7 +195,8 @@ PlanetsideTilemapView.new = function (init)
       local can_move_list = self.current_focus.stack.forEachSelected(function (unit)
         if unit.hasMoveOrder() and self.current_focus.stack.isUnitSelected(unit.uid) then
           local move_cost = self.model.terrain_connective_matrix[unit.getNextMove().idx]['mpcost'][unit.move_method]
-          if unit.curr_movepoints < move_cost then
+          --Allow move if unit has enough movepoints, or if it has all of its movepoints (i.e.: 'can always move one in any valid direction' rule)
+          if unit.curr_movepoints < move_cost and unit.curr_movepoints < unit.max_movepoints then
             stack_can_move = false
           end
         end
