@@ -127,10 +127,10 @@ Tilemap.new = function (init)
   end
 
   self.getHexAtIdx = function (idx)
-    if calc_idx <= 0 then
-      idx = #self.tiles + calc_idx + 1
-    elseif idx >= #self.tiles then
-      idx = (#self.tiles + 1)
+    if idx < 0 then
+      idx = #self.tiles + idx + 1
+    elseif idx > #self.tiles then
+      idx = (idx - #self.tiles - 1)
     end
     return self.tiles[idx]
   end

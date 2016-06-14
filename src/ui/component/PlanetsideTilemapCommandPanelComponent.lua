@@ -24,6 +24,10 @@ PlanetsideTilemapCommandPanelComponent.new = function (init)
     }))
   end
 
+  self.focusNextUnit = function ()
+    self.super.goToNext()
+  end
+
   --Subcomponents
   self.endTurnButton = ImmediateButtonComponent.new({
     sprite = SpriteInstance.new({sprite = "EndTurn_UI"}),
@@ -31,14 +35,22 @@ PlanetsideTilemapCommandPanelComponent.new = function (init)
     callback = self.promptEndTurn
   })
 
-  self.buttons = {self.endTurnButton}
+  self.nextUnitButton = ImmediateButtonComponent.new({
+    sprite = SpriteInstance.new({sprite = "EndTurn_UI"}),
+    ui_rect = {x = self.ui_rect.x + 56, y = self.ui_rect.y, w = 56, h = 52},
+    callback = self.focusNextUnit
+  })
+
+  self.buttons = {self.endTurnButton, self.nextUnitButton}
 
   --Events
   self.onDraw = function ()
     love.graphics.setColor(self.background_color)
     love.graphics.rectangle("fill",self.ui_rect.x, self.ui_rect.y, self.ui_rect.w, self.ui_rect.h)
     love.graphics.reset()
-    self.endTurnButton.onDraw()
+    for i, v in ipairs(self.buttons) do
+      v.onDraw()
+    end
   end
 
   self.onMousePressed = function (x, y, button)

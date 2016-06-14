@@ -131,6 +131,20 @@ PlanetsideTilemapView.new = function (init)
   end
 
   --Logic
+  self.goToNext = function()
+    local curr_idx = (self.current_focus ~= nil and self.current_focus.idx) or 0
+    for i = curr_idx+1, #self.model.tiles do
+      local check_hex = self.model.getHexAtIdx(i)
+      if check_hex.stack.getOwner() == GlobalGameState.current_player then
+        if self.current_focus ~= nil then
+          self.focus(self.current_focus)
+        end
+        self.focus(check_hex)
+        break
+      end
+    end
+  end
+
   self.focus = function (fhex)
     --if unit == nil then return end
     if self.current_focus ~= nil and self.current_focus == fhex then

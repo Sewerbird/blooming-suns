@@ -52,7 +52,7 @@ Tile.new = function (init)
             love.graphics.setColor({255,255,255})
             love.graphics.print(self.stack.size(),computed_position.x + 32 -9, computed_position.y)
           else
-            --[[ Debug sprite position
+            -- Debug sprite position
             local hex = self.owning_map.pixel_to_hex({x = self.position.x, y = self.position.y})
             love.graphics.print(
              self.position.col..", "..self.position.row.."\n::"..self.idx,

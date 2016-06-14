@@ -128,7 +128,6 @@ Stack.new = function(init)
     return false
   end
 
-
   self.isUnitInactive = function(uid)
     return self.inactive_index[uid] == true
   end
