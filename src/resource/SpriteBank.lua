@@ -68,6 +68,7 @@ SpriteBank.new = function (init)
     self.loadSprite("Ice", "assets/sprites/IceTileSprite")
     self.loadSprite("Tundra", "assets/sprites/TundraTileSprite")
     self.loadSprite("Steppe", "assets/sprites/SteppeTileSprite")
+    self.loadSprite("EndTurn_UI", "assets/sprites/EndTurn_UI")
     self.loadSprite("NextUnit_UI", "assets/sprites/NextUnit_UI")
   end
 
