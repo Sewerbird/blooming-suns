@@ -145,6 +145,19 @@ PlanetsideTilemapView.new = function (init)
     end
   end
 
+  self.toNextWaypoint = function()
+    print("GOING TO NEXT WAYPOINT")
+    local wasAbleToMove = true
+
+    while wasAbleToMove do
+      if self.current_focus ~= nil and self.current_focus.stack.getOwner() == GlobalGameState.current_player and self.current_focus.stack.hasSelection() then
+        wasAbleToMove = self.executeNextOrder()
+      else
+        wasAbleToMove = false
+      end
+    end
+  end
+
   self.focus = function (fhex)
     --if unit == nil then return end
     if self.current_focus ~= nil and self.current_focus == fhex then
@@ -217,7 +230,7 @@ PlanetsideTilemapView.new = function (init)
       end)
 
 
-      if not stack_can_move then return end
+      if not stack_can_move then return false end
 
       self.current_focus.stack.forEachSelected(function (unit)
         if unit.hasMoveOrder() and self.current_focus.stack.isUnitSelected(unit.uid) then
@@ -239,11 +252,14 @@ PlanetsideTilemapView.new = function (init)
         end
       end)
 
-      if movedTo == nil then return end
+      if movedTo == nil then return false end
       self.current_focus.stack.clearSelection()
       self.current_focus = self.model.tiles[movedTo]
       self.inspector.inspect(self.current_focus)
+
+      return true
     end
+    return false
   end
 
   self.draw = function ()

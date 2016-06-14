@@ -28,6 +28,10 @@ PlanetsideTilemapCommandPanelComponent.new = function (init)
     self.super.goToNext()
   end
 
+  self.toNextWaypoint = function ()
+    self.super.toNextWaypoint()
+  end
+
   --Subcomponents
   self.endTurnButton = ImmediateButtonComponent.new({
     sprite = SpriteInstance.new({sprite = "EndTurn_UI"}),
@@ -41,7 +45,13 @@ PlanetsideTilemapCommandPanelComponent.new = function (init)
     callback = self.focusNextUnit
   })
 
-  self.buttons = {self.endTurnButton, self.nextUnitButton}
+  self.toWaypointButton = ImmediateButtonComponent.new({
+    sprite = SpriteInstance.new({sprite = "ToWaypoint_UI"}),
+    ui_rect = {x = self.ui_rect.x + 56, y = self.ui_rect.y + 25, w = 25, h = 25},
+    callback = self.toNextWaypoint
+  })
+
+  self.buttons = {self.endTurnButton, self.nextUnitButton, self.toWaypointButton}
 
   --Events
   self.onDraw = function ()
