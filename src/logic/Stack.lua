@@ -50,6 +50,14 @@ Stack.new = function(init)
     if self.isUnitSelected(uid) == false and self.getUnit(uid) ~= nil then
       table.insert(self.selection, uid)
       self.selection_index[uid] = true
+      --Reorder selection to preserve order
+      local n_selection = {}
+      for i, v in ipairs(self.units) do
+        if self.isUnitSelected(v.uid) then
+          table.insert(n_selection, v.uid)
+        end
+      end
+      self.selection = n_selection
     end
   end
 

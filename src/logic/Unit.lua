@@ -16,7 +16,7 @@ Unit.new = function (init)
     backColor = init.backColor or {200,50,50},
     idx = init.idx or IDX_CNTR + 1,
     health = 100 - math.floor(math.random() * 50),
-    curr_movepoints = 5
+    curr_movepoints = 50
   }
   UUID_CNTR = UUID_CNTR + 1
   IDX_CNTR = IDX_CNTR + 1
