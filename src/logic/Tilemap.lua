@@ -63,8 +63,9 @@ Pathfinder.new = function(init)
       if self.avoidOther == true then
 
       end
+      local mp_cost = self.tilemap.terrain_connective_matrix[considered.location.idx]['mpcost']['walk'] or 10000
       local emCost = math.min(math.min(math.abs(goal.col - self.tilemap.num_cols - n.location.col),math.abs(n.location.col - self.tilemap.num_cols - goal.col)),math.abs(goal.col - n.location.col)) + math.abs(goal.row - n.location.row)/2
-      n.mCost = 1 + parent.mCost
+      n.mCost = mp_cost + parent.mCost
       n.score = n.mCost + emCost
       n.parent = parent
       n.lid = n.location.idx
@@ -88,6 +89,14 @@ Tilemap.new = function (init)
     hex_size = init.hex_size or 42, --MUST be half of tilesize_x
     tiles = init.tiles or {},
     terrain_connective_matrix = init.terrain_connective_matrix or {},
+    terrain_type_move_costs = init.terrain_type_move_costs or {
+      Ocean = { sail = 1,  fly = 1 },
+      Ice = { walk = 3, hover = 2, fly = 1 },
+      Grass = { walk = 1, hover = 1, fly = 1 },
+      Tundra = { walk = 2, hover = 1, fly = 1 },
+      Steppe = { walk = 1, hover = 1, fly = 1 },
+      Desert = { walk = 3, hover = 2, fly = 1 }
+    },
     terrain_type_minimap_colors = init.terrain_type_minimap_colors or {
       Ocean = {0, 125, 255},
       Ice = {190, 210, 230},

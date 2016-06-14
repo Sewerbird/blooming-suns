@@ -12,6 +12,7 @@ Unit.new = function (init)
     selected = false,
     move_queue = nil,
     move_domain = init.move_domain or 'land',
+    move_method = init.move_method or 'walk',
     owner = init.owner or 'Hazat',
     backColor = init.backColor or {200,50,50},
     idx = init.idx or IDX_CNTR + 1,

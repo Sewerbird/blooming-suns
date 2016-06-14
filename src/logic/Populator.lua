@@ -74,6 +74,7 @@ Populator.new = function (init)
               local new_unit = Unit.new({
                 sprite = "TestSeaUnit",
                 move_domain = "sea",
+                move_method = "sail",
                 location = {idx = idx, row = row, col = col},
                 owner = r_owner,
                 backColor = owner_color
@@ -83,6 +84,7 @@ Populator.new = function (init)
               local new_unit = Unit.new({
                 sprite = "TestUnit",
                 move_domain = "land",
+                move_method = "walk",
                 location = {idx = idx, row = row, col = col},
                 owner = r_owner,
                 backColor = owner_color
@@ -139,6 +141,8 @@ Populator.new = function (init)
           map.terrain_connective_matrix[idx]['air'][SE] = "SE"
           map.terrain_connective_matrix[idx]['air'][SW] = "SW"
         end
+        --Generate Terrain Costs
+        map.terrain_connective_matrix[idx]['mpcost'] = map.terrain_type_move_costs[terrain_type]
 
       end
     end

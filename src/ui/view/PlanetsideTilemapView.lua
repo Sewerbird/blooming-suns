@@ -190,12 +190,14 @@ PlanetsideTilemapView.new = function (init)
       end
 
       local movedTo = nil
-      local move_cost = 1
       local stack_can_move = true
 
       local can_move_list = self.current_focus.stack.forEachSelected(function (unit)
-        if unit.hasMoveOrder() and self.current_focus.stack.isUnitSelected(unit.uid) and unit.curr_movepoints < move_cost then
-          stack_can_move = false
+        if unit.hasMoveOrder() and self.current_focus.stack.isUnitSelected(unit.uid) then
+          local move_cost = self.model.terrain_connective_matrix[unit.getNextMove().idx]['mpcost'][unit.move_method]
+          if unit.curr_movepoints < move_cost then
+            stack_can_move = false
+          end
         end
       end)
 
@@ -211,7 +213,8 @@ PlanetsideTilemapView.new = function (init)
             return
           end
           moving_unit = self.current_focus.delocateUnit(moving_unit)
-          moving_unit.performMoveOrder()
+          local move_cost = self.model.terrain_connective_matrix[unit.getNextMove().idx]['mpcost'][unit.move_method]
+          moving_unit.performMoveOrder(move_cost)
           movedTo = moving_unit.location.idx
           self.model.tiles[moving_unit.location.idx].relocateUnit(moving_unit)
           self.model.tiles[moving_unit.location.idx].stack.selectUnit(moving_unit.uid)
