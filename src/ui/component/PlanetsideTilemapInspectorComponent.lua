@@ -127,10 +127,24 @@ PlanetsideTilemapInspectorUnitSelectorTileComponent.new = function(init)
 
   self.onMouseReleased = function (x, y)
     local tgt_stack = self.super.target.stack
+    local wants_to_set_active = false
+    if love.keyboard.isDown('lshift') then
+      print("LSHIFT IS DOWN")
+      wants_to_set_active = true
+    end
     if tgt_stack.isUnitSelected(self.target.uid) then
       tgt_stack.deselectUnit(self.target.uid)
+      if wants_to_set_active then
+        tgt_stack.deactivateUnit(self.target.uid)
+      end
+    elseif tgt_stack.isUnitInactive(self.target.uid) then
+      tgt_stack.activateUnit(self.target.uid)
     else
-      tgt_stack.selectUnit(self.target.uid)
+      if wants_to_set_active then
+        tgt_stack.deactivateUnit(self.target.uid)
+      else
+        tgt_stack.selectUnit(self.target.uid)
+      end
     end
   end
   return self

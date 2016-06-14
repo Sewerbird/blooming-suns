@@ -108,7 +108,7 @@ Stack.new = function(init)
 
     if self.getUnit(uid) ~= nil and self.isUnitActive(uid) then
       table.insert(self.inactive, uid)
-      self.inactive_index[uid] = uid
+      self.inactive_index[uid] = true
     end
   end
 
