@@ -31,13 +31,13 @@ PlanetsideTilemapCommandPanelComponent.new = function (init)
   --Subcomponents
   self.endTurnButton = ImmediateButtonComponent.new({
     sprite = SpriteInstance.new({sprite = "EndTurn_UI"}),
-    ui_rect = {x = self.ui_rect.x, y = self.ui_rect.y, w = 56, h = 52},
+    ui_rect = {x = self.ui_rect.x, y = self.ui_rect.y, w = 50, h = 50},
     callback = self.promptEndTurn
   })
 
   self.nextUnitButton = ImmediateButtonComponent.new({
-    sprite = SpriteInstance.new({sprite = "EndTurn_UI"}),
-    ui_rect = {x = self.ui_rect.x + 56, y = self.ui_rect.y, w = 56, h = 52},
+    sprite = SpriteInstance.new({sprite = "NextUnit_UI"}),
+    ui_rect = {x = self.ui_rect.x + 56, y = self.ui_rect.y, w = 25, h = 25},
     callback = self.focusNextUnit
   })
 

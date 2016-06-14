@@ -52,8 +52,13 @@ SpriteBank.new = function (init)
     self.loadSpritesheet("icetile", "assets/tilesets/icetile.png", 168, 146)
     self.loadSpritesheet("tundratile", "assets/tilesets/tundratile.png", 168, 146)
     self.loadSpritesheet("steppetile", "assets/tilesets/steppetile.png", 168, 146)
-    self.loadSpritesheet("endturn", "assets/tilesets/endturn.png", 162, 150)
+    self.loadSpritesheet("command_ui", "assets/tilesets/command_ui.png", 280, 128)
     --Load Sprites Next
+    local spriteSpecs = love.filesystem.getDirectoryItems("assets/sprites")
+    print("Loading the following sprites: ")
+    for i, v in ipairs(spriteSpecs) do
+      print(i .. " - " .. v)
+    end
     self.loadSprite("TestUnit", "assets/sprites/TestUnitSprite")
     self.loadSprite("TestSpaceUnit", "assets/sprites/TestSpaceUnitSprite")
     self.loadSprite("TestSeaUnit", "assets/sprites/TestSeaUnitSprite")
@@ -63,7 +68,7 @@ SpriteBank.new = function (init)
     self.loadSprite("Ice", "assets/sprites/IceTileSprite")
     self.loadSprite("Tundra", "assets/sprites/TundraTileSprite")
     self.loadSprite("Steppe", "assets/sprites/SteppeTileSprite")
-    self.loadSprite("EndTurn_UI", "assets/sprites/EndTurn_UI")
+    self.loadSprite("NextUnit_UI", "assets/sprites/NextUnit_UI")
   end
 
   return self
