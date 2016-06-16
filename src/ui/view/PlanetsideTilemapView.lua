@@ -167,38 +167,7 @@ PlanetsideTilemapView.new = function (init)
       self.current_focus = nil
       self.inspector.uninspect()
     elseif self.current_focus ~= nil and self.current_focus ~= fhex and self.current_focus.stack.getOwner() == GlobalGameState.current_player then
-      --TODO: The unit movement logic belongs in a gamestate mutator
-      local start = {row = self.current_focus.position.row, col = self.current_focus.position.col, idx = self.current_focus.idx}
-      local f_unit = self.current_focus.stack.head()
-      local path_append = false
-        --TODO: fix appending paths to movequeus in katamari-situations
-      --[[
-      if (love.keyboard.isDown('lshift') or love.keyboard.isDown('rshift')) and f_unit.hasMoveOrder() then
-        path_append = true
-        start = f_unit.move_queue.tail()
-      end
-      ]]--
-
-      local goal = {row = fhex.position.row, col = fhex.position.col, idx = fhex.idx}
-
-      local path = self.model.avoidPathfinder:findPath(start, goal, self.current_focus.stack.head().move_domain)
-
-      if path == nil then return end
-
-      self.current_focus.stack.forEach(function (unit)
-        if path_append and self.current_focus.stack.isUnitSelected(unit.uid) then
-          unit.appendMoveQueue(path)
-        elseif self.current_focus.stack.isUnitSelected(unit.uid) then
-          unit.setMoveQueue(path)
-        end
-      end)
-
-      for i, v in ipairs(self.model.tiles) do
-        self.model.tiles[i].debug = false;
-      end
-      for i, v in ipairs(path.nodes) do
-        self.model.tiles[v.lid].debug = true;
-      end
+      self.assignMovePath(fhex)
     elseif fhex.stack.size() > 0 then
       if self.current_focus ~= nil then
         self.current_focus.click()
@@ -206,6 +175,41 @@ PlanetsideTilemapView.new = function (init)
       self.current_focus = fhex
       self.current_focus.click()
       self.inspector.inspect(fhex)
+    end
+  end
+
+  self.assignMovePath = function (destination_hex)
+     --TODO: The unit movement logic belongs in a gamestate mutator
+    local start = {row = self.current_focus.position.row, col = self.current_focus.position.col, idx = self.current_focus.idx}
+    local f_unit = self.current_focus.stack.head()
+    local path_append = false
+      --TODO: fix appending paths to movequeus in katamari-situations
+    --[[
+    if (love.keyboard.isDown('lshift') or love.keyboard.isDown('rshift')) and f_unit.hasMoveOrder() then
+      path_append = true
+      start = f_unit.move_queue.tail()
+    end
+    ]]--
+
+    local goal = {row = destination_hex.position.row, col = destination_hex.position.col, idx = destination_hex.idx}
+
+    local path = self.model.avoidPathfinder:findPath(start, goal, self.current_focus.stack.head().move_domain)
+
+    if path == nil then return end
+
+    self.current_focus.stack.forEach(function (unit)
+      if path_append and self.current_focus.stack.isUnitSelected(unit.uid) then
+        unit.appendMoveQueue(path)
+      elseif self.current_focus.stack.isUnitSelected(unit.uid) then
+        unit.setMoveQueue(path)
+      end
+    end)
+
+    for i, v in ipairs(self.model.tiles) do
+      self.model.tiles[i].debug = false;
+    end
+    for i, v in ipairs(path.nodes) do
+      self.model.tiles[v.lid].debug = true;
     end
   end
 

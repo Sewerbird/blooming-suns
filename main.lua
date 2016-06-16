@@ -12,6 +12,7 @@ require('src/ui/component/PlanetsideTilemapCommandPanelComponent');
 require('src/ui/component/PlanetsideTilemapInspectorComponent');
 require('src/ui/component/PlanetsideTilemapCameraComponent');
 require('src/ui/component/PlanetsideMinimapComponent');
+require('src/ui/component/SpacesideOrreryCameraComponent');
 require('src/ui/component/LabelComponent');
 require('src/ui/component/PanelComponent');
 require('src/ui/component/ImmediateButtonComponent');
