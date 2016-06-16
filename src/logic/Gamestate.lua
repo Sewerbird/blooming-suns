@@ -7,10 +7,15 @@ Gamestate.new = function(init)
   local self = {
     units = {},
     tilemaps = {},
+    spacemaps = {},
     players = {},
     turn_order = {},
     current_player = nil
   }
+
+  self.addSpacemap = function (idx, spacemap)
+    self.spacemaps[idx] = spacemap
+  end
 
   self.addTilemap = function (idx, tilemap)
     self.tilemaps[idx] = tilemap
@@ -41,6 +46,10 @@ Gamestate.new = function(init)
 
   self.getTilemap = function (idx)
     return self.tilemaps[idx]
+  end
+
+  self.getSpacemap = function (idx)
+    return self.spacemaps[idx]
   end
 
   self.nextTurn = function ()

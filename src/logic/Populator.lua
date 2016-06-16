@@ -7,6 +7,7 @@ Populator.new = function (init)
 
   self.generateGameState = function()
     local gamestate = Gamestate.new()
+    gamestate.addSpacemap(1, Spacemap.new())
     gamestate.addTilemap(1, Tilemap.new())
     self.generateTileMapTerrainRandom(gamestate.getTilemap(1))
     gamestate.addPlayer('Hazat', Player.new())

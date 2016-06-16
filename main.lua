@@ -4,6 +4,7 @@ require('src/logic/Gamestate');
 require('src/logic/Stack');
 require('src/logic/Tile');
 require('src/logic/Tilemap');
+require('src/logic/Spacemap');
 require('src/logic/Populator');
 require('src/logic/Unit');
 
@@ -17,6 +18,7 @@ require('src/ui/component/ImmediateButtonComponent');
 require('src/ui/component/ViewComponent');
 require('src/ui/view/ConfirmationView');
 require('src/ui/view/PlanetsideTilemapView');
+require('src/ui/view/SpacesideOrreryView');
 require('src/ui/view/AlertBoxView');
 require('src/ui/view/View');
 require('src/ui/ViewManager');
@@ -45,9 +47,13 @@ function love.load()
   GlobalGameState = Populator.new().generateGameState()
 
   --Create Views
+  --[[
   local def_view = PlanetsideTilemapView.new({
     model = GlobalGameState.getTilemap(1),
     rect = {x = 0, y = 0, w = love.graphics.getWidth(), h = love.graphics.getHeight()}
+  })]]
+  local def_view = SpacesideOrreryView.new({
+    model = GlobalGameState.getSpacemap(1)
   })
   GlobalViewManager.push(def_view)
 end
