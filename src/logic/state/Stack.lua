@@ -87,9 +87,9 @@ Stack.new = function(init)
   end
 
   self.growSelectionBasedOnMoveQueue = function(uid)
-    local cmp = self.getUnit(uid).serializeMoveQueue()
+    local cmp = self.getUnit(uid).orders.serialize()
     for i, v in ipairs(self.units) do
-      if v.serializeMoveQueue() == cmp then
+      if v.orders.serialize() == cmp then
         self.selectUnit(v.uid)
       end
     end

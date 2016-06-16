@@ -10,6 +10,7 @@ Unit.new = function (init)
     sprite = init.sprite or nil,
     location = init.location or nil,
     selected = false,
+    orders = init.order_queue or OrderQueue.new(),
     move_queue = nil,
     move_domain = init.move_domain or 'land',
     move_method = init.move_method or 'walk',

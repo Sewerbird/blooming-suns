@@ -1,25 +1,29 @@
 --game classes
-require('src/logic/Player');
-require('src/logic/Gamestate');
-require('src/logic/Stack');
-require('src/logic/Tile');
-require('src/logic/Tilemap');
-require('src/logic/Spacemap');
 require('src/logic/Populator');
-require('src/logic/Unit');
+require('src/logic/state/Gamestate');
+  require('src/logic/state/Player');
+  require('src/logic/state/Spacemap');
+  require('src/logic/state/Tilemap');
+    require('src/logic/state/Tile');
+      require('src/logic/state/Stack');
+        require('src/logic/state/Unit');
+          require('src/logic/state/OrderQueue');
+            require('src/logic/state/Order');
 
-require('src/ui/component/PlanetsideTilemapCommandPanelComponent');
-require('src/ui/component/PlanetsideTilemapInspectorComponent');
-require('src/ui/component/PlanetsideTilemapCameraComponent');
-require('src/ui/component/PlanetsideMinimapComponent');
-require('src/ui/component/SpacesideOrreryCameraComponent');
+require('src/ui/view/PlanetsideTilemapView');
+  require('src/ui/component/PlanetsideTilemapCommandPanelComponent');
+  require('src/ui/component/PlanetsideTilemapInspectorComponent');
+  require('src/ui/component/PlanetsideTilemapCameraComponent');
+  require('src/ui/component/PlanetsideMinimapComponent');
+require('src/ui/view/SpacesideOrreryView');
+  require('src/ui/component/SpacesideOrreryCameraComponent');
+
 require('src/ui/component/LabelComponent');
 require('src/ui/component/PanelComponent');
 require('src/ui/component/ImmediateButtonComponent');
 require('src/ui/component/ViewComponent');
+
 require('src/ui/view/ConfirmationView');
-require('src/ui/view/PlanetsideTilemapView');
-require('src/ui/view/SpacesideOrreryView');
 require('src/ui/view/AlertBoxView');
 require('src/ui/view/View');
 require('src/ui/ViewManager');
