@@ -48,14 +48,16 @@ function love.load()
   GlobalGameState = Populator.new().generateGameState()
 
   --Create Views
-  --[[
+  --
   local def_view = PlanetsideTilemapView.new({
     model = GlobalGameState.getTilemap(1),
     rect = {x = 0, y = 0, w = love.graphics.getWidth(), h = love.graphics.getHeight()}
-  })]]
+  })
+  --[[
   local def_view = SpacesideOrreryView.new({
     model = GlobalGameState.getSpacemap(1)
   })
+  ]]
   GlobalViewManager.push(def_view)
 end
 
