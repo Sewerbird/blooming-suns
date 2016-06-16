@@ -9,8 +9,12 @@ OrderQueue.new = function (init)
     target = init.target or {}
   }
 
-  self.hasNext = function ()
-    return self.queue ~= nil and #self.queue > 0
+  self.hasNext = function (type)
+    if type == nil then
+      return self.queue ~= nil and #self.queue > 0
+    else
+      return self.queue ~= nil and #self.queue > 0 and self.queue[1].kind == type
+    end
   end
 
   self.length = function ()
@@ -18,7 +22,7 @@ OrderQueue.new = function (init)
   end
 
   self.add = function (order)
-    table.insert(self.queue)
+    table.insert(self.queue, order)
   end
 
   self.peek = function ()

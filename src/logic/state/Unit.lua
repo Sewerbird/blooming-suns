@@ -28,38 +28,10 @@ Unit.new = function (init)
     self.sprite = SpriteInstance.new({sprite = self.sprite})
   end
 
-  self.hasMoveOrder = function ()
-    return self.move_queue ~= nil and self.move_queue.length() > 0
-  end
-
-  self.getNextMove = function ()
-    return self.move_queue.head()
-  end
-
   self.performMoveOrder = function (cost)
-    local tgt = self.move_queue.popleft()
+    local order = self.orders.next()
     self.curr_movepoints = math.max(self.curr_movepoints - (cost or 1), 0)
-    self.location = tgt
-  end
-
-  self.setMoveQueue = function (path)
-    self.move_queue = List.new()
-    self.appendMoveQueue(path)
-  end
-
-  self.appendMoveQueue = function (path)
-    for i, j in ipairs(path.nodes) do
-      self.move_queue.pushright(j.location)
-    end
-  end
-
-  self.serializeMoveQueue = function ()
-    local result = ""
-    if self.move_queue == nil then return result end
-    for i, j in ipairs(self.move_queue) do
-      result = result .. j.idx .. '|'
-    end
-    return result
+    self.location = order.dst
   end
 
   self.clearMoveQueue = function ()

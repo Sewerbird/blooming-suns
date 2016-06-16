@@ -182,29 +182,22 @@ PlanetsideTilemapView.new = function (init)
      --TODO: The unit movement logic belongs in a gamestate mutator
     local start = {row = self.current_focus.position.row, col = self.current_focus.position.col, idx = self.current_focus.idx}
     local f_unit = self.current_focus.stack.head()
-    local path_append = false
-      --TODO: fix appending paths to movequeus in katamari-situations
-    --[[
-    if (love.keyboard.isDown('lshift') or love.keyboard.isDown('rshift')) and f_unit.hasMoveOrder() then
-      path_append = true
-      start = f_unit.move_queue.tail()
-    end
-    ]]--
 
     local goal = {row = destination_hex.position.row, col = destination_hex.position.col, idx = destination_hex.idx}
-
     local path = self.model.avoidPathfinder:findPath(start, goal, self.current_focus.stack.head().move_domain)
 
     if path == nil then return end
 
     self.current_focus.stack.forEach(function (unit)
-      if path_append and self.current_focus.stack.isUnitSelected(unit.uid) then
-        unit.appendMoveQueue(path)
-      elseif self.current_focus.stack.isUnitSelected(unit.uid) then
-        unit.setMoveQueue(path)
+      if self.current_focus.stack.isUnitSelected(unit.uid) then
+        unit.orders.clear()
+        for i, j in ipairs(path.nodes) do
+          unit.orders.add(Order.new{kind="Move", dst=j.location})
+        end
       end
     end)
 
+    --TODO: do this properly.
     for i, v in ipairs(self.model.tiles) do
       self.model.tiles[i].debug = false;
     end
@@ -223,40 +216,41 @@ PlanetsideTilemapView.new = function (init)
       local movedTo = nil
       local stack_can_move = true
 
-      local can_move_list = self.current_focus.stack.forEachSelected(function (unit)
-        if unit.hasMoveOrder() and self.current_focus.stack.isUnitSelected(unit.uid) then
-          local move_cost = self.model.terrain_connective_matrix[unit.getNextMove().idx]['mpcost'][unit.move_method]
-          --Allow move if unit has enough movepoints, or if it has all of its movepoints (i.e.: 'can always move one in any valid direction' rule)
+      --Verify
+      self.current_focus.stack.forEachSelected(function (unit)
+        if unit.orders.hasNext("Move") then
+          local move_cost = self.model.terrain_connective_matrix[unit.orders.peek().dst.idx]['mpcost'][unit.move_method]
           if unit.curr_movepoints < move_cost and unit.curr_movepoints < unit.max_movepoints then
-            stack_can_move = false
+              stack_can_move = false
           end
         end
       end)
 
-
       if not stack_can_move then return false end
 
+      --Commit
       self.current_focus.stack.forEachSelected(function (unit)
-        if unit.hasMoveOrder() and self.current_focus.stack.isUnitSelected(unit.uid) then
+        if unit.orders.hasNext("Move") then
           local moving_unit = unit
-          --check destination is empty/friendly
-          local dest_owner = self.model.tiles[moving_unit.getNextMove().idx].stack.getOwner()
-          if dest_owner ~= nil and dest_owner ~= unit.owner then
-            return
-          end
+          local dest_owner = self.model.tiles[moving_unit.orders.peek().dst.idx].stack.getOwner()
+          if dest_owner ~= nil and dest_owner ~= unit.owner then return end
           moving_unit = self.current_focus.delocateUnit(moving_unit)
-          local move_cost = self.model.terrain_connective_matrix[unit.getNextMove().idx]['mpcost'][unit.move_method]
-          moving_unit.performMoveOrder(move_cost)
+          local move_cost = self.model.terrain_connective_matrix[unit.orders.peek().dst.idx]['mpcost'][unit.move_method]
+          local order = moving_unit.orders.next()
+          moving_unit.curr_movepoints = math.max(moving_unit.curr_movepoints - (cost or 1), 0)
+          moving_unit.location = order.dst
           movedTo = moving_unit.location.idx
           self.model.tiles[moving_unit.location.idx].relocateUnit(moving_unit)
           self.model.tiles[moving_unit.location.idx].stack.selectUnit(moving_unit.uid)
-          for i = moving_unit.move_queue.first , moving_unit.move_queue.last do
-            self.model.tiles[moving_unit.move_queue[i].idx].debug = true;
+          for i, v in ipairs(moving_unit.orders.queue) do
+            self.model.tiles[v.dst.idx].debug = true;
           end
         end
       end)
 
       if movedTo == nil then return false end
+
+      --Refocus if Committed
       self.current_focus.stack.clearSelection()
       self.current_focus = self.model.tiles[movedTo]
       self.inspector.inspect(self.current_focus)
