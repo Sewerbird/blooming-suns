@@ -17,3 +17,5 @@ This is an attempt to work a 4X Strategy Game featuring detailed planet-side mec
 - Feel free to fork, although sewerbird/blooming-suns is the 'official' fork so far as I'm concerned
 
 Pull requests on forks will be reviewed and merged upstream to Sewerbird/blooming-suns
+
+There is a Trello board at https://trello.com/b/VOm7sxvd/sovereign-of-the-blooming-sun to see what I'm working on and prioritizing.

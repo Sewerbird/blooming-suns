@@ -1,0 +1,5 @@
+describe("Test framework", function ()
+  it("Should pass a noop", function ()
+    assert.is_true(true)
+  end)
+end)
