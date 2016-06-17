@@ -9,10 +9,10 @@ Populator.new = function (init)
     local gamestate = Gamestate.new()
     gamestate.addSpacemap(1, Spacemap.new())
     gamestate.addTilemap(1, Tilemap.new())
-    self.generateTileMapTerrainRandom(gamestate.getTilemap(1))
     gamestate.addPlayer('Hazat', Player.new())
     gamestate.addPlayer('Hawkwood', Player.new())
     gamestate.setPlayerOrder({'Hazat', 'Hawkwood'})
+    self.generateTileMapTerrainRandom(gamestate.getTilemap(1))
 
     return gamestate
   end

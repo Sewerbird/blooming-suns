@@ -28,16 +28,6 @@ Unit.new = function (init)
     self.sprite = SpriteInstance.new({sprite = self.sprite})
   end
 
-  self.performMoveOrder = function (cost)
-    local order = self.orders.next()
-    self.curr_movepoints = math.max(self.curr_movepoints - (cost or 1), 0)
-    self.location = order.dst
-  end
-
-  self.clearMoveQueue = function ()
-    self.move_queue = nil
-  end
-
   --members
   self.update = function (dt)
     self.sprite.update(dt)
