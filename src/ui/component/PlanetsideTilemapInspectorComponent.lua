@@ -37,7 +37,6 @@ PlanetsideTilemapInspectorComponent.new = function (init)
 
   self.onMutation = function (mut)
     --TODO: do check to see if mutation affects us, not just blindly reset
-    print("Inspector got mutation event")
     self.inspect(self.target)
   end
 

@@ -73,15 +73,6 @@ PlanetsideTilemapView.new = function (init)
     callback = function () print("SPAAAACE") end
   })
 
---[[
-  self.spacesidebutton = ViewComponent.new({
-      target = nil,
-      description = "SPAAAACE",
-      ui_rect = {x = 125, y = 20, h = 25, w = 25, rx = 0, ry = 0},
-      background_color = {200, 150, 190},
-      super = self
-    })
---]]
   self.blastoffbutton = ViewComponent.new({
       target = nil,
       description = "TAKEOFF",
@@ -168,7 +159,6 @@ PlanetsideTilemapView.new = function (init)
   end
 
   self.toNextWaypoint = function()
-    print("GOING TO NEXT WAYPOINT")
     local wasAbleToMove = true
 
     while wasAbleToMove do
@@ -181,7 +171,6 @@ PlanetsideTilemapView.new = function (init)
   end
 
   self.focus = function (fhex)
-    --if unit == nil then return end
     if self.current_focus ~= nil and self.current_focus == fhex then
       if self.current_focus ~= nil then
         self.current_focus.click()
@@ -201,7 +190,7 @@ PlanetsideTilemapView.new = function (init)
   end
 
   self.assignMovePath = function (destination_hex)
-     --TODO: The unit movement logic belongs in a gamestate mutator
+    --TODO: Should move assignment be in a mutator?
     local start = {row = self.current_focus.position.row, col = self.current_focus.position.col, idx = self.current_focus.idx}
     local f_unit = self.current_focus.stack.head()
 
@@ -269,53 +258,10 @@ PlanetsideTilemapView.new = function (init)
         end)
       end
 
-      --[[
-
-      --TODO: showing order queue logic should be handled differently
-      for i, v in ipairs(self.model.tiles) do
-        self.model.tiles[i].debug = false;
-      end
-      local movedTo = nil
-      local stack_can_move = true
-
-      --Verify
-      self.current_focus.stack.forEachSelected(function (unit)
-        if unit.orders.hasNext("Move") then
-          local move_cost = self.model.terrain_connective_matrix[unit.orders.peek().dst.idx]['mpcost'][unit.move_method]
-          if unit.curr_movepoints < move_cost and unit.curr_movepoints < unit.max_movepoints then
-              stack_can_move = false
-          end
-        end
-      end)
-
-      if not stack_can_move then return false end
-
-      --Commit
-      self.current_focus.stack.forEachSelected(function (unit)
-        if unit.orders.hasNext("Move") then
-          local moving_unit = unit
-          local dest_owner = self.model.tiles[moving_unit.orders.peek().dst.idx].stack.getOwner()
-          if dest_owner ~= nil and dest_owner ~= unit.owner then return end
-          moving_unit = self.current_focus.delocateUnit(moving_unit)
-          local move_cost = self.model.terrain_connective_matrix[unit.orders.peek().dst.idx]['mpcost'][unit.move_method]
-          local order = moving_unit.orders.next()
-          moving_unit.curr_movepoints = math.max(moving_unit.curr_movepoints - (move_cost or 1), 0)
-          moving_unit.location = order.dst
-          movedTo = moving_unit.location.idx
-          self.model.tiles[moving_unit.location.idx].relocateUnit(moving_unit)
-          self.model.tiles[moving_unit.location.idx].stack.selectUnit(moving_unit.uid)
-          for i, v in ipairs(moving_unit.orders.queue) do
-            self.model.tiles[v.dst.idx].debug = true;
-          end
-        end
-      end)
-
-      --]]
       if movedTo == nil then return false end
 
       --Refocus if Committed
       self.current_focus.stack.clearSelection()
-      print("REFOCUSING ON: " .. inspect(movedTo,{depth=2}))
       self.current_focus = movedTo
       self.inspector.inspect(self.current_focus)
 
