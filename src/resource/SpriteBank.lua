@@ -53,6 +53,7 @@ SpriteBank.new = function (init)
     self.loadSpritesheet("tundratile", "assets/tilesets/tundratile.png", 168, 146)
     self.loadSpritesheet("steppetile", "assets/tilesets/steppetile.png", 168, 146)
     self.loadSpritesheet("command_ui", "assets/tilesets/command_ui.png", 280, 128)
+    self.loadSpritesheet("space_ui", "assets/tilesets/space_UI.png", 74, 174)
     --Load Sprites Next
     local spriteSpecs = love.filesystem.getDirectoryItems("assets/sprites")
     print("Loading the following sprites: ")
@@ -71,6 +72,7 @@ SpriteBank.new = function (init)
     self.loadSprite("EndTurn_UI", "assets/sprites/EndTurn_UI")
     self.loadSprite("NextUnit_UI", "assets/sprites/NextUnit_UI")
     self.loadSprite("ToWaypoint_UI", "assets/sprites/ToWaypoint_UI")
+    self.loadSprite("ToSpace_UI", "assets/sprites/ToSpace_UI")
   end
 
   return self

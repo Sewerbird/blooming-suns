@@ -64,6 +64,16 @@ PlanetsideTilemapView.new = function (init)
       super = self
     })
 
+  self.spacesidebutton =  ImmediateButtonComponent.new({
+    target = nil,
+    description = "SPAAAAACE",
+    sprite = SpriteInstance.new({sprite = "ToSpace_UI"}),
+    ui_rect = {x = 125, y = 20, h = 25, w = 25, rx = 0, ry = 0},
+    super = self,
+    callback = function () print("SPAAAACE") end
+  })
+
+--[[
   self.spacesidebutton = ViewComponent.new({
       target = nil,
       description = "SPAAAACE",
@@ -71,7 +81,7 @@ PlanetsideTilemapView.new = function (init)
       background_color = {200, 150, 190},
       super = self
     })
-
+--]]
   self.blastoffbutton = ViewComponent.new({
       target = nil,
       description = "TAKEOFF",

@@ -30,5 +30,8 @@ ImmediateButtonComponent.new = function(init)
 
   self.onClick = self.callback
 
+  self.onMousePressed = function () end
+  self.onMouseReleased = function () self.onClick() end
+
   return self
 end
