@@ -135,8 +135,20 @@ PlanetsideTilemapView.new = function (init)
   self.onKeyPressed = function (key)
     if key == 'space' then
       self.executeNextOrder()
+    elseif key == 'z' then
+      self.undoLastOrder()
+    elseif key == 'x' then
+      self.redoLastOrder()
     elseif key == 'i' and self.current_focus ~= nil then
       print(inspect(self.current_focus))
+    end
+  end
+
+  self.onMutation = function (mut)
+    for i, component in ipairs(self.components) do
+      if component.onMutation ~= nil then
+        component.onMutation(mut)
+      end
     end
   end
 
@@ -202,7 +214,7 @@ PlanetsideTilemapView.new = function (init)
       if self.current_focus.stack.isUnitSelected(unit.uid) then
         unit.orders.clear()
         for i, j in ipairs(path.nodes) do
-          unit.orders.add(Order.new{kind="Move", dst=j.location})
+          unit.orders.add(MoveUnitOrder.new({map = self.model, unit = unit, src=(path.nodes[i-1] and self.model.tiles[path.nodes[i-1].location.idx]) or self.current_focus, dst=j.location}))
         end
       end
     end)
@@ -216,13 +228,53 @@ PlanetsideTilemapView.new = function (init)
     end
   end
 
+  self.undoLastOrder = function()
+    GlobalMutatorBus.rewind()
+  end
+
+  self.redoLastOrder = function()
+    GlobalMutatorBus.replay()
+  end
+
   self.executeNextOrder = function ()
     if self.current_focus ~= nil and self.current_focus.stack.getOwner() == GlobalGameState.current_player then
       --TODO: this logic shouldn't live in the view, but in a gamestate mutator
+
+      --TODO: think through verification process
+      local verifyOrder = function (unit, order)
+        if order.kind == "Move" then
+          local move_cost = self.model.terrain_connective_matrix[order.dst.idx]['mpcost'][unit.move_method]
+          if unit.curr_movepoints < move_cost and unit.curr_movepoints < unit.max_movepoints then
+              return false
+          end
+        end
+        return true
+      end
+
+
+      --Verify: all selected units asked to execute their next order must be able to do so legally, otherwise cancel
+      local able = true
+      self.current_focus.stack.forEachSelected(function (unit)
+        able = able and unit.orders.hasNext() and verifyOrder(unit, unit.orders.peek())
+      end)
+
+      --Execute: If all selected units can perform their order, execute the order
+      local movedTo = nil
+      if able then
+        self.current_focus.stack.forEachSelected(function (unit)
+          local order = unit.orders.next()
+          GlobalMutatorBus.executeOrder(order)
+          movedTo = self.model.getHexAtIdx(unit.location.idx)
+          movedTo.stack.selectUnit(unit.uid)
+        end)
+      end
+
+      --[[
+
+      --TODO: showing order queue logic should be handled differently
       for i, v in ipairs(self.model.tiles) do
         self.model.tiles[i].debug = false;
       end
-
       local movedTo = nil
       local stack_can_move = true
 
@@ -247,7 +299,7 @@ PlanetsideTilemapView.new = function (init)
           moving_unit = self.current_focus.delocateUnit(moving_unit)
           local move_cost = self.model.terrain_connective_matrix[unit.orders.peek().dst.idx]['mpcost'][unit.move_method]
           local order = moving_unit.orders.next()
-          moving_unit.curr_movepoints = math.max(moving_unit.curr_movepoints - (cost or 1), 0)
+          moving_unit.curr_movepoints = math.max(moving_unit.curr_movepoints - (move_cost or 1), 0)
           moving_unit.location = order.dst
           movedTo = moving_unit.location.idx
           self.model.tiles[moving_unit.location.idx].relocateUnit(moving_unit)
@@ -258,11 +310,13 @@ PlanetsideTilemapView.new = function (init)
         end
       end)
 
+      --]]
       if movedTo == nil then return false end
 
       --Refocus if Committed
       self.current_focus.stack.clearSelection()
-      self.current_focus = self.model.tiles[movedTo]
+      print("REFOCUSING ON: " .. inspect(movedTo,{depth=2}))
+      self.current_focus = movedTo
       self.inspector.inspect(self.current_focus)
 
       return true

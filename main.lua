@@ -10,6 +10,11 @@ require('src/logic/state/Gamestate');
           require('src/logic/state/OrderQueue');
             require('src/logic/state/Order');
 
+require('src/logic/mutate/Mutator');
+require('src/logic/mutate/MutatorBus');
+require('src/logic/mutate/MoveUnitMutator');
+require('src/logic/order/MoveUnitOrder');
+
 require('src/ui/view/PlanetsideTilemapView');
   require('src/ui/component/PlanetsideTilemapCommandPanelComponent');
   require('src/ui/component/PlanetsideTilemapInspectorComponent');
@@ -51,6 +56,9 @@ function love.load()
   --Create Gamestate
   GlobalGameState = Populator.new().generateGameState()
 
+  --Load MutatorBus
+  GlobalMutatorBus = MutatorBus.new()
+
   --Create Views
   --
   local def_view = PlanetsideTilemapView.new({
@@ -61,7 +69,7 @@ function love.load()
   local def_view = SpacesideOrreryView.new({
     model = GlobalGameState.getSpacemap(1)
   })
-  ]]
+  --]]
   GlobalViewManager.push(def_view)
 end
 

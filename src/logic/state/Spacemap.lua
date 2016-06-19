@@ -17,7 +17,7 @@ Spacemap.new = function (init)
       { name = "Mercury",
         dist_Mkm = 58,
         dist_logMkm = 1.76275,
-        dist_AU = 0.38709224,
+        dist_AU = 0.48709224,
         parent = "Sol",
         position = { x = 0, y = 0, w_x = 0, w_y = 0}
         },
@@ -76,7 +76,7 @@ Spacemap.new = function (init)
         dist_AU = 30.0026738,
         parent = "Sol",
         position = { x = 0, y = 0, w_x = 0, w_y = 0}
-        },
+        }--[[,
       { name = "Pluto",
         dist_Mkm = 5909,
         dist_logMkm = 3.77155,
@@ -97,7 +97,7 @@ Spacemap.new = function (init)
         dist_AU = 45.7150000,
         parent = "Sol",
         position = { x = 0, y = 0, w_x = 0, w_y = 0}
-      }
+      }]]
     }
   }
 

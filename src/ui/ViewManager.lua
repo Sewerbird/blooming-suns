@@ -51,6 +51,12 @@ ViewManager.new = function (init)
     self.views[self.activeView].onKeyPressed(key)
   end
 
+  self.onMutation = function (mut)
+    if self.views[self.activeView].onMutation ~= nil then
+      self.views[self.activeView].onMutation(mut)
+    end
+  end
+
   self.getClickedView = function (x, y)
     local result = nil
     for i = 1 , #self.views do
