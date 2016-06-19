@@ -135,6 +135,15 @@ PlanetsideTilemapCameraComponent.new = function (init)
     end
   end
 
+  self.focusOnTileByIdx = function(idx)
+    local tilePosition = {
+      x = self.target.tiles[idx].position.x,
+      y = self.target.tiles[idx].position.y
+    }
+    self.position.x = tilePosition.x + self.ui_rect.x
+    self.position.y = tilePosition.y + self.ui_rect.y
+  end
+
   self.onUpdate = function (dt)
     local moved = false
     --Update tiles & units (for animation)

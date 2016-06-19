@@ -186,6 +186,7 @@ PlanetsideTilemapView.new = function (init)
       self.current_focus = fhex
       self.current_focus.click()
       self.inspector.inspect(fhex)
+      self.camera.focusOnTileByIdx(fhex.idx)
     end
   end
 
