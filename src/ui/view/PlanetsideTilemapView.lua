@@ -232,7 +232,7 @@ PlanetsideTilemapView.new = function (init)
 
       --TODO: think through verification process
       local verifyOrder = function (unit, order)
-        if order.kind == "Move" then
+        if order.kind == "move" then
           local move_cost = self.model.terrain_connective_matrix[order.dst.idx]['mpcost'][unit.move_method]
           if unit.curr_movepoints < move_cost and unit.curr_movepoints < unit.max_movepoints then
               return false
