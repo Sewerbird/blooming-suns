@@ -237,6 +237,11 @@ PlanetsideTilemapView.new = function (init)
           if unit.curr_movepoints < move_cost and unit.curr_movepoints < unit.max_movepoints then
               return false
           end
+          --A Unit may only move into a tile owned by no one or owned by the player
+          local dst_owner = self.model.tiles[order.dst.idx].stack.getOwner()
+          if dst_owner ~= nil and unit.owner ~= dst_owner then
+            return false
+          end
         end
         return true
       end
