@@ -40,6 +40,7 @@ require('src/resource/SpriteInstance');
 
 --libs
 require('lib/astar');
+require('lib/pubsub');
 inspect = require('lib/inspect');
 __ = require('lib/underscore');
 

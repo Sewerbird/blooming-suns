@@ -6,18 +6,18 @@ PubSub.new = function (init)
     UID_CNTR = 0,
     topics = {}
   }
+
   self.addSubscriber = function(topic, callback)
     if self.topics[topic] == nil then
       self.topics[topic] = {}
     end
-    self.UID_CNTR = self.UID_CNTR + 1
-    local f = self.UID_CNTR
+    local f = self.UID_CNTR + 1
     table.insert(self.topics[topic],{
-      uid = f
+      uid = f,
       cb = callback
     })
     return function ()
-      for i, v in ipairs(self.topics[topic])
+      for i, v in ipairs(self.topics[topic]) do
         if v.uid == f then
           table.remove(v)
         end
@@ -26,7 +26,7 @@ PubSub.new = function (init)
   end
 
   self.publish = function(topic, message)
-    for i, v in ipairs(self.topics[topic])
+    for i, v in ipairs(self.topics[topic]) do
       v.cb(message)
     end
   end
