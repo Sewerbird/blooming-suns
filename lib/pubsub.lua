@@ -16,6 +16,7 @@ PubSub.new = function (init)
       uid = f,
       cb = callback
     })
+    --return an unsubscribe function
     return function ()
       for i, v in ipairs(self.topics[topic]) do
         if v.uid == f then
