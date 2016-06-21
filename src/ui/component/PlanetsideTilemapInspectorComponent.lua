@@ -103,31 +103,33 @@ PlanetsideTilemapInspectorUnitSelectorTileComponent.new = function(init)
   self.draw = function()
     local tgt_unit = self.target
     local lclSprite = SpriteInstance.new({sprite = tgt_unit.sprite, sprite_ref = tgt_unit.sprite.sprite_ref})
-    lclSprite.position = self.ui_rect
+    lclSprite.position = {}
+    lclSprite.position.x = self.ui_rect.x - 8
+    lclSprite.position.y = self.ui_rect.y - 4
     --Draw backing
     love.graphics.setColor(tgt_unit.backColor)
-    love.graphics.rectangle("fill",lclSprite.position.x, lclSprite.position.y,32,32)
+    love.graphics.rectangle("fill",self.ui_rect.x, self.ui_rect.y,32,32)
     love.graphics.reset()
     --Draw selection status
     if self.super.target.stack.isUnitSelected(tgt_unit.uid) then
       love.graphics.setColor({255,255,255,100})
-      love.graphics.rectangle("fill",lclSprite.position.x, lclSprite.position.y, 32, 32)
+      love.graphics.rectangle("fill",self.ui_rect.x, self.ui_rect.y, 32, 32)
       love.graphics.reset()
     end
     --Draw inactive status
     if self.super.target.stack.isUnitInactive(tgt_unit.uid) then
       love.graphics.setColor({0,0,0,100})
-      love.graphics.rectangle("fill",lclSprite.position.x, lclSprite.position.y, 32, 32)
+      love.graphics.rectangle("fill",self.ui_rect.x, self.ui_rect.y, 32, 32)
       love.graphics.reset()
     end
     lclSprite.draw()
     --Draw health bar
     love.graphics.setColor({0,255,125})
-    love.graphics.rectangle("fill",lclSprite.position.x, lclSprite.position.y + 32 - 2, 32 * (tgt_unit.health / 100), 2)
+    love.graphics.rectangle("fill",self.ui_rect.x, self.ui_rect.y + 32 - 2, 32 * (tgt_unit.health / 100), 2)
     love.graphics.reset()
     --Draw remaining move points
     love.graphics.setColor({255,255,255})
-    love.graphics.print(tgt_unit.curr_movepoints,lclSprite.position.x + 32 -9, lclSprite.position.y)
+    love.graphics.print(tgt_unit.curr_movepoints, self.ui_rect.x + 32 -9, self.ui_rect.y)
   end
 
   self.onMouseReleased = function (x, y)
