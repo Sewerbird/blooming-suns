@@ -11,6 +11,7 @@ PlanetsideTilemapCameraComponent.new = function (init)
     super = init.super,
     dragLocus = init.dragLocus,
     lastClick = init.lastClick,
+    tile_overlay = init.tile_overlay or {},
     keyboard_speed = 800
   }
 
@@ -115,6 +116,17 @@ PlanetsideTilemapCameraComponent.new = function (init)
     end
   end
 
+  self.setOverlay = function (tile_to_sprite_map)
+    self.tile_overlay = tile_to_sprite_map
+    for i, v in pairs(self.tile_overlay) do
+      self.tile_overlay[i] = SpriteInstance.new({sprite = v.sprite})
+    end
+  end
+
+  self.clearOverlay = function ()
+    self.tile_overlay = {}
+  end
+
   self.onDraw = function()
     local toDraw = self.getSeen()
     for i = 1, #toDraw.tiles do
@@ -131,6 +143,10 @@ PlanetsideTilemapCameraComponent.new = function (init)
           computedPosition.x = computedPosition.x + (self.target.hex_size * self.target.num_cols * 3 / 2)
         end
         toDraw.tiles[i].draw(computedPosition)
+        if self.tile_overlay[idx] ~= nil then --overlay desired for this tile
+          self.tile_overlay[idx].position = computedPosition
+          self.tile_overlay[idx].draw()
+        end
       end
     end
   end

@@ -54,6 +54,7 @@ SpriteBank.new = function (init)
     self.loadSpritesheet("steppetile", "assets/tilesets/steppetile.png", 168, 146)
     self.loadSpritesheet("command_ui", "assets/tilesets/command_ui.png", 280, 128)
     self.loadSpritesheet("space_ui", "assets/tilesets/space_UI.png", 74, 174)
+    self.loadSpritesheet("command_overlay", "assets/tilesets/command_overlay.png",400,200)
     --Load Sprites Next
     local spriteSpecs = love.filesystem.getDirectoryItems("assets/sprites")
     print("Loading the following sprites: ")
@@ -73,6 +74,8 @@ SpriteBank.new = function (init)
     self.loadSprite("NextUnit_UI", "assets/sprites/NextUnit_UI")
     self.loadSprite("ToWaypoint_UI", "assets/sprites/ToWaypoint_UI")
     self.loadSprite("ToSpace_UI", "assets/sprites/ToSpace_UI")
+    self.loadSprite("MoveDot_UI", "assets/sprites/MoveDotSprite_UI")
+    self.loadSprite("MoveCross_UI", "assets/sprites/MoveCrossSprite_UI")
   end
 
   return self

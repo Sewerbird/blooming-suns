@@ -209,13 +209,11 @@ PlanetsideTilemapView.new = function (init)
       end
     end)
 
-    --TODO: do this properly.
-    for i, v in ipairs(self.model.tiles) do
-      self.model.tiles[i].debug = false;
-    end
+    local overlay = {}
     for i, v in ipairs(path.nodes) do
-      self.model.tiles[v.lid].debug = true;
+      overlay[v.lid] = {sprite="MoveDot_UI"}
     end
+    self.camera.setOverlay(overlay)
   end
 
   self.undoLastOrder = function()
