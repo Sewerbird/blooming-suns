@@ -50,7 +50,7 @@ Tile.new = function (init)
             --love.graphics.rectangle("fill",computed_position.x + 32 - 9, computed_position.y, 9, 9)
             --love.graphics.reset()
             love.graphics.setColor({255,255,255})
-            love.graphics.print(self.stack.size(),computed_position.x + 32 -9, computed_position.y)
+            love.graphics.print(self.stack.size(),computed_position.x + 32 -9 + 8, computed_position.y + 4)
           else
             -- Debug sprite position
             local hex = self.owning_map.pixel_to_hex({x = self.position.x, y = self.position.y})

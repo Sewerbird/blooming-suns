@@ -43,22 +43,30 @@ SpriteBank.new = function (init)
     --TODO: Load Definitions From File
 
     --Load Spritesheets First
-    self.loadSpritesheet("noble", "assets/tilesets/noble.png", 32, 32)
-    self.loadSpritesheet("cadiz", "assets/tilesets/cadizship.png", 32, 32)
-    self.loadSpritesheet("Destroyer", "assets/tilesets/Destroyer.png", 64, 64)
+    self.loadSpritesheet("units", "assets/tilesets/units.png", 144, 120)
+
     self.loadSpritesheet("oceantile", "assets/tilesets/oceantile.png", 168, 146)
     self.loadSpritesheet("dunetile", "assets/tilesets/dunetile.png", 168, 146)
     self.loadSpritesheet("grasstile", "assets/tilesets/grasstile.png", 168, 146)
     self.loadSpritesheet("icetile", "assets/tilesets/icetile.png", 168, 146)
     self.loadSpritesheet("tundratile", "assets/tilesets/tundratile.png", 168, 146)
     self.loadSpritesheet("steppetile", "assets/tilesets/steppetile.png", 168, 146)
+
     self.loadSpritesheet("command_ui", "assets/tilesets/command_ui.png", 280, 128)
     self.loadSpritesheet("space_ui", "assets/tilesets/space_UI.png", 74, 174)
+
     self.loadSpritesheet("command_overlay", "assets/tilesets/command_overlay.png",400,200)
     --Load Sprites Next
     self.loadSprite("TestUnit", "assets/sprites/TestUnitSprite")
     self.loadSprite("TestSpaceUnit", "assets/sprites/TestSpaceUnitSprite")
     self.loadSprite("TestSeaUnit", "assets/sprites/TestSeaUnitSprite")
+    self.loadSprite("TestSeaTransport", "assets/sprites/TestSeaTransportSprite")
+    self.loadSprite("TestSpaceTransport", "assets/sprites/TestSpaceTransportSprite")
+    self.loadSprite("TestSpyUnit", "assets/sprites/TestSpyUnitSprite")
+    self.loadSprite("TestAirUnit", "assets/sprites/TestAirUnitSprite")
+    self.loadSprite("TestAirTransport", "assets/sprites/TestAirTransportSprite")
+    self.loadSprite("TestBuildUnit", "assets/sprites/TestBuildUnitSprite")
+
     self.loadSprite("Ocean", "assets/sprites/OceanTileSprite")
     self.loadSprite("Desert", "assets/sprites/DuneTileSprite")
     self.loadSprite("Grass", "assets/sprites/GrassTileSprite")

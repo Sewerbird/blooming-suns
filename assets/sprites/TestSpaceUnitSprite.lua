@@ -1,14 +1,14 @@
 --TestSpaceUnitSprite
 local sprite = {
-  spritesheet = "cadiz", --tileset reference
-  sprite_name = nil, --name of this sprite
+  spritesheet = "units", --tileset reference
+  sprite_name = "TestSpaceUnit", --name of this sprite
   frame_duration = nil, --speed of animation
   animations = {  --arrays of quads
     idle = {
-      {0, 0, 32, 32}
+      {48, 80, 48, 40}
     },
     selected = {
-      {0, 0, 32, 32},
+      {48, 80, 48, 40},
       {0, 0, 1, 1}
     }
   }

@@ -36,20 +36,20 @@ Unit.new = function (init)
   self.draw = function (computed_position, centered)
     self.sprite.position = computed_position
     if centered == true then
-      self.sprite.position.x = self.sprite.position.x - 16 --TODO: offset by sprite size
-      self.sprite.position.y = self.sprite.position.y - 16 --TODO: offset by sprite size
+      self.sprite.position.x = self.sprite.position.x - 24 --TODO: offset by sprite size
+      self.sprite.position.y = self.sprite.position.y - 20 --TODO: offset by sprite size
     end
     --Draw backing
     love.graphics.setColor(50,50,50)
-    love.graphics.rectangle("fill",self.sprite.position.x-2, self.sprite.position.y-2,36,36)
+    love.graphics.rectangle("fill",self.sprite.position.x-2 + 8, self.sprite.position.y-2 + 4,36,36)
     love.graphics.setColor(self.backColor)
-    love.graphics.rectangle("fill",self.sprite.position.x, self.sprite.position.y,32,32)
+    love.graphics.rectangle("fill",self.sprite.position.x + 8, self.sprite.position.y + 4,32,32)
     love.graphics.reset()
     --Draw Sprite
     self.sprite.draw()
     --Draw health bar
     love.graphics.setColor({0,255,125})
-    love.graphics.rectangle("fill",self.sprite.position.x, self.sprite.position.y + 32 - 2, 32 * (self.health / 100), 2)
+    love.graphics.rectangle("fill",self.sprite.position.x + 8, self.sprite.position.y + 32 - 2 + 4, 32 * (self.health / 100), 2)
     love.graphics.reset()
   end
 
