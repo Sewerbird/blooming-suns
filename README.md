@@ -8,6 +8,12 @@ This is an attempt to work a 4X Strategy Game featuring detailed planet-side mec
 - Download & Install [LÖVE2D](https://love2d.org/) for your platform.
 - Checkout this repository with Git.
 - Run with `love .` in the repository root. You may have to set up an alias in your terminal.
+- run_dev.sh (included in the repo) will run tests and then the game, assuming love.app is installed in your applications folder
+
+## Testing
+
+- Uses [Busted](http://olivinelabs.com/busted/) for unit testing
+- Run tests with `busted spec/` after installing busted ([luarocks](https://luarocks.org/) recommended)
 
 ## Contributions
 
