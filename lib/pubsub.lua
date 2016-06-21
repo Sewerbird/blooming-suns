@@ -7,7 +7,7 @@ PubSub.new = function (init)
     topics = {}
   }
 
-  self.addSubscriber = function(topic, callback)
+  self.subscribe = function(topic, callback)
     if self.topics[topic] == nil then
       self.topics[topic] = {}
     end

@@ -56,11 +56,6 @@ SpriteBank.new = function (init)
     self.loadSpritesheet("space_ui", "assets/tilesets/space_UI.png", 74, 174)
     self.loadSpritesheet("command_overlay", "assets/tilesets/command_overlay.png",400,200)
     --Load Sprites Next
-    local spriteSpecs = love.filesystem.getDirectoryItems("assets/sprites")
-    print("Loading the following sprites: ")
-    for i, v in ipairs(spriteSpecs) do
-      print(i .. " - " .. v)
-    end
     self.loadSprite("TestUnit", "assets/sprites/TestUnitSprite")
     self.loadSprite("TestSpaceUnit", "assets/sprites/TestSpaceUnitSprite")
     self.loadSprite("TestSeaUnit", "assets/sprites/TestSeaUnitSprite")

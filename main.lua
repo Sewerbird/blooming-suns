@@ -59,6 +59,8 @@ function love.load()
   --Load MutatorBus
   GlobalMutatorBus = MutatorBus.new()
 
+  GlobalMutatorBus.subscribe(GlobalViewManager.onMutation)
+
   --Create Views
   --
   local def_view = PlanetsideTilemapView.new({

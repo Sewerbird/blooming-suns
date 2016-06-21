@@ -1,3 +1,5 @@
+require('lib/pubsub')
+
 MutatorBus = {}
 
 MutatorBus.new = function (init)
@@ -54,26 +56,28 @@ MutatorBus.new = function (init)
   end
 
   self.fastForward = function ()
-    while self.pointer ~= #self.history do
-      self.replay()
-    end
+    self.seekForward(function() return false end)
   end
 
   self.seekBack = function (condition)
-    while not condition(self.history[self.pointer]) do
+    while not condition(self.history[self.pointer]) and self.pointer > 0 do
       self.rewind()
     end
   end
 
   self.seekForward = function (condition)
-    while not condition(self.history[self.pointer]) do
+    while not condition(self.history[self.pointer]) and self.pointer < #self.history do
       self.replay()
     end
   end
 
+  self.subscribe = function (topic, callback)
+    return self.pubsub.subscribe(topic, callback)
+  end
   self.publish = function (mutation)
     --TODO: Decouple this
-    GlobalViewManager.onMutation(mutation)
+    self.pubsub.publish("mutation", mutation)
+    --GlobalViewManager.onMutation(mutation)
   end
 
   return self
