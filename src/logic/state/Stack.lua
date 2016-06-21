@@ -147,19 +147,15 @@ Stack.new = function(init)
   end
 
   self.forEachSelected = function (func)
-    local results = List.new()
     for i, uid in ipairs(self.selection) do
-      results.pushright(func(self.getUnit(uid)))
+      func(self.getUnit(uid))
     end
-    return results
   end
 
   self.forEach = function (func)
-    local results = List.new()
     for i, v in ipairs(self.units) do
-      results.pushright(func(v))
+      func(v)
     end
-    return results
   end
 
   self.getOwner = function ()

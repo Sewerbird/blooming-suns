@@ -191,6 +191,8 @@ PlanetsideTilemapView.new = function (init)
   end
 
   self.assignMovePath = function (destination_hex)
+    if destination_hex == nil then return end
+
     --TODO: Should move assignment be in a mutator?
     local start = {row = self.current_focus.position.row, col = self.current_focus.position.col, idx = self.current_focus.idx}
     local f_unit = self.current_focus.stack.head()

@@ -23,7 +23,6 @@ Populator.new = function (init)
 
     for j = 0, nc - 1 do
       for i = 0, nr - 1 do
-        --TODO: Randomly Determine terrain
 
         local terrain_type = "Grass";
         local rand = math.random()
