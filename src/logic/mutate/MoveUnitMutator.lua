@@ -11,7 +11,7 @@ MoveUnitMutator.new = function (init)
 
 
   self.execute = function ()
-    print("Moving unit" .. self.unit.uid .. " from " .. self.src.idx .. " to " .. self.dst.idx)
+    --print("Moving unit" .. self.unit.uid .. " from " .. self.src.idx .. " to " .. self.dst.idx)
     local unit = self.src.stack.getUnit(self.unit.uid)
     local move_cost = self.map.terrain_connective_matrix[self.dst.idx]['mpcost'][unit.move_method]
     unit.curr_movepoints = math.max(self.unit.curr_movepoints - (move_cost or 1), 0)
@@ -21,7 +21,7 @@ MoveUnitMutator.new = function (init)
   end
 
   self.undo = function ()
-    print("Undoing unit " .. self.unit.uid .. " moving from " .. self.src.idx .. " to " .. self.dst.idx)
+    --print("Undoing unit " .. self.unit.uid .. " moving from " .. self.src.idx .. " to " .. self.dst.idx)
     local unit = self.map.getHexAtIdx(self.dst.idx).stack.getUnit(self.unit.uid)
     local move_cost = self.map.terrain_connective_matrix[self.dst.idx]['mpcost'][unit.move_method]
     unit.curr_movepoints = math.max(unit.curr_movepoints + (move_cost or 1), 0)

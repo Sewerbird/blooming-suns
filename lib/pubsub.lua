@@ -26,6 +26,8 @@ PubSub.new = function (init)
   end
 
   self.publish = function(topic, message)
+    if self.topics[topic] == nil then return end
+
     for i, v in ipairs(self.topics[topic]) do
       v.cb(message)
     end

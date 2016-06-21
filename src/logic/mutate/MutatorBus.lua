@@ -4,11 +4,13 @@ MutatorBus.new = function (init)
   local init = init or {}
   local self = {
     history = {},
-    pointer = 0
+    pointer = 0,
+    pubsub = PubSub.new()
   }
 
   self.executeOrder = function (order)
     self.mutate(order.mutator)
+    self.pubsub.publish(order.mutator.kind,{})
   end
 
   self.mutate = function (mutator)
