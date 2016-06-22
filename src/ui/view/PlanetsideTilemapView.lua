@@ -209,7 +209,8 @@ PlanetsideTilemapView.new = function (init)
           unit.orders.add(MoveUnitOrder.new({
             map = self.model,
             unit = unit,
-            src=(path.nodes[i-1] and self.model.tiles[path.nodes[i-1].location.idx]) or self.current_focus, dst=j.location
+            src=(path.nodes[i-1] and self.model.tiles[path.nodes[i-1].location.idx]) or self.current_focus,
+            dst=j.location
           }))
         end
       end

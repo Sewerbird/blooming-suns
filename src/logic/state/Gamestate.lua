@@ -40,8 +40,16 @@ Gamestate.new = function(init)
     self.setPlayerOrder(new_turn_order)
   end
 
+  self.getPlayer = function (idx)
+    return self.players[idx]
+  end
+
   self.setPlayerOrder = function (player_idx_order)
     self.turn_order = player_idx_order
+  end
+
+  self.getPlayerOrder = function ()
+    return self.turn_order
   end
 
   self.getTilemap = function (idx)
