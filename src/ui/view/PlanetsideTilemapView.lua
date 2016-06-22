@@ -206,7 +206,11 @@ PlanetsideTilemapView.new = function (init)
       if self.current_focus.stack.isUnitSelected(unit.uid) then
         unit.orders.clear()
         for i, j in ipairs(path.nodes) do
-          unit.orders.add(MoveUnitOrder.new({map = self.model, unit = unit, src=(path.nodes[i-1] and self.model.tiles[path.nodes[i-1].location.idx]) or self.current_focus, dst=j.location}))
+          unit.orders.add(MoveUnitOrder.new({
+            map = self.model,
+            unit = unit,
+            src=(path.nodes[i-1] and self.model.tiles[path.nodes[i-1].location.idx]) or self.current_focus, dst=j.location
+          }))
         end
       end
     end)
@@ -228,29 +232,11 @@ PlanetsideTilemapView.new = function (init)
 
   self.executeNextOrder = function ()
     if self.current_focus ~= nil and self.current_focus.stack.getOwner() == GlobalGameState.current_player then
-      --TODO: this logic shouldn't live in the view, but in a gamestate mutator
-
-      --TODO: think through verification process
-      local verifyOrder = function (unit, order)
-        if order.kind == "move" then
-          local move_cost = self.model.terrain_connective_matrix[order.dst.idx]['mpcost'][unit.move_method]
-          if unit.curr_movepoints < move_cost and unit.curr_movepoints < unit.max_movepoints then
-              return false
-          end
-          --A Unit may only move into a tile owned by no one or owned by the player
-          local dst_owner = self.model.tiles[order.dst.idx].stack.getOwner()
-          if dst_owner ~= nil and unit.owner ~= dst_owner then
-            return false
-          end
-        end
-        return true
-      end
-
 
       --Verify: all selected units asked to execute their next order must be able to do so legally, otherwise cancel
       local able = true
       self.current_focus.stack.forEachSelected(function (unit)
-        able = able and unit.orders.hasNext() and verifyOrder(unit, unit.orders.peek())
+        able = able and unit.orders.hasNext() and unit.orders.peek().verify()
       end)
 
       --Execute: If all selected units can perform their order, execute the order
@@ -265,8 +251,7 @@ PlanetsideTilemapView.new = function (init)
       end
 
       if movedTo == nil then return false end
-
-      --Refocus if Committed
+      --Refocus if something happened
       self.current_focus.stack.clearSelection()
       self.current_focus = movedTo
       self.inspector.inspect(self.current_focus)

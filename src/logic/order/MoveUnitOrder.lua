@@ -20,6 +20,20 @@ MoveUnitOrder.new = function (init)
   })
 
   self.verify = function ()
+    local unit = self.unit
+    local map = self.map
+    local dst_idx = self.dst.idx
+    --A unit must have enough move points for the move into the square, unless they have full movepoints: in which case they may move (using up all)
+    local move_cost = map.terrain_connective_matrix[dst_idx]['mpcost'][unit.move_method]
+    if unit.curr_movepoints < move_cost and unit.curr_movepoints < unit.max_movepoints then
+        return false
+    end
+    --A Unit may only move into a tile owned by no one or owned by the player
+    local dst_owner = map.tiles[dst_idx].stack.getOwner()
+    if dst_owner ~= nil and unit.owner ~= dst_owner then
+      return false
+    end
+
     return true
   end
 
