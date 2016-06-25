@@ -136,7 +136,6 @@ PlanetsideTilemapInspectorUnitSelectorTileComponent.new = function(init)
     local tgt_stack = self.super.target.stack
     local wants_to_set_active = false
     if love.keyboard.isDown('lshift') then
-      print("LSHIFT IS DOWN")
       wants_to_set_active = true
     end
     if tgt_stack.isUnitSelected(self.target.uid) then
