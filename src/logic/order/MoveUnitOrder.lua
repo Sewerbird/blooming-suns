@@ -7,8 +7,8 @@ MoveUnitOrder.new = function (init)
   local self = Order.new(init)
 
   self.kind = "move"
-  self.src = init.src or nil
   self.dst = init.dst or nil
+  self.src = init.src or nil
   self.map = init.map or nil
   self.unit = init.unit or nil
 

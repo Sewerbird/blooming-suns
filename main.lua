@@ -59,7 +59,7 @@ function love.load()
   --Load MutatorBus
   GlobalMutatorBus = MutatorBus.new()
 
-  GlobalMutatorBus.subscribe(GlobalViewManager.onMutation)
+  GlobalMutatorBus.subscribe("mutation", GlobalViewManager.onMutation)
 
   --Create Views
   --

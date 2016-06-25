@@ -26,11 +26,11 @@ Populator.new = function (init)
 
         local terrain_type = "Grass";
         local rand = math.random()
-        if i <= 2 or nr - i  < 3 then
+        if i <= 1 or nr - i  < 3 then
           terrain_type = "Ice"
-        elseif (i <= 5 or nr - i < 6) and rand > 0.5 then
+        elseif (i <= 4 or nr - i < 6) and rand > 0.5 then
           terrain_type = "Tundra"
-        elseif rand > 0.245 then
+        elseif rand > 0.345 then
           terrain_type = "Ocean"
         elseif rand > 0.22 then
           terrain_type = "Desert"
