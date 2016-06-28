@@ -101,5 +101,19 @@ Spacemap.new = function (init)
     }
   }
 
+  self.getPlanetByName = function (name)
+    for i, planet in ipairs(self.planets) do
+        if name == planet.name then return planet end
+    end
+  end
+
+  self.getPlanetList = function()
+    local result = {}
+    for i, planet in ipairs(self.planets) do
+        table.insert(result,planet.name)
+    end
+    return result
+  end
+
   return self
 end
