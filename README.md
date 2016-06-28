@@ -25,3 +25,5 @@ This is an attempt to work a 4X Strategy Game featuring detailed planet-side mec
 Pull requests on forks will be reviewed and merged upstream to Sewerbird/blooming-suns
 
 There is a Trello board at https://trello.com/b/VOm7sxvd/sovereign-of-the-blooming-sun to see what I'm working on and prioritizing.
+
+There is also a zube.io board at https://zube.io/boards/58830112 that I'm trying out to see if I like it more than Trello.
