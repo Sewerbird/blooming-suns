@@ -6,7 +6,7 @@ This is an attempt to work a 4X Strategy Game featuring detailed planet-side mec
 ## Developer Setup
 
 - Download & Install [LÖVE2D](https://love2d.org/) for your platform.
-- Checkout this repository with Git.
+- Checkout this repository with [Git](https://git-scm.com/downloads).
 - Run with `love .` in the repository root. You may have to set up an alias in your terminal.
 - run_dev.sh (included in the repo) will run tests and then the game, assuming love.app is installed in your applications folder
 
