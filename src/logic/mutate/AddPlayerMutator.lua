@@ -4,16 +4,15 @@ AddPlayerMutator.new = function (init)
   local init = init or {}
   local self = Mutator.new(init)
 
-  self.state = init.state
   self.player = init.player
 
-  self.execute = function ()
+  self.execute = function (state)
     self.addedIdx = #self.state.players+1
-    self.state.addPlayer(self.addedIdx, self.player)
+    state.addPlayer(self.addedIdx, self.player)
   end
 
-  self.undo = function ()
-    self.state.removePlayer(self.addedIdx)
+  self.undo = function (state)
+    state.removePlayer(self.addedIdx)
   end
 
   return self

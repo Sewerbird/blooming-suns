@@ -4,7 +4,6 @@ CreateUnitMutator.new = function (init)
   local init = init or {}
   local self = Mutator.new(init)
 
-  self.state = init.state
   self.player = init.player
   self.tile = init.tile
   self.type = init.type
@@ -32,12 +31,12 @@ CreateUnitMutator.new = function (init)
     end
   end
 
-  self.execute = function ()
+  self.execute = function (state)
     self.unit = self.constructor()
     self.tile.relocateUnit(self.unit)
   end
 
-  self.undo = function ()
+  self.undo = function (state)
     self.tile.delocateUnit(self.unit)
   end
 

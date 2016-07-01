@@ -33,28 +33,28 @@ Tile.new = function (init)
 
     for i, v in ipairs(TILE_SPRITE_ORDER) do
       if self.slayers[v] ~= nil then
-          self.slayers[v].position = computed_position
-          local do_center = false
-          if v == "unit" then
-            do_center = true
-            computed_position.x = computed_position.x + self.owning_map.tilesize_x / 2
-            computed_position.y = computed_position.y + self.owning_map.tilesize_y / 2
-          end
+        self.slayers[v].position = computed_position
+        local do_center = false
+        if v == "unit" then
+          do_center = true
+          computed_position.x = computed_position.x + self.owning_map.tilesize_x / 2
+          computed_position.y = computed_position.y + self.owning_map.tilesize_y / 2
+        end
 
-          self.slayers[v].draw(computed_position, do_center)
-          --Draw stack size
-          if v == "unit" then
-            love.graphics.setColor({255,255,255})
-            love.graphics.print(self.stack.size(),computed_position.x + 32 -9 + 8, computed_position.y + 4)
-          else
-            --[[ Debug sprite position
-            local hex = self.owning_map.pixel_to_hex({x = self.position.x, y = self.position.y})
-            love.graphics.print(
-             self.position.col..", "..self.position.row.."\n::"..self.idx,
-             computed_position.x + self.owning_map.tilesize_x / 4,
-             computed_position.y + self.owning_map.tilesize_y / 4)
-            --]]
-          end
+        self.slayers[v].draw(computed_position, do_center)
+        --Draw stack size
+        if v == "unit" then
+          love.graphics.setColor({255,255,255})
+          love.graphics.print(self.stack.size(),computed_position.x + 32 -9 + 8, computed_position.y + 4)
+        else
+          --[[ Debug sprite position
+          local hex = self.owning_map.pixel_to_hex({x = self.position.x, y = self.position.y})
+          love.graphics.print(
+           self.position.col..", "..self.position.row.."\n::"..self.idx,
+           computed_position.x + self.owning_map.tilesize_x / 4,
+           computed_position.y + self.owning_map.tilesize_y / 4)
+          --]]
+        end
       end
     end
   end

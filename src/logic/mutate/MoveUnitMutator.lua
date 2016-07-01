@@ -10,7 +10,7 @@ MoveUnitMutator.new = function (init)
   self.map = init.map --tilemap
 
 
-  self.execute = function ()
+  self.execute = function (state)
     --print("Moving unit" .. self.unit.uid .. " from " .. self.src.idx .. " to " .. self.dst.idx)
     local unit = self.src.stack.getUnit(self.unit.uid)
     local move_cost = self.map.terrain_connective_matrix[self.dst.idx]['mpcost'][unit.move_method]
@@ -20,7 +20,7 @@ MoveUnitMutator.new = function (init)
     self.map.tiles[self.dst.idx].relocateUnit(moved)
   end
 
-  self.undo = function ()
+  self.undo = function (state)
     --print("Undoing unit " .. self.unit.uid .. " moving from " .. self.src.idx .. " to " .. self.dst.idx)
     local unit = self.map.getHexAtIdx(self.dst.idx).stack.getUnit(self.unit.uid)
     local move_cost = self.map.terrain_connective_matrix[self.dst.idx]['mpcost'][unit.move_method]

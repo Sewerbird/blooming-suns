@@ -7,7 +7,8 @@ MutatorBus.new = function (init)
   local self = {
     history = {},
     pointer = 0,
-    pubsub = PubSub.new()
+    pubsub = PubSub.new(),
+    writeable_gamestate = init.state
   }
 
   self.executeOrder = function (order)
@@ -25,7 +26,7 @@ MutatorBus.new = function (init)
     end
 
     table.insert(self.history, mutator)
-    mutator.execute()
+    mutator.execute(self.writeable_gamestate)
     self.pointer = self.pointer + 1
     self.publish(mutator)
   end

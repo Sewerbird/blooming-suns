@@ -4,38 +4,36 @@ EndTurnMutator.new = function (init)
   local init = init or {}
   local self = Mutator.new(init)
 
-  self.state = init.state
-
-  self.execute = function ()
+  self.execute = function (state)
     local nxt = nil
-    for i, player in ipairs(self.state.turn_order) do
-      if player == self.state.current_player then
+    for i, player in ipairs(state.turn_order) do
+      if player == state.current_player then
         nxt = i + 1
         break
       end
     end
-    if self.state.turn_order[nxt] == nil then
-      self.state.current_player = self.state.turn_order[1]
+    if state.turn_order[nxt] == nil then
+      state.current_player = state.turn_order[1]
     else
-      self.state.current_player = self.state.turn_order[nxt]
+      state.current_player = state.turn_order[nxt]
     end
-    print("CURRENT_PLAYER IS NOW " .. self.state.current_player)
+    print("CURRENT_PLAYER IS NOW " .. state.current_player)
   end
 
-  self.undo = function ()
+  self.undo = function (state)
     local prev = nil
-    for i, player in ipairs(self.state.turn_order) do
-      if player == self.state.current_player then
+    for i, player in ipairs(state.turn_order) do
+      if player == state.current_player then
         prev = i - 1
         break
       end
     end
-    if self.state.turn_order[prev] == nil then
-      self.state.current_player = self.state.turn_order[#self.state.turn_order]
+    if state.turn_order[prev] == nil then
+      state.current_player = state.turn_order[#state.turn_order]
     else
-      self.state.current_player = self.state.turn_order[prev]
+      state.current_player = state.turn_order[prev]
     end
-    print("CURRENT_PLAYER IS NOW" .. self.state.current_player)
+    print("CURRENT_PLAYER IS NOW" .. state.current_player)
   end
 
   return self
