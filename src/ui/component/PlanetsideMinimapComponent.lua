@@ -31,22 +31,22 @@ PlanetsideMinimapComponent.new = function (init)
     --Foreground
     --TODO: cache this image... doesn't tend to change
     local toDraw = self.target
-    local scale_x = self.ui_rect.w / toDraw.num_cols
-    local scale_y = self.ui_rect.h / toDraw.num_rows
+    local scale_x = self.ui_rect.w / self.target.num_cols
+    local scale_y = self.ui_rect.h / self.target.num_rows
     local metadata = self.tracked_camera.getSeenMetadata()
 
-    for i = 0, #toDraw.tiles do
+    for i = 0, #self.target.tiles do
       --Draws an offset grid of rectangles for each tile on the planet. Scaled.
       local computedPosition = {
-        x = (toDraw.tiles[i].position.col * scale_x) + self.ui_rect.x,
-        y = (toDraw.tiles[i].position.row * scale_y) + self.ui_rect.y
+        x = (self.target.tiles[i].position.col * scale_x) + self.ui_rect.x,
+        y = (self.target.tiles[i].position.row * scale_y) + self.ui_rect.y
       }
-      local color = toDraw.terrain_type_minimap_colors[toDraw.tiles[i].terrain_type]
+      local color = toDraw.terrain_type_minimap_colors[self.target.tiles[i].terrain_type]
       if color == nil then color = {255,125,255} end
 
       love.graphics.setColor(color)
       local offset = 0
-      if toDraw.tiles[i].position.col % 2 == 0 then offset = scale_y/2 end
+      if self.target.tiles[i].position.col % 2 == 0 then offset = scale_y/2 end
       love.graphics.rectangle("fill",computedPosition.x, computedPosition.y + offset, scale_x, scale_y)
       love.graphics.reset()
     end

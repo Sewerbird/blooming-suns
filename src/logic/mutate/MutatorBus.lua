@@ -11,8 +11,12 @@ MutatorBus.new = function (init)
   }
 
   self.executeOrder = function (order)
+    if order.verify() == false then
+      return false
+    end
     self.mutate(order.mutator)
     self.pubsub.publish(order.mutator.kind,{})
+    return true
   end
 
   self.mutate = function (mutator)

@@ -7,23 +7,26 @@ Populator.new = function (init)
 
   self.generateGameState = function()
     local gamestate = Gamestate.new()
-    gamestate.addSpacemap(1, Spacemap.new())
-    gamestate.addTilemap(1, Tilemap.new())
+    --Add players
     gamestate.addPlayer('Hazat', Player.new())
     gamestate.addPlayer('Hawkwood', Player.new())
     gamestate.setPlayerOrder({'Hazat', 'Hawkwood'})
-    self.generateTileMapTerrainRandom(gamestate.getTilemap(1))
+    --Make Spacemap
+    gamestate.addSpacemap(1, Spacemap.new())
+    --Make Planetsides
+    local rtilemap = self.generateTileMapTerrainRandom()
+    gamestate.addTilemap(1, rtilemap)
 
     return gamestate
   end
 
-  self.generateTileMapTerrainRandom = function (map)
+  self.generateTileMapTerrainRandom = function ()
+    local map = Tilemap.new()
     local nr = map.num_rows
     local nc = map.num_cols
 
     for j = 0, nc - 1 do
       for i = 0, nr - 1 do
-
         local terrain_type = "Grass";
         local rand = math.random()
         if i <= 1 or nr - i  < 3 then
@@ -172,6 +175,8 @@ Populator.new = function (init)
         end
       end
     end
+
+    return map;
   end
 
   return self

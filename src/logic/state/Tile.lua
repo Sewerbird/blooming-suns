@@ -27,11 +27,9 @@ Tile.new = function (init)
   end
 
   self.draw = function (computed_position)
-
     --center
     computed_position.x = computed_position.x - self.owning_map.tilesize_x / 2
     computed_position.y = computed_position.y - self.owning_map.tilesize_y / 2
-
 
     for i, v in ipairs(TILE_SPRITE_ORDER) do
       if self.slayers[v] ~= nil then
@@ -46,9 +44,6 @@ Tile.new = function (init)
           self.slayers[v].draw(computed_position, do_center)
           --Draw stack size
           if v == "unit" then
-            --love.graphics.setColor({0,0,0})
-            --love.graphics.rectangle("fill",computed_position.x + 32 - 9, computed_position.y, 9, 9)
-            --love.graphics.reset()
             love.graphics.setColor({255,255,255})
             love.graphics.print(self.stack.size(),computed_position.x + 32 -9 + 8, computed_position.y + 4)
           else
@@ -58,16 +53,10 @@ Tile.new = function (init)
              self.position.col..", "..self.position.row.."\n::"..self.idx,
              computed_position.x + self.owning_map.tilesize_x / 4,
              computed_position.y + self.owning_map.tilesize_y / 4)
-            -- ]]
+            --]]
           end
       end
     end
-    if self.debug == true then
-      love.graphics.setColor(125,255,125)
-      love.graphics.circle("fill", computed_position.x + self.owning_map.tilesize_x / 2, computed_position.y + self.owning_map.tilesize_y /2 , 15)
-      love.graphics.reset()
-    end
-
   end
 
   self.delocateUnit = function(unit)
@@ -84,14 +73,6 @@ Tile.new = function (init)
   self.setTerrain = function (type)
     self.terrain_type = type
     self.slayers.terrain = SpriteInstance.new({sprite = self.terrain_type})
-  end
-
-  self.onFocus = function ()
-    --self.stack.focus()
-  end
-
-  self.onUnfocus = function ()
-    --self.stack.unfocus()
   end
 
   self.click = function ()

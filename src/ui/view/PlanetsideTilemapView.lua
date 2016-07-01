@@ -144,6 +144,17 @@ PlanetsideTilemapView.new = function (init)
   end
 
   --Logic
+  self.promptEndTurn = function()
+    local nxt_turn = function ()
+      GlobalViewManager.pop()
+      GlobalMutatorBus.mutate(EndTurnMutator.new({state = GlobalGameState}))
+    end
+    GlobalViewManager.push(ConfirmationView.new({
+      prompt_text = "End Your Turn?",
+      confirm_callback = nxt_turn,
+      cancel_callback = GlobalViewManager.pop
+    }))
+  end
   self.goToNext = function()
     local curr_idx = (self.current_focus ~= nil and self.current_focus.idx) or 0
     for i = curr_idx+1, #self.model.tiles do
@@ -178,7 +189,7 @@ PlanetsideTilemapView.new = function (init)
       self.current_focus = nil
       self.inspector.uninspect()
     elseif self.current_focus ~= nil and self.current_focus ~= fhex and self.current_focus.stack.getOwner() == GlobalGameState.current_player then
-      self.assignMovePath(fhex)
+      self.assignMovePath(self.current_focus, fhex)
     elseif fhex.stack.size() > 0 then
       if self.current_focus ~= nil then
         self.current_focus.click()
@@ -190,28 +201,30 @@ PlanetsideTilemapView.new = function (init)
     end
   end
 
-  self.assignMovePath = function (destination_hex)
+  self.assignMovePath = function (src_hex, destination_hex)
     if destination_hex == nil then return end
 
     --TODO: Should move assignment be in a mutator?
-    local start = {row = self.current_focus.position.row, col = self.current_focus.position.col, idx = self.current_focus.idx}
-    local f_unit = self.current_focus.stack.head()
+    local start = {row = src_hex.position.row, col = src_hex.position.col, idx = src_hex.idx}
+    local f_unit = src_hex.stack.head()
 
     local goal = {row = destination_hex.position.row, col = destination_hex.position.col, idx = destination_hex.idx}
-    local path = self.model.avoidPathfinder:findPath(start, goal, self.current_focus.stack.head().move_domain)
+    local path = self.model.avoidPathfinder:findPath(start, goal, src_hex.stack.head().move_domain)
 
     if path == nil then return end
 
-    self.current_focus.stack.forEach(function (unit)
-      if self.current_focus.stack.isUnitSelected(unit.uid) then
+    src_hex.stack.forEach(function (unit)
+      if src_hex.stack.isUnitSelected(unit.uid) then
         unit.orders.clear()
+        local lastHex = src_hex
         for i, j in ipairs(path.nodes) do
           unit.orders.add(MoveUnitOrder.new({
             map = self.model,
             unit = unit,
-            src=(path.nodes[i-1] and self.model.tiles[path.nodes[i-1].location.idx]) or self.current_focus,
+            src=lastHex,
             dst=j.location
           }))
+          lastHex = self.model.getHexAtIdx(j.location.idx)
         end
       end
     end)

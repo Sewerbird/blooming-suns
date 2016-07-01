@@ -59,6 +59,7 @@ PlanetsideTilemapInspectorComponent.new = function (init)
   end
 
   self.inspect = function (target)
+    if target == nil then return end
     self.uninspect()
     self.target = target
 

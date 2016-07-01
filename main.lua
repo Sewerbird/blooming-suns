@@ -38,7 +38,13 @@ require('src/logic/state/Gamestate');
 
 require('src/logic/mutate/Mutator');
 require('src/logic/mutate/MutatorBus');
+require('src/logic/mutate/AddPlayerMutator');
+require('src/logic/mutate/CreateUnitMutator');
+require('src/logic/mutate/EndTurnMutator');
+require('src/logic/mutate/ModifyHexTerrainMutator');
 require('src/logic/mutate/MoveUnitMutator');
+require('src/logic/mutate/RemovePlayerMutator');
+require('src/logic/mutate/SetPlayerOrderMutator');
 require('src/logic/order/MoveUnitOrder');
 
 require('src/ui/view/PlanetsideTilemapView');
