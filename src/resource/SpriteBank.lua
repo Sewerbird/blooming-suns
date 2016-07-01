@@ -55,7 +55,7 @@ SpriteBank.new = function (init)
     self.loadSpritesheet("command_ui", "assets/tilesets/command_ui.png", 280, 128)
     self.loadSpritesheet("space_ui", "assets/tilesets/space_UI.png", 74, 174)
 
-    self.loadSpritesheet("command_overlay", "assets/tilesets/command_overlay.png",400,200)
+    self.loadSpritesheet("command_overlay", "assets/tilesets/command_overlay.png",600,400)
     --Load Sprites Next
     self.loadSprite("TestUnit", "assets/sprites/TestUnitSprite")
     self.loadSprite("TestSpaceUnit", "assets/sprites/TestSpaceUnitSprite")

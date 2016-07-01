@@ -33,6 +33,7 @@ PlanetsideMinimapComponent.new = function (init)
     local toDraw = self.target
     local scale_x = self.ui_rect.w / self.target.num_cols
     local scale_y = self.ui_rect.h / self.target.num_rows
+    
     local metadata = self.tracked_camera.getSeenMetadata()
 
     for i = 0, #self.target.tiles do

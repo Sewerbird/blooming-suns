@@ -147,7 +147,7 @@ PlanetsideTilemapView.new = function (init)
   self.promptEndTurn = function()
     local nxt_turn = function ()
       GlobalViewManager.pop()
-      GlobalMutatorBus.mutate(EndTurnMutator.new({state = GlobalGameState}))
+      GlobalMutatorBus.mutate(EndTurnMutator.new())
     end
     GlobalViewManager.push(ConfirmationView.new({
       prompt_text = "End Your Turn?",

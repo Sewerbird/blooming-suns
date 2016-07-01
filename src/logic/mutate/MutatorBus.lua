@@ -38,7 +38,7 @@ MutatorBus.new = function (init)
     end
 
     local mut = self.history[self.pointer]
-    self.history[self.pointer].undo()
+    self.history[self.pointer].undo(self.writeable_gamestate)
     self.pointer = self.pointer - 1
     self.publish(mut)
     return mut
@@ -51,7 +51,7 @@ MutatorBus.new = function (init)
     end
     self.pointer = self.pointer + 1
     local mut = self.history[self.pointer]
-    self.history[self.pointer].execute()
+    self.history[self.pointer].execute(self.writeable_gamestate)
     self.publish(mut)
     return mut
   end

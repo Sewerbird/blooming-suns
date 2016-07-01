@@ -73,6 +73,7 @@ require('src/resource/SpriteInstance');
 --libs
 require('lib/astar');
 require('lib/pubsub');
+require('lib/const');
 inspect = require('lib/inspect');
 __ = require('lib/underscore');
 
@@ -89,7 +90,7 @@ function love.load()
   GlobalGameState = Populator.new().generateGameState()
 
   --Load MutatorBus
-  GlobalMutatorBus = MutatorBus.new()
+  GlobalMutatorBus = MutatorBus.new({state = GlobalGameState})
 
   GlobalMutatorBus.subscribe("mutation", GlobalViewManager.onMutation)
 
