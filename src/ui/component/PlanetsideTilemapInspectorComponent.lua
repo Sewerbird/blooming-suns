@@ -90,6 +90,21 @@ PlanetsideTilemapInspectorComponent.new = function (init)
     self.target = nil
   end
 
+  self.getOrderOverlay = function ()
+    if self.target == nil then return {} end
+
+    if not self.target.stack.hasSelection() then return {} end
+
+    local overlay = {}
+    local first = self.target.stack.headSelected()
+    first.orders.forEach(function (order)
+      if order.kind == 'move' then
+        overlay[order.dst.idx] = {sprite="MoveDot_UI"}
+      end
+    end)
+    return overlay
+  end
+
   return self
 end
 

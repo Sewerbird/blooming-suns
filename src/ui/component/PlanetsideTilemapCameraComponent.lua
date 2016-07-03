@@ -144,7 +144,13 @@ PlanetsideTilemapCameraComponent.new = function (init)
         end
         toDraw.tiles[i].draw(computedPosition)
         if self.tile_overlay[idx] ~= nil then --overlay desired for this tile
-          self.tile_overlay[idx].position = computedPosition
+          self.tile_overlay[idx].position = {}
+          local spriteSize = self.tile_overlay[idx].getCurrentDimension()
+          local tileSize = toDraw.tiles[i].slayers["terrain"].getCurrentDimension()
+          self.tile_overlay[idx].position = {
+            x = computedPosition.x + (spriteSize.w / 2 ) + (tileSize.w / 2),
+            y = computedPosition.y - (spriteSize.h / 2 ) + (tileSize.h / 2)
+          }
           self.tile_overlay[idx].draw()
         end
       end
@@ -158,6 +164,8 @@ PlanetsideTilemapCameraComponent.new = function (init)
     }
     self.position.x = tilePosition.x + self.ui_rect.x
     self.position.y = tilePosition.y + self.ui_rect.y
+
+    self.boundsCheck()
   end
 
   self.onUpdate = function (dt)
@@ -189,21 +197,25 @@ PlanetsideTilemapCameraComponent.new = function (init)
     end
     --bounds check
     if moved then
-      local topEdge = self.position.y - self.extent.half_height;
-      local bottomEdge = self.position.y + self.extent.half_height;
-      local rightWorldEdge = self.target.num_cols * self.target.tilesize_x * 3 /4;
-      local leftWorldEdge = 0;
-
-
-      if topEdge < -self.target.tilesize_y / 2 then self.position.y = self.extent.half_height - self.target.tilesize_y /2 end
-      if bottomEdge > self.target.num_rows * math.sqrt(3) * self.target.hex_size then
-        self.position.y = self.target.num_rows * math.sqrt(3) * self.target.hex_size - self.extent.half_height
-      end
-      if self.position.x > rightWorldEdge then self.position.x = self.position.x - rightWorldEdge end
-      if self.position.x < leftWorldEdge then self.position.x = rightWorldEdge + self.position.x end
-      self.position.y = math.floor(self.position.y)
-      self.position.x = math.floor(self.position.x)
+      self.boundsCheck()
     end
+  end
+
+  self.boundsCheck = function()
+    local topEdge = self.position.y - self.extent.half_height;
+    local bottomEdge = self.position.y + self.extent.half_height;
+    local rightWorldEdge = self.target.num_cols * self.target.tilesize_x * 3 /4;
+    local leftWorldEdge = 0;
+
+
+    if topEdge < -self.target.tilesize_y / 2 then self.position.y = self.extent.half_height - self.target.tilesize_y /2 end
+    if bottomEdge > self.target.num_rows * math.sqrt(3) * self.target.hex_size then
+      self.position.y = self.target.num_rows * math.sqrt(3) * self.target.hex_size - self.extent.half_height
+    end
+    if self.position.x > rightWorldEdge then self.position.x = self.position.x - rightWorldEdge end
+    if self.position.x < leftWorldEdge then self.position.x = rightWorldEdge + self.position.x end
+    self.position.y = math.floor(self.position.y)
+    self.position.x = math.floor(self.position.x)
   end
 
   self.doClick = function (x, y, button)

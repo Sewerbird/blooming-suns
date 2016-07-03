@@ -9,7 +9,7 @@ Order.new = function (init)
   }
 
   self.serialize = function()
-    return "{" .. init.kind .. "." .. init.dst.idx .. "}"
+    return "{" .. tostring(init.kind) .. "." .. init.dst.idx .. "}"
   end
 
   return self

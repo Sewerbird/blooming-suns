@@ -142,6 +142,12 @@ Stack.new = function(init)
     end
   end
 
+  self.headSelected = function()
+    for i, uid in ipairs(self.selection) do
+      return self.getUnit(uid)
+    end
+  end
+
   self.size = function()
     return self.stack_size
   end

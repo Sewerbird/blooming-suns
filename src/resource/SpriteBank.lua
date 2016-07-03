@@ -30,6 +30,7 @@ SpriteBank.new = function (init)
 
     --Set sprite speed
     self.sprites[identifier].frame_duration = 0.5
+    self.sprites[identifier].anim_spec = deepcopy(me.animations)
 
     --Set sprite animations to quad references
     for k, v in pairs(self.sprites[identifier].animations) do

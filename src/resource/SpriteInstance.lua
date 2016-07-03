@@ -43,5 +43,12 @@ SpriteInstance.new = function (init)
       )
   end
 
+  self.getCurrentDimension = function ()
+    local cutout = self.sprite_ref.anim_spec[self.curr_anim][self.curr_frame]
+    local width = (cutout[3] - cutout[1]) * self.sprite_ref.scale_x
+    local height = (cutout[4] - cutout[2]) * self.sprite_ref.scale_y
+    return {w = width, h = height}
+  end
+
   return self
 end

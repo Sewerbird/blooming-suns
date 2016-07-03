@@ -37,6 +37,12 @@ OrderQueue.new = function (init)
     self.queue = {}
   end
 
+  self.forEach = function (func)
+    for i, v in ipairs(self.queue) do
+      func(v)
+    end
+  end
+
   self.serialize = function ()
     local result = ""
     for i, v in ipairs(self.queue) do
