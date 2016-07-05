@@ -103,6 +103,8 @@ PlanetsideTilemapInspectorComponent.new = function (init)
     first.orders.forEach(function (order)
       if order.kind == 'move' then
         overlay[order.dst.idx] = {sprite="MoveDot_UI"}
+      elseif order.kind == 'attack' then
+        overlay[order.dst.idx] = {sprite="MoveAttack_UI"}
       end
     end)
     return overlay
