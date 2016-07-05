@@ -252,9 +252,13 @@ PlanetsideTilemapView.new = function (init)
     end)
 
     local overlay = {}
-    for i, v in ipairs(path.nodes) do
-      overlay[v.lid] = {sprite="MoveDot_UI"}
-    end
+    src_hex.stack.headSelected().orders.forEach(function (order)
+      if order.kind == 'move' then
+        overlay[order.dst.idx] = {sprite = "MoveDot_UI"}
+      elseif order.kind == 'attack' then
+        overlay[order.dst.idx] = {sprite = "MoveAttack_UI"}
+      end
+    end)
     self.camera.setOverlay(overlay)
   end
 
@@ -287,12 +291,9 @@ PlanetsideTilemapView.new = function (init)
       end
 
       if movedTo ~= nil then 
-        print("MovedTo was okay" .. movedTo.idx)
         self.unfocus()
         self.clickHex(movedTo)
         return true 
-      else
-        print("MovedTo Was null")
       end
     end
     return false

@@ -24,7 +24,6 @@ ViewComponent.new = function (init)
     love.graphics.setColor(self.background_color)
     love.graphics.rectangle("fill", self.ui_rect.x, self.ui_rect.y, self.ui_rect.w, self.ui_rect.h, self.ui_rect.rx, self.ui_rect.ry)
     love.graphics.setColor(255,255,255)
-    --love.graphics.print(self.description, self.ui_rect.x + 25, self.ui_rect.y + self.ui_rect.h/2)
     love.graphics.reset()
   end
 

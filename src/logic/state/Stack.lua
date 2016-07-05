@@ -152,6 +152,13 @@ Stack.new = function(init)
     return self.stack_size
   end
 
+  self.getSelected = function (func)
+    local result = {}
+    for i, uid in ipairs(self.selection) do
+      table.insert(result, self.getUnit(uid))
+    end
+  end
+  
   self.forEachSelected = function (func)
     for i, uid in ipairs(self.selection) do
       func(self.getUnit(uid))

@@ -79,7 +79,7 @@ SpriteBank.new = function (init)
     self.loadSprite("ToWaypoint_UI", "assets/sprites/ToWaypoint_UI")
     self.loadSprite("ToSpace_UI", "assets/sprites/ToSpace_UI")
     self.loadSprite("MoveDot_UI", "assets/sprites/MoveDotSprite_UI")
-    self.loadSprite("MoveCross_UI", "assets/sprites/MoveCrossSprite_UI")
+    self.loadSprite("MoveAttack_UI", "assets/sprites/MoveAttackSprite_UI")
   end
 
   return self
