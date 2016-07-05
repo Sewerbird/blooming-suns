@@ -9,7 +9,6 @@ Unit.new = function (init)
     uid = UUID_CNTR,
     sprite = init.sprite or nil,
     location = init.location or nil,
-    selected = false,
     orders = init.order_queue or OrderQueue.new(),
     move_queue = nil,
     move_domain = init.move_domain or 'land',
@@ -53,14 +52,9 @@ Unit.new = function (init)
     love.graphics.reset()
   end
 
-  self.select = function ()
-    self.selected = not self.selected
-    if self.selected then
-      self.sprite.changeAnim("selected")
-    else
-      self.sprite.changeAnim("idle")
-    end
+  self.setAnim = function(anim_name)
+    self.sprite.changeAnim(anim_name)
   end
-
+  
   return self
 end

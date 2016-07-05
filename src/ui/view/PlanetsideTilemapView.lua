@@ -160,9 +160,7 @@ PlanetsideTilemapView.new = function (init)
     for i = curr_idx+1, #self.model.tiles do
       local check_hex = self.model.getHexAtIdx(i)
       if check_hex.stack.getOwner() == GlobalGameState.current_player then
-        if self.current_focus ~= nil then
-          self.focus(self.current_focus)
-        end
+        self.unfocus()
         self.focus(check_hex)
         break
       end
@@ -181,24 +179,36 @@ PlanetsideTilemapView.new = function (init)
     end
   end
 
-  self.focus = function (fhex)
-    if self.current_focus ~= nil and self.current_focus == fhex then
-      if self.current_focus ~= nil then
-        self.current_focus.click()
-      end
-      self.current_focus = nil
-      self.inspector.uninspect()
-    elseif self.current_focus ~= nil and self.current_focus ~= fhex and self.current_focus.stack.getOwner() == GlobalGameState.current_player then
+  self.clickHex = function (fhex)
+    if self.current_focus ~= nil and fhex == self.current_focus then
+      print('unfocusing')
+      self.unfocus()
+    elseif self.current_focus ~= nil  and self.current_focus.stack.getOwner() == GlobalGameState.current_player then
+      print('assigning movepath')
       self.assignMovePath(self.current_focus, fhex)
-    elseif fhex.stack.size() > 0 then
-      if self.current_focus ~= nil then
-        self.current_focus.click()
-      end
+    elseif self.current_focus == nil and fhex.stack.size() > 0 then
+      --select
+      print('focusing' .. fhex.idx)
+      self.unfocus()
       self.current_focus = fhex
-      self.current_focus.click()
-      self.inspector.inspect(fhex)
+      self.inspector.inspect(self.current_focus)
       self.camera.focusOnTileByIdx(fhex.idx)
+      self.camera.setOverlay(self.inspector.getOrderOverlay())
     end
+  end
+
+  self.focus = function (fhex)
+    self.unfocus()
+    self.current_focus = fhex
+    self.inspector.inspect(self.current_focus)
+    self.camera.focusOnTileByIdx(fhex.idx)
+    self.camera.setOverlay(self.inspector.getOrderOverlay())
+  end
+
+  self.unfocus = function ()
+    self.inspector.uninspect()
+    self.camera.clearOverlay()
+    self.current_focus = nil
   end
 
   self.assignMovePath = function (src_hex, destination_hex)
@@ -264,13 +274,14 @@ PlanetsideTilemapView.new = function (init)
         end)
       end
 
-      if movedTo == nil then return false end
-      --Refocus if something happened
-      self.current_focus.stack.clearSelection()
-      self.current_focus = movedTo
-      self.inspector.inspect(self.current_focus)
-
-      return true
+      if movedTo ~= nil then 
+        print("MovedTo was okay" .. movedTo.idx)
+        self.unfocus()
+        self.clickHex(movedTo)
+        return true 
+      else
+        print("MovedTo Was null")
+      end
     end
     return false
   end

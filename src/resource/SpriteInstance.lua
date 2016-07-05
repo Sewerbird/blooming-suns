@@ -15,6 +15,7 @@ SpriteInstance.new = function (init)
   }
 
   self.changeAnim = function (anim)
+    if anim == self.curr_anim then return end
     self.curr_anim = anim
     self.curr_frame = 1
     self.timer = 0

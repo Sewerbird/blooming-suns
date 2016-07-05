@@ -16,12 +16,13 @@ Tile.new = function (init)
     construction_type = init.construction_type,
     owning_map = init.owning_map,
     idx = init.idx,
-    stack = Stack.new(),
-    selection = {}
+    stack = Stack.new()
   }
 
   self.update = function (dt)
-    if self.stack.head() ~= nil then
+    if self.stack.headSelected() ~= nil then
+      self.stack.headSelected().update(dt)
+    elseif self.stack.head() ~= nil then
       self.stack.head().update(dt)
     end
   end
@@ -31,23 +32,26 @@ Tile.new = function (init)
     computed_position.x = computed_position.x - self.owning_map.tilesize_x / 2
     computed_position.y = computed_position.y - self.owning_map.tilesize_y / 2
 
+    center_position = { x = computed_position.x + self.owning_map.tilesize_x / 2, y = computed_position.y + self.owning_map.tilesize_y / 2 }
+
     for i, v in ipairs(TILE_SPRITE_ORDER) do
       if self.slayers[v] ~= nil then
         self.slayers[v].position = computed_position
         local do_center = false
         if v == "unit" then
+          if self.stack.hasSelection() then
+            self.stack.headSelected().setAnim('selected')
+          else
+            self.stack.head().setAnim('idle')
+          end
           do_center = true
-          computed_position.x = computed_position.x + self.owning_map.tilesize_x / 2
-          computed_position.y = computed_position.y + self.owning_map.tilesize_y / 2
-        end
-
-        self.slayers[v].draw(computed_position, do_center)
-        --Draw stack size
-        if v == "unit" then
+          self.slayers[v].draw(center_position, do_center)
+          --Draw stack size
           love.graphics.setColor({255,255,255})
-          love.graphics.print(self.stack.size(),computed_position.x + 32 -9 + 8, computed_position.y + 4)
+          love.graphics.print(self.stack.size(),center_position.x + 32 -9 + 8, center_position.y + 4)
         else
-          --[[ Debug sprite position
+          self.slayers[v].draw(computed_position, do_center)
+          -- Debug sprite position
           local hex = self.owning_map.pixel_to_hex({x = self.position.x, y = self.position.y})
           love.graphics.print(
            self.position.col..", "..self.position.row.."\n::"..self.idx,
@@ -73,12 +77,6 @@ Tile.new = function (init)
   self.setTerrain = function (type)
     self.terrain_type = type
     self.slayers.terrain = SpriteInstance.new({sprite = self.terrain_type})
-  end
-
-  self.click = function ()
-    if self.stack.head() ~= nil then
-      self.stack.head().select()
-    end
   end
 
   return self

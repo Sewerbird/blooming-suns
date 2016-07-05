@@ -87,6 +87,9 @@ PlanetsideTilemapInspectorComponent.new = function (init)
 
   self.uninspect = function ()
     self.selector_tiles = {}
+    if self.target ~= nil then
+      self.target.stack.clearSelection()
+    end
     self.target = nil
   end
 

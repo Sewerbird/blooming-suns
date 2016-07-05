@@ -220,7 +220,7 @@ PlanetsideTilemapCameraComponent.new = function (init)
 
   self.doClick = function (x, y, button)
     local clickable = self.getSeenAt(x,y)
-    self.super.focus(clickable)
+    self.super.clickHex(clickable)
   end
 
   return self
