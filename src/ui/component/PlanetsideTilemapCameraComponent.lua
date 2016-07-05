@@ -148,8 +148,8 @@ PlanetsideTilemapCameraComponent.new = function (init)
           local spriteSize = self.tile_overlay[idx].getCurrentDimension()
           local tileSize = toDraw.tiles[i].slayers["terrain"].getCurrentDimension()
           self.tile_overlay[idx].position = {
-            x = computedPosition.x + (spriteSize.w / 2 ) + (tileSize.w / 2),
-            y = computedPosition.y - (spriteSize.h / 2 ) + (tileSize.h / 2)
+            x = computedPosition.x + tileSize.w/2 - spriteSize.w/2,
+            y = computedPosition.y + tileSize.h/2 - spriteSize.h/2
           }
           self.tile_overlay[idx].draw()
         end
