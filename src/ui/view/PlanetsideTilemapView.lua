@@ -180,12 +180,15 @@ PlanetsideTilemapView.new = function (init)
   end
 
   self.clickHex = function (fhex)
+    --Click on a selected hex should unselect it
     if self.current_focus ~= nil and fhex == self.current_focus then
       print('unfocusing')
       self.unfocus()
+    --Clicking on a hex while a selected stack is selected should issue a move command
     elseif self.current_focus ~= nil  and self.current_focus.stack.getOwner() == GlobalGameState.current_player then
       print('assigning movepath')
       self.assignMovePath(self.current_focus, fhex)
+    --Clicking on a stack, if not having selected anything else, should select the stack
     elseif self.current_focus == nil and fhex.stack.size() > 0 then
       --select
       print('focusing' .. fhex.idx)
@@ -228,12 +231,21 @@ PlanetsideTilemapView.new = function (init)
         unit.orders.clear()
         local lastHex = src_hex
         for i, j in ipairs(path.nodes) do
-          unit.orders.add(MoveUnitOrder.new({
-            map = self.model,
-            unit = unit,
-            src=lastHex,
-            dst=j.location
-          }))
+          local next_hex = self.model.getHexAtIdx(j.location.idx)
+          if next_hex.stack.size() > 0 and src_hex.stack.getOwner() ~= next_hex.stack.getOwner() then
+            unit.orders.add(AttackStackOrder.new({
+              map = self.model,
+              src = src_hex,
+              dst = next_hex
+              }))
+          else
+            unit.orders.add(MoveUnitOrder.new({
+              map = self.model,
+              unit = unit,
+              src=lastHex,
+              dst=j.location
+            }))
+          end
           lastHex = self.model.getHexAtIdx(j.location.idx)
         end
       end
