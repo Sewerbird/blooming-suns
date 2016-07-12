@@ -180,10 +180,15 @@ PlanetsideTilemapView.new = function (init)
   end
 
   self.clickHex = function (fhex)
-    --Click on a selected hex should unselect it
-    if self.current_focus ~= nil and fhex == self.current_focus then
+    if self.current_focus ~= nil and self.current_focus.stack.size() == 0 then self.unfocus() end
+
+    --Click on a selected hex should unselect it. If current focus tile is empty, make sure we're unfocused
+    if self.current_focus ~= nil and (fhex == self.current_focus or self.current_focus.stack.size() == 0) then
       print('unfocusing')
       self.unfocus()
+    --Clicking on an adjacent hex while a selected stack with sufficient movement points against an opposing player should issue an attack command
+    elseif self.current_focus ~= nil and self.current_focus.stack.getOwner() == GlobalGameState.current_player and fhex.stack.getOwner() ~= self.current_focus.stack.getOwner() and fhex.stack.getOwner() ~= nil then
+      self.assignAttackOrder(self.current_focus, fhex)
     --Clicking on a hex while a selected stack is selected should issue a move command
     elseif self.current_focus ~= nil  and self.current_focus.stack.getOwner() == GlobalGameState.current_player then
       print('assigning movepath')
@@ -214,6 +219,32 @@ PlanetsideTilemapView.new = function (init)
     self.current_focus = nil
   end
 
+  self.assignAttackOrder = function (src_hex, destination_hex)
+    local attackers = {}
+    local defenders = {}
+
+    src_hex.stack.forEachSelected(function (unit)
+      table.insert(attackers, unit.uid)
+    end)
+
+    destination_hex.stack.forEach(function (unit)
+      table.insert(defenders, unit.uid)
+    end)
+
+    print("UID of model is " .. inspect(self.model, {depth = 2}))
+    local attackOrder = AttackStackOrder.new({
+      src = src_hex.idx, 
+      dst = destination_hex.idx, 
+      attackers = attackers, 
+      defenders = defenders, 
+      map = 1})
+
+    if attackOrder.verify() == true then
+      GlobalMutatorBus.executeOrder(attackOrder)
+      print("EXECUTED ORDER")
+    end
+  end
+  
   self.assignMovePath = function (src_hex, destination_hex)
     if destination_hex == nil then return end
 

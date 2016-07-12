@@ -18,6 +18,7 @@ Gamestate.new = function(init)
   end
 
   self.addTilemap = function (idx, tilemap)
+    tilemap.uid = uid
     self.tilemaps[idx] = tilemap
   end
 

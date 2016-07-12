@@ -82,6 +82,7 @@ end
 Tilemap.new = function (init)
   local init = init or {}
   local self = {
+    uid = init.uid or 1,
     num_rows = init.num_rows or 21, --MUST be Odd for current Adjacency logic
     num_cols = init.num_cols or 42,
     tilesize_x = init.tilesize_x or 84,

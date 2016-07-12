@@ -15,6 +15,10 @@ Stack.new = function(init)
   }
 
   self.addUnit = function(unit)
+    if unit == nil then
+      print('Tried to add a nil unit, bailing out')
+      return
+    end
     table.insert(self.units, unit)
     self.unit_index[unit.uid] = true
     self.stack_size = self.stack_size + 1

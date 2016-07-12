@@ -41,6 +41,7 @@ require('src/logic/mutate/MutatorBus');
 require('src/logic/mutate/AddPlayerMutator');
 require('src/logic/mutate/BattleMutator');
 require('src/logic/mutate/CreateUnitMutator');
+require('src/logic/mutate/DestroyUnitMutator');
 require('src/logic/mutate/EndTurnMutator');
 require('src/logic/mutate/ModifyHexTerrainMutator');
 require('src/logic/mutate/MoveUnitMutator');

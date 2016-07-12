@@ -64,7 +64,7 @@ Tile.new = function (init)
   end
 
   self.delocateUnit = function(unit)
-    local result = self.stack.removeUnit(unit.uid)
+    local result = self.stack.removeUnit(unit)
     self.slayers.unit = self.stack.head()
     return result
   end
