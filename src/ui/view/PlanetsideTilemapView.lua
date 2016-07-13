@@ -244,10 +244,10 @@ PlanetsideTilemapView.new = function (init)
     if destination_hex == nil then return end
 
     --TODO: Should move assignment be in a mutator?
-    local start = {row = src_hex.position.row, col = src_hex.position.col, idx = src_hex.idx}
+    local start = {row = src_hex.location.row, col = src_hex.location.col, idx = src_hex.idx}
     local f_unit = src_hex.stack.head()
 
-    local goal = {row = destination_hex.position.row, col = destination_hex.position.col, idx = destination_hex.idx}
+    local goal = {row = destination_hex.location.row, col = destination_hex.location.col, idx = destination_hex.idx}
     local path = self.model.avoidPathfinder:findPath(start, goal, src_hex.stack.head().move_domain)
 
     if path == nil then return end

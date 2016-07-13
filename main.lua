@@ -77,6 +77,7 @@ require('src/resource/SpriteInstance');
 require('lib/astar');
 require('lib/pubsub');
 require('lib/const');
+require('lib/location');
 inspect = require('lib/inspect');
 __ = require('lib/underscore');
 

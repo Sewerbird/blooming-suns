@@ -39,15 +39,15 @@ PlanetsideMinimapComponent.new = function (init)
     for i = 0, #self.target.tiles do
       --Draws an offset grid of rectangles for each tile on the planet. Scaled.
       local computedPosition = {
-        x = (self.target.tiles[i].position.col * scale_x) + self.ui_rect.x,
-        y = (self.target.tiles[i].position.row * scale_y) + self.ui_rect.y
+        x = (self.target.tiles[i].location.col * scale_x) + self.ui_rect.x,
+        y = (self.target.tiles[i].location.row * scale_y) + self.ui_rect.y
       }
       local color = toDraw.terrain_type_minimap_colors[self.target.tiles[i].terrain_type]
       if color == nil then color = {255,125,255} end
 
       love.graphics.setColor(color)
       local offset = 0
-      if self.target.tiles[i].position.col % 2 == 0 then offset = scale_y/2 end
+      if self.target.tiles[i].location.col % 2 == 0 then offset = scale_y/2 end
       love.graphics.rectangle("fill",computedPosition.x, computedPosition.y + offset, scale_x, scale_y)
       love.graphics.reset()
     end

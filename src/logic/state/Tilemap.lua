@@ -138,8 +138,8 @@ Tilemap.new = function (init)
 
   self.getCoordFromIdx = function (idx)
     return {
-      col = self.tiles[idx].position.col,
-      row = self.tiles[idx].position.row,
+      col = self.tiles[idx].location.col,
+      row = self.tiles[idx].location.row,
       idx = idx
     }
   end

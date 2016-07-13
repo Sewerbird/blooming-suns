@@ -11,7 +11,7 @@ Tile.new = function (init)
     --units
     units = init.units or {},
     --core
-    position = init.position,
+    location = init.location,
     terrain_type = init.terrain_type,
     construction_type = init.construction_type,
     owning_map = init.owning_map,
@@ -52,9 +52,9 @@ Tile.new = function (init)
         else
           self.slayers[v].draw(computed_position, do_center)
           -- Debug sprite position
-          local hex = self.owning_map.pixel_to_hex({x = self.position.x, y = self.position.y})
+          local hex = self.owning_map.pixel_to_hex({x = self.location.x, y = self.location.y})
           love.graphics.print(
-           self.position.col..", "..self.position.row.."\n::"..self.idx,
+           self.location.col..", "..self.location.row.."\n::"..self.idx,
            computed_position.x + self.owning_map.tilesize_x / 4,
            computed_position.y + self.owning_map.tilesize_y / 4)
           --]]

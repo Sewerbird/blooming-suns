@@ -7,11 +7,13 @@ Location.new = function(init)
     h_y = init.h_y , --hex-space y (pixel)
 		x = init.x ,     --map-space y (pixel)
 		y = init.y ,     --map-space x (pixel)
+    row = init.row or nil,
+    col = init.col or nil,
 		idx = init.idx , --hex uid
 		map = init.map   --map uid
 	}
 
-	if x == nil or y == nil or idx == nil or map == nil then
+	if self.x == nil or self.y == nil or self.idx == nil or self.map == nil then
 		error('Attempt to create Location without all components specified' .. inspect(init))
 	end
 

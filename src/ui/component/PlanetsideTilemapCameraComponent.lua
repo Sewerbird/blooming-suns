@@ -132,8 +132,8 @@ PlanetsideTilemapCameraComponent.new = function (init)
     for i = 1, #toDraw.tiles do
       if toDraw.tiles[i] ~= nil then
         local computedPosition = {
-          x = toDraw.tiles[i].position.x - self.position.x + self.extent.half_width + self.ui_rect.x,
-          y = toDraw.tiles[i].position.y - self.position.y + self.extent.half_height + self.ui_rect.y
+          x = toDraw.tiles[i].location.x - self.position.x + self.extent.half_width + self.ui_rect.x,
+          y = toDraw.tiles[i].location.y - self.position.y + self.extent.half_height + self.ui_rect.y
         }
         local idx = toDraw.tiles[i].idx
         --East-West Tile Wrapping
@@ -159,8 +159,8 @@ PlanetsideTilemapCameraComponent.new = function (init)
 
   self.focusOnTileByIdx = function(idx)
     local tilePosition = {
-      x = self.target.tiles[idx].position.x,
-      y = self.target.tiles[idx].position.y
+      x = self.target.tiles[idx].location.x,
+      y = self.target.tiles[idx].location.y
     }
     self.position.x = tilePosition.x + self.ui_rect.x
     self.position.y = tilePosition.y + self.ui_rect.y

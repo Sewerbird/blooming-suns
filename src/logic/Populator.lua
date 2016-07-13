@@ -14,13 +14,13 @@ Populator.new = function (init)
     --Make Spacemap
     gamestate.addSpacemap(1, Spacemap.new())
     --Make Planetsides
-    local rtilemap = self.generateTileMapTerrainRandom()
+    local rtilemap = self.generateTileMapTerrainRandom(1)
     gamestate.addTilemap(1, rtilemap)
 
     return gamestate
   end
 
-  self.generateTileMapTerrainRandom = function ()
+  self.generateTileMapTerrainRandom = function (tilemap_id)
     local map = Tilemap.new()
     local nr = map.num_rows
     local nc = map.num_cols
@@ -52,12 +52,14 @@ Populator.new = function (init)
         local px_y = size * math.sqrt(3) * (row - 0.5 * (col % 2))
 
         local new_tile = Tile.new({
-          position = {
+          location = Location.new({
             x = px_x,
             y = px_y,
             col = col,
-            row = row
-          },
+            row = row,
+            idx = idx,
+            map = tilemap_id
+          }),
           owning_map = map,
           idx = idx
         })
@@ -75,7 +77,7 @@ Populator.new = function (init)
           for i = 1 , math.floor(math.random() * 5) + 1 do
             if terrain_type ~= "Ocean" then
               local definition = require('assets/definitions/TestLandPaperUnit')
-              definition.location = {idx = idx, row = row, col = col}
+              definition.location = Location.new(new_tile.location)
               definition.owner = r_owner
               definition.backColor = owner_color
               local new_unit = Unit.new(definition)
