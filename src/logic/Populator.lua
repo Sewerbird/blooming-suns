@@ -73,25 +73,12 @@ Populator.new = function (init)
             owner_color = {50,50,200}
           end
           for i = 1 , math.floor(math.random() * 5) + 1 do
-            if terrain_type == "Ocean" then
-              local new_unit = Unit.new({
-                sprite = "TestSeaUnit",
-                move_domain = "sea",
-                move_method = "sail",
-                location = {idx = idx, row = row, col = col},
-                owner = r_owner,
-                backColor = owner_color
-              })
-              new_tile.relocateUnit(new_unit)
-            else
-              local new_unit = Unit.new({
-                sprite = "TestUnit",
-                move_domain = "land",
-                move_method = "walk",
-                location = {idx = idx, row = row, col = col},
-                owner = r_owner,
-                backColor = owner_color
-              })
+            if terrain_type ~= "Ocean" then
+              local definition = require('assets/definitions/TestLandPaperUnit')
+              definition.location = {idx = idx, row = row, col = col}
+              definition.owner = r_owner
+              definition.backColor = owner_color
+              local new_unit = Unit.new(definition)
               new_tile.relocateUnit(new_unit)
             end
           end

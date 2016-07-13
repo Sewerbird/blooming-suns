@@ -11,7 +11,6 @@ DestroyUnitMutator.new = function (init)
 
 
   self.execute = function (state)
-    print(inspect(self))
     self.unit = state.getTilemap(self.map).getHexAtIdx(self.hex).delocateUnit(self.destroyed)
   end
 

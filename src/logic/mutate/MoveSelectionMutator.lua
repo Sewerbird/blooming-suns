@@ -11,24 +11,25 @@ MoveSelectionMutator.new = function (init)
 
 
   self.execute = function (state)
+    local map = state.getTilemap(self.map)
     for i, unit in self.units do
-      local unit = self.src.stack.getUnit(unit.uid)
-      local move_cost = self.map.terrain_connective_matrix[self.dst.idx]['mpcost'][unit.move_method]
-      unit.curr_movepoints = math.max(self.unit.curr_movepoints - (move_cost or 1), 0)
-      local moved = self.map.tiles[self.src.idx].delocateUnit(unit.uid)
+      local mover = map.getHexAtIdx(self.src).stack.getUnit(unit)
+      local move_cost = map.terrain_connective_matrix[self.dst]['mpcost'][mover.move_method]
+      mover.curr_movepoints = math.max(mover.curr_movepoints - (move_cost or 1), 0)
+      local moved = map.getHexAtIdx[self.src].delocateUnit(unit)
       moved.location = self.dst
-      self.map.tiles[self.dst.idx].relocateUnit(moved)
+      map.getHexAtIdx[self.dst].relocateUnit(moved)
     end
   end
 
   self.undo = function (state)
     for i, unit in self.units do
-      local unit = self.map.getHexAtIdx(self.dst.idx).stack.getUnit(unit.uid)
-      local move_cost = self.map.terrain_connective_matrix[self.dst.idx]['mpcost'][unit.move_method]
-      unit.curr_movepoints = math.max(unit.curr_movepoints + (move_cost or 1), 0)
-      local moved = self.map.getHexAtIdx(self.dst.idx).delocateUnit(unit.uid)
-      moved.location = self.src.position
-      self.map.getHexAtIdx(self.src.idx).relocateUnit(moved)
+      local mover = self.map.getHexAtIdx(self.dst).stack.getUnit(unit)
+      local move_cost = self.map.terrain_connective_matrix[self.dst]['mpcost'][mover.move_method]
+      mover.curr_movepoints = math.max(mover.curr_movepoints + (move_cost or 1), 0)
+      local moved = self.map.getHexAtIdx(self.dst).delocateUnit(mover)
+      moved.location = self.src
+      self.map.getHexAtIdx(self.sr).relocateUnit(moved)
     end
   end
 
