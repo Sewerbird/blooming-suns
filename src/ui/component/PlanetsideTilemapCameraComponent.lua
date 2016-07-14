@@ -129,31 +129,43 @@ PlanetsideTilemapCameraComponent.new = function (init)
 
   self.onDraw = function()
     local toDraw = self.getSeen()
+
+    self.drawSeen(toDraw.indices, toDraw.tiles)
+    self.drawSeen(toDraw.indices, toDraw.units)
+
     for i = 1, #toDraw.tiles do
-      if toDraw.tiles[i] ~= nil then
+      local idx = toDraw.tiles[i].location.idx
+      if self.tile_overlay[idx] ~= nil then --overlay desired for this tile
         local computedPosition = {
           x = toDraw.tiles[i].location.x - self.position.x + self.extent.half_width + self.ui_rect.x,
           y = toDraw.tiles[i].location.y - self.position.y + self.extent.half_height + self.ui_rect.y
         }
-        local idx = toDraw.tiles[i].idx
-        --East-West Tile Wrapping
-        if toDraw.indices.wIdx ~= nil and idx <= #self.target.tiles and idx >= toDraw.indices.wIdx then
-          computedPosition.x = computedPosition.x - (self.target.hex_size * self.target.num_cols * 3 / 2)
-        elseif toDraw.indices.eIdx ~= nil and idx >= 0 and idx <= toDraw.indices.eIdx then
-          computedPosition.x = computedPosition.x + (self.target.hex_size * self.target.num_cols * 3 / 2)
-        end
-        toDraw.tiles[i].draw(computedPosition)
-        if self.tile_overlay[idx] ~= nil then --overlay desired for this tile
-          self.tile_overlay[idx].position = {}
-          local spriteSize = self.tile_overlay[idx].getCurrentDimension()
-          local tileSize = toDraw.tiles[i].slayers["terrain"].getCurrentDimension()
-          self.tile_overlay[idx].position = {
-            x = computedPosition.x + tileSize.w/2 - spriteSize.w/2,
-            y = computedPosition.y + tileSize.h/2 - spriteSize.h/2
-          }
-          self.tile_overlay[idx].draw()
-        end
+        self.tile_overlay[idx].position = computedPosition
+        local spriteSize = self.tile_overlay[idx].getCurrentDimension()
+        local tileSize = toDraw.tiles[i].slayers["terrain"].getCurrentDimension()
+        self.tile_overlay[idx].position = {
+          x = computedPosition.x - spriteSize.w/2,
+          y = computedPosition.y - spriteSize.h/2
+        }
+        self.tile_overlay[idx].draw()
       end
+    end
+  end
+
+  self.drawSeen = function (indices, seen)
+    for i, seen in ipairs(seen) do
+      local computedPosition = {
+        x = seen.location.x - self.position.x + self.extent.half_width + self.ui_rect.x,
+        y = seen.location.y - self.position.y + self.extent.half_height + self.ui_rect.y
+      }
+      local idx = seen.location.idx
+      --East-West Tile Wrapping
+      if indices.wIdx ~= nil and idx <= #self.target.tiles and idx >= indices.wIdx then
+        computedPosition.x = computedPosition.x - (self.target.hex_size * self.target.num_cols * 3 / 2)
+      elseif indices.eIdx ~= nil and idx >= 0 and idx <= indices.eIdx then
+        computedPosition.x = computedPosition.x + (self.target.hex_size * self.target.num_cols * 3 / 2)
+      end
+      seen.draw(computedPosition)
     end
   end
 

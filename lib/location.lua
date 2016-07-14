@@ -1,14 +1,18 @@
+--Worldspace Location Class
+
 Location = {}
 
 Location.new = function(init)
 	local init = init or {}
 	local self = {
-    h_x = init.h_x , --hex-space x (pixel)
-    h_y = init.h_y , --hex-space y (pixel)
-		x = init.x ,     --map-space y (pixel)
-		y = init.y ,     --map-space x (pixel)
+    --optional
+    h_x = init.h_x or 0, --hex-space x (pixel)
+    h_y = init.h_y or 0, --hex-space y (pixel)
     row = init.row or nil,
     col = init.col or nil,
+    --required
+		x = init.x ,     --map-space y (pixel)
+		y = init.y ,     --map-space x (pixel)
 		idx = init.idx , --hex uid
 		map = init.map   --map uid
 	}
