@@ -133,21 +133,18 @@ PlanetsideTilemapCameraComponent.new = function (init)
     self.drawSeen(toDraw.indices, toDraw.tiles)
     self.drawSeen(toDraw.indices, toDraw.units)
 
-    for i = 1, #toDraw.tiles do
-      local idx = toDraw.tiles[i].location.idx
-      if self.tile_overlay[idx] ~= nil then --overlay desired for this tile
-        local computedPosition = {
-          x = toDraw.tiles[i].location.x - self.position.x + self.extent.half_width + self.ui_rect.x,
-          y = toDraw.tiles[i].location.y - self.position.y + self.extent.half_height + self.ui_rect.y
-        }
-        self.tile_overlay[idx].position = computedPosition
+    --Draw Overlay
+    for i, tile in ipairs(toDraw.tiles) do
+      local idx = tile.location.idx
+      local location = tile.location
+
+      if self.tile_overlay[idx] ~= nil then
         local spriteSize = self.tile_overlay[idx].getCurrentDimension()
-        local tileSize = toDraw.tiles[i].slayers["terrain"].getCurrentDimension()
         self.tile_overlay[idx].position = {
-          x = computedPosition.x - spriteSize.w/2,
-          y = computedPosition.y - spriteSize.h/2
+          x = location.x - self.position.x + self.extent.half_width + self.ui_rect.x - spriteSize.w/2,
+          y = location.y - self.position.y + self.extent.half_height + self.ui_rect.y - spriteSize.h/2
         }
-        self.tile_overlay[idx].draw()
+        self.tile_overlay[idx].draw();
       end
     end
   end
