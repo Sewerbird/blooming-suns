@@ -14,13 +14,13 @@ Populator.new = function (init)
     --Make Spacemap
     gamestate.addSpacemap(1, Spacemap.new())
     --Make Planetsides
-    local rtilemap = self.generateTileMapTerrainRandom(1)
+    local rtilemap = self.generateTileMapTerrainRandom(gamestate, 1)
     gamestate.addTilemap(1, rtilemap)
 
     return gamestate
   end
 
-  self.generateTileMapTerrainRandom = function (tilemap_id)
+  self.generateTileMapTerrainRandom = function (gamestate, tilemap_id)
     local map = Tilemap.new()
     local nr = map.num_rows
     local nc = map.num_cols
@@ -81,7 +81,7 @@ Populator.new = function (init)
               definition.owner = r_owner
               definition.backColor = owner_color
               local new_unit = Unit.new(definition)
-              new_tile.relocateUnit(new_unit)
+              gamestate.placeUnit(new_unit)
             end
           end
         end

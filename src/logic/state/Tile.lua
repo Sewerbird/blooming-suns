@@ -32,11 +32,11 @@ Tile.new = function (init)
     computed_position.x = computed_position.x - self.owning_map.tilesize_x / 2
     computed_position.y = computed_position.y - self.owning_map.tilesize_y / 2
 
-    center_position = { x = computed_position.x + self.owning_map.tilesize_x / 2, y = computed_position.y + self.owning_map.tilesize_y / 2 }
-
     for i, v in ipairs(TILE_SPRITE_ORDER) do
       if self.slayers[v] ~= nil then
         self.slayers[v].position = computed_position
+        self.slayers[v].draw()
+        --[[
         local do_center = false
         if v == "unit" then
           if self.stack.hasSelection() then
@@ -50,28 +50,28 @@ Tile.new = function (init)
           love.graphics.setColor({255,255,255})
           love.graphics.print(self.stack.size(),center_position.x + 32 -9 + 8, center_position.y + 4)
         else
-          self.slayers[v].draw(computed_position, do_center)
-          -- Debug sprite position
+          ]]--
+          --[[ Debug sprite position
           local hex = self.owning_map.pixel_to_hex({x = self.location.x, y = self.location.y})
           love.graphics.print(
            self.location.col..", "..self.location.row.."\n::"..self.idx,
            computed_position.x + self.owning_map.tilesize_x / 4,
            computed_position.y + self.owning_map.tilesize_y / 4)
-          --]]
-        end
+          ]]
+        --end
       end
     end
   end
 
   self.delocateUnit = function(unit)
     local result = self.stack.removeUnit(unit)
-    self.slayers.unit = self.stack.head()
+    --self.slayers.unit = self.stack.head()
     return result
   end
 
   self.relocateUnit = function(unit)
     self.stack.addUnit(unit)
-    self.slayers.unit = self.stack.head()
+    --self.slayers.unit = self.stack.head()
   end
 
   self.setTerrain = function (type)

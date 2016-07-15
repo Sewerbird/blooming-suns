@@ -80,6 +80,8 @@ PlanetsideTilemapCameraComponent.new = function (init)
       end
     end
 
+    seen.units = GlobalGameState.units
+
     return seen
   end
 

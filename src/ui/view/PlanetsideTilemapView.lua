@@ -180,25 +180,28 @@ PlanetsideTilemapView.new = function (init)
   end
 
   self.clickHex = function (fhex)
-    if self.current_focus ~= nil and self.current_focus.stack.size() == 0 then self.unfocus() end
+    --[[
+    if self.current_focus ~= nil and self.current_focus.stack.size() == 0 then 
+      print("bailing")
+      self.unfocus() 
+    end]]
 
     --Click on a selected hex should unselect it. If current focus tile is empty, make sure we're unfocused
     if self.current_focus ~= nil and (fhex == self.current_focus or self.current_focus.stack.size() == 0) then
+      print("unfocusing")
       self.unfocus()
     --Clicking on an adjacent hex while a selected stack with sufficient movement points against an opposing player should issue an attack command
     elseif self.current_focus ~= nil and self.current_focus.stack.getOwner() == GlobalGameState.current_player and fhex.stack.getOwner() ~= self.current_focus.stack.getOwner() and fhex.stack.getOwner() ~= nil then
+      print("attacking")
       self.assignAttackOrder(self.current_focus, fhex)
     --Clicking on a hex while a selected stack is selected should issue a move command
     elseif self.current_focus ~= nil  and self.current_focus.stack.getOwner() == GlobalGameState.current_player then
+      print("moving")
       self.assignMovePath(self.current_focus, fhex)
     --Clicking on a stack, if not having selected anything else, should select the stack
     elseif self.current_focus == nil and fhex.stack.size() > 0 then
-      --select
-      self.unfocus()
-      self.current_focus = fhex
-      self.inspector.inspect(self.current_focus)
-      self.camera.focusOnTileByIdx(fhex.idx)
-      self.camera.setOverlay(self.inspector.getOrderOverlay())
+      print("focusing")
+      self.focus(fhex)
     end
   end
 

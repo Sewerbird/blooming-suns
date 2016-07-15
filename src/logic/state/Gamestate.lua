@@ -6,6 +6,7 @@ Gamestate.new = function(init)
   local init = init or {}
   local self = {
     units = {},
+    stacks = {},
     tilemaps = {},
     spacemaps = {},
     players = {},
@@ -82,6 +83,10 @@ Gamestate.new = function(init)
     print("Turn Begun: Running Processes...")
     print("--> No Processes")
     print("Turn Processing Complete!")
+  end
+
+  self.placeUnit = function (unit)
+    table.insert(self.units,unit)
   end
 
   return self
