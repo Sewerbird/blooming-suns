@@ -30,7 +30,7 @@ MoveSelectionOrder.new = function (init)
           return false
       end
       --A Unit may only move into a tile owned by no one or owned by the player
-      local dst_owner = map.tiles[dst_idx].stack.getOwner()
+      local dst_owner = map.tiles[dst_idx].getStack().getOwner()
       if dst_owner ~= nil and unit.owner ~= dst_owner then
         return false
       end

@@ -89,6 +89,7 @@ Tilemap.new = function (init)
     tilesize_y = init.tilesize_y or 73,
     hex_size = init.hex_size or 42, --MUST be half of tilesize_x
     tiles = init.tiles or {},
+    stacks = init.stacks or {},
     terrain_connective_matrix = init.terrain_connective_matrix or {},
     terrain_type_move_costs = init.terrain_type_move_costs or {
       Ocean = { sail = 1,  fly = 1 },
@@ -107,6 +108,13 @@ Tilemap.new = function (init)
       Desert = {240, 240, 0}
     }
   }
+
+  self.getStackAt = function (position)
+    if self.stacks[position.idx] == nil then
+      self.stacks[position.idx] = Stack.new()
+    end
+    return self.stacks[position.idx]
+  end
 
   self.getTileAt = function (position)
     local calc_hex = self.pixel_to_hex(position)

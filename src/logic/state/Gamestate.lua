@@ -18,9 +18,18 @@ Gamestate.new = function(init)
     self.spacemaps[idx] = spacemap
   end
 
+  self.getSpacemap = function (idx)
+    return self.spacemaps[idx]
+  end
+
   self.addTilemap = function (idx, tilemap)
     tilemap.uid = uid
     self.tilemaps[idx] = tilemap
+  end
+
+  self.getTilemap = function (idx)
+    print('Getting tilemap' .. inspect(self.tilemaps,{depth=2}))
+    return self.tilemaps[idx]
   end
 
   self.addPlayer = function (idx, player)
@@ -54,12 +63,10 @@ Gamestate.new = function(init)
     return self.turn_order
   end
 
-  self.getTilemap = function (idx)
-    return self.tilemaps[idx]
-  end
-
-  self.getSpacemap = function (idx)
-    return self.spacemaps[idx]
+  self.startTurn = function ()
+    print("Turn Begun: Running Processes...")
+    print("--> No Processes")
+    print("Turn Processing Complete!")
   end
 
   self.nextTurn = function ()
@@ -79,14 +86,15 @@ Gamestate.new = function(init)
     self.startTurn()
   end
 
-  self.startTurn = function ()
-    print("Turn Begun: Running Processes...")
-    print("--> No Processes")
-    print("Turn Processing Complete!")
-  end
-
   self.placeUnit = function (unit)
     table.insert(self.units,unit)
+    print('Location:' .. inspect(unit.location,{depth=2}))
+    print('Stack:' .. inspect(self.getTilemap(unit.location.map), {depth = 2}))
+    self.getTilemap(unit.location.map).getStackAt(unit.location).addUnit(unit);
+  end
+
+  self.moveUnit = function (unit, dst_hex)
+    
   end
 
   return self

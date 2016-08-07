@@ -80,49 +80,16 @@ PlanetsideTilemapView.new = function (init)
       background_color = {230, 190, 220}
     })
 
-  self.components = {
-    self.camera,
-    self.inspector,
-    self.commandpanel,
-    self.titlebar,
-    self.resourcebar,
-    self.minimap,
-    self.spacesidebutton,
-    self.blastoffbutton
-  }
+  self.addComponent(self.camera)
+  self.addComponent(self.inspector)
+  self.addComponent(self.minimap)
+  self.addComponent(self.titlebar)
+  self.addComponent(self.resourcebar)
+  self.addComponent(self.spacesidebutton)
+  self.addComponent(self.blastoffbutton)
+  self.addComponent(self.commandpanel)
 
   --Events
-  self.update = function (dt)
-    self.camera.onUpdate(dt)
-  end
-
-  self.onMousePressed = function (x, y, button)
-    for i, component in ipairs(self.components) do
-      if (component.ui_rect.x < x and
-        component.ui_rect.x + component.ui_rect.w > x and
-        component.ui_rect.y < y and
-        component.ui_rect.y + component.ui_rect.h > y) then
-        component.onMousePressed(x - component.ui_rect.x, y - component.ui_rect.y, button)
-      end
-    end
-  end
-
-  self.onMouseReleased = function (x, y, button)
-    for i, component in ipairs(self.components) do
-      if (component.ui_rect.x < x and
-        component.ui_rect.x + component.ui_rect.w > x and
-        component.ui_rect.y < y and
-        component.ui_rect.y + component.ui_rect.h > y) then
-        component.onMouseReleased(x - component.ui_rect.x, y - component.ui_rect.y, button)
-      end
-    end
-  end
-
-  self.onMouseMoved = function (x, y)
-    self.camera.onMouseMoved(x - self.camera.ui_rect.x, y - self.camera.ui_rect.y)
-    self.inspector.onMouseMoved(x - self.inspector.ui_rect.x, y - self.inspector.ui_rect.y,button)
-  end
-
   self.onKeyPressed = function (key)
     if key == 'space' then
       self.executeNextOrder()
@@ -159,7 +126,7 @@ PlanetsideTilemapView.new = function (init)
     local curr_idx = (self.current_focus ~= nil and self.current_focus.idx) or 0
     for i = curr_idx+1, #self.model.tiles do
       local check_hex = self.model.getHexAtIdx(i)
-      if check_hex.stack.getOwner() == GlobalGameState.current_player then
+      if check_hex.getStack().getOwner() == GlobalGameState.current_player then
         self.unfocus()
         self.focus(check_hex)
         break
@@ -171,7 +138,7 @@ PlanetsideTilemapView.new = function (init)
     local wasAbleToMove = true
 
     while wasAbleToMove do
-      if self.current_focus ~= nil and self.current_focus.stack.getOwner() == GlobalGameState.current_player and self.current_focus.stack.hasSelection() then
+      if self.current_focus ~= nil and self.current_focus.getStack().getOwner() == GlobalGameState.current_player and self.current_focus.getStack().hasSelection() then
         wasAbleToMove = self.executeNextOrder()
       else
         wasAbleToMove = false
@@ -180,26 +147,27 @@ PlanetsideTilemapView.new = function (init)
   end
 
   self.clickHex = function (fhex)
+    print("Hex clicked" .. inspect(fhex.stack,{depth=2}))
     --[[
-    if self.current_focus ~= nil and self.current_focus.stack.size() == 0 then 
+    if self.current_focus ~= nil and self.current_focus.getStack().size() == 0 then 
       print("bailing")
       self.unfocus() 
     end]]
 
     --Click on a selected hex should unselect it. If current focus tile is empty, make sure we're unfocused
-    if self.current_focus ~= nil and (fhex == self.current_focus or self.current_focus.stack.size() == 0) then
+    if self.current_focus ~= nil and (fhex == self.current_focus or self.current_focus.getStack().size() == 0) then
       print("unfocusing")
       self.unfocus()
     --Clicking on an adjacent hex while a selected stack with sufficient movement points against an opposing player should issue an attack command
-    elseif self.current_focus ~= nil and self.current_focus.stack.getOwner() == GlobalGameState.current_player and fhex.stack.getOwner() ~= self.current_focus.stack.getOwner() and fhex.stack.getOwner() ~= nil then
+    elseif self.current_focus ~= nil and self.current_focus.getStack().getOwner() == GlobalGameState.current_player and fhex.getStack().getOwner() ~= self.current_focus.getStack().getOwner() and fhex.getStack().getOwner() ~= nil then
       print("attacking")
       self.assignAttackOrder(self.current_focus, fhex)
     --Clicking on a hex while a selected stack is selected should issue a move command
-    elseif self.current_focus ~= nil  and self.current_focus.stack.getOwner() == GlobalGameState.current_player then
+    elseif self.current_focus ~= nil  and self.current_focus.getStack().getOwner() == GlobalGameState.current_player then
       print("moving")
       self.assignMovePath(self.current_focus, fhex)
     --Clicking on a stack, if not having selected anything else, should select the stack
-    elseif self.current_focus == nil and fhex.stack.size() > 0 then
+    elseif self.current_focus == nil and fhex.getStack().size() > 0 then
       print("focusing")
       self.focus(fhex)
     end
@@ -223,11 +191,11 @@ PlanetsideTilemapView.new = function (init)
     local attackers = {}
     local defenders = {}
 
-    src_hex.stack.forEachSelected(function (unit)
+    src_hex.getStack().forEachSelected(function (unit)
       table.insert(attackers, unit.uid)
     end)
 
-    destination_hex.stack.forEach(function (unit)
+    destination_hex.getStack().forEach(function (unit)
       table.insert(defenders, unit.uid)
     end)
 
@@ -248,20 +216,20 @@ PlanetsideTilemapView.new = function (init)
 
     --TODO: Should move assignment be in a mutator?
     local start = {row = src_hex.location.row, col = src_hex.location.col, idx = src_hex.idx}
-    local f_unit = src_hex.stack.head()
+    local f_unit = src_hex.getStack().head()
 
     local goal = {row = destination_hex.location.row, col = destination_hex.location.col, idx = destination_hex.idx}
-    local path = self.model.avoidPathfinder:findPath(start, goal, src_hex.stack.head().move_domain)
+    local path = self.model.avoidPathfinder:findPath(start, goal, src_hex.getStack().head().move_domain)
 
     if path == nil then return end
 
-    src_hex.stack.forEach(function (unit)
-      if src_hex.stack.isUnitSelected(unit.uid) then
+    src_hex.getStack().forEach(function (unit)
+      if src_hex.getStack().isUnitSelected(unit.uid) then
         unit.orders.clear()
         local lastHex = src_hex
         for i, j in ipairs(path.nodes) do
           local next_hex = self.model.getHexAtIdx(j.location.idx)
-          if next_hex.stack.size() > 0 and src_hex.stack.getOwner() ~= next_hex.stack.getOwner() then
+          if next_hex.getStack().size() > 0 and src_hex.getStack().getOwner() ~= next_hex.getStack().getOwner() then
             unit.orders.add(AttackStackOrder.new({
               map = self.model,
               src = src_hex,
@@ -281,7 +249,7 @@ PlanetsideTilemapView.new = function (init)
     end)
 
     local overlay = {}
-    src_hex.stack.headSelected().orders.forEach(function (order)
+    src_hex.getStack().headSelected().orders.forEach(function (order)
       if order.kind == 'move' then
         overlay[order.dst.idx] = {sprite = "MoveDot_UI"}
       elseif order.kind == 'attack' then
@@ -300,22 +268,23 @@ PlanetsideTilemapView.new = function (init)
   end
 
   self.executeNextOrder = function ()
-    if self.current_focus ~= nil and self.current_focus.stack.getOwner() == GlobalGameState.current_player then
+    if self.current_focus ~= nil and self.current_focus.getStack().getOwner() == GlobalGameState.current_player then
 
       --Verify: all selected units asked to execute their next order must be able to do so legally, otherwise cancel
       local able = true
-      self.current_focus.stack.forEachSelected(function (unit)
+      self.current_focus.getStack().forEachSelected(function (unit)
         able = able and unit.orders.hasNext() and unit.orders.peek().verify()
       end)
 
       --Execute: If all selected units can perform their order, execute the order
       local movedTo = nil
       if able then
-        self.current_focus.stack.forEachSelected(function (unit)
+        self.current_focus.getStack().forEachSelected(function (unit)
           local order = unit.orders.next()
           GlobalMutatorBus.executeOrder(order)
+          if unit.location == nil then print('mm..'..inspect(unit,{depth=2})) end
           movedTo = self.model.getHexAtIdx(unit.location.idx)
-          movedTo.stack.selectUnit(unit.uid)
+          movedTo.getStack().selectUnit(unit.uid)
         end)
       end
 
@@ -326,19 +295,6 @@ PlanetsideTilemapView.new = function (init)
       end
     end
     return false
-  end
-
-  self.draw = function ()
-    --Note: Camera is drawn under the other UI elements since it tends to draw outside its boundaries on the edges
-    self.camera.onDraw()
-    --UI Interface Elements
-    self.inspector.onDraw()
-    self.minimap.onDraw()
-    self.titlebar.onDraw()
-    self.resourcebar.onDraw()
-    self.spacesidebutton.onDraw()
-    self.blastoffbutton.onDraw()
-    self.commandpanel.onDraw()
   end
 
   return self

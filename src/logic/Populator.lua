@@ -14,14 +14,14 @@ Populator.new = function (init)
     --Make Spacemap
     gamestate.addSpacemap(1, Spacemap.new())
     --Make Planetsides
-    local rtilemap = self.generateTileMapTerrainRandom(gamestate, 1)
-    gamestate.addTilemap(1, rtilemap)
+    gamestate.addTilemap(1, Tilemap.new())
+    self.generateTileMapTerrainRandom(gamestate, 1)
 
     return gamestate
   end
 
   self.generateTileMapTerrainRandom = function (gamestate, tilemap_id)
-    local map = Tilemap.new()
+    local map = gamestate.getTilemap(tilemap_id)
     local nr = map.num_rows
     local nc = map.num_cols
 

@@ -12,15 +12,29 @@ ViewComponent.new = function (init)
   }
 
   self.onMousePressed = function (x, y, button)
+    --Components can respond to mouse presses over themselves
   end
 
   self.onMouseReleased = function (x, y)
+    --Components can respond to mouse releases over themselves
+  end
+
+  self.onMouseMoved = function (x, y, button)
+    --Components can respond to mouse motions over themselves
+  end
+
+  self.onMouseCancelled = function ()
+    --If this component was MousePressed, but the mouse released was off-component, you can respond here
   end
 
   self.onUpdate = function (dt)
+    --Components that are sensitive to time can get an onUpdate here
   end
 
   self.onDraw = function ()
+    --Components must be able to draw themselves
+
+    --DEFAULT implementation. Just fills the background over the whole ui_rect with the background color
     love.graphics.setColor(self.background_color)
     love.graphics.rectangle("fill", self.ui_rect.x, self.ui_rect.y, self.ui_rect.w, self.ui_rect.h, self.ui_rect.rx, self.ui_rect.ry)
     love.graphics.setColor(255,255,255)

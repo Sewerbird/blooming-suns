@@ -15,7 +15,7 @@ DestroyUnitMutator.new = function (init)
   end
 
   self.undo = function (state)
-    state.getTilemap(self.map).getHexAtIdx(self.hex).stack.addUnit(self.unit)
+    state.getTilemap(self.map).getHexAtIdx(self.hex).getStack().addUnit(self.unit)
   end
 
   return self

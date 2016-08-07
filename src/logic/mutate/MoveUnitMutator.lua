@@ -11,16 +11,16 @@ MoveUnitMutator.new = function (init)
 
 
   self.execute = function (state)
-    local unit = self.src.stack.getUnit(self.unit.uid)
+    local unit = self.src.getStack().getUnit(self.unit.uid)
     local move_cost = self.map.terrain_connective_matrix[self.dst.idx]['mpcost'][unit.move_method]
     unit.curr_movepoints = math.max(self.unit.curr_movepoints - (move_cost or 1), 0)
-    local moved = self.map.tiles[self.src.idx].delocateUnit(unit.uid)
+    local moved = self.src.getStack().removeUnit(self.unit.uid)
     moved.location = self.dst
-    self.map.tiles[self.dst.idx].relocateUnit(moved)
+    self.map.getStackAt(self.dst).addUnit(moved)
   end
 
   self.undo = function (state)
-    local unit = self.map.getHexAtIdx(self.dst.idx).stack.getUnit(self.unit.uid)
+    local unit = self.map.getHexAtIdx(self.dst.idx).getStack().getUnit(self.unit.uid)
     local move_cost = self.map.terrain_connective_matrix[self.dst.idx]['mpcost'][unit.move_method]
     unit.curr_movepoints = math.max(unit.curr_movepoints + (move_cost or 1), 0)
     local moved = self.map.getHexAtIdx(self.dst.idx).delocateUnit(unit.uid)

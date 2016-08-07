@@ -15,6 +15,103 @@ PlanetsideTilemapCameraComponent.new = function (init)
     keyboard_speed = 800
   }
 
+  self.onMousePressed = function (x, y, button)
+    --Camera Pan
+    self.dragLocus = {x = x, y = y, camx = self.position.x, camy = self.position.y}
+    self.lastClick = os.time()
+  end
+
+  self.onMouseReleased = function (x, y)
+    --Camera Pan
+    self.dragLocus = nil
+    --Click done
+    local now = os.time()
+    if self.lastClick ~= nil and now - self.lastClick < 0.2 then self.doClick(x, y, button) end
+    lastClick = nil
+    now = nil
+  end
+
+  self.onMouseMoved = function (x, y)
+    --Mouse Pan
+    if self.dragLocus ~= nil then
+      self.position.x = self.dragLocus.camx + (self.dragLocus.x - x)
+      self.position.y = self.dragLocus.camy + (self.dragLocus.y - y)
+    end
+  end
+
+  self.onDraw = function()
+    local toDraw = QueryTilesInViewport.ask(self.map, self.position, self.extent)
+    for i, tile in ipairs(toDraw) do
+      local stack = QueryStackAtLocation.ask(self.map, tile)
+      local hex = QueryTileAtLocation.ask(self.map, tile)
+      local computedPosition = {
+        x = hex.location.x - self.position.x + self.extent.half_width + self.ui_rect.x,
+        y = hex.location.y - self.position.y + self.extent.half_height + self.ui_rect.y
+      }
+      hex.draw(computedPosition)
+      if stack.size() > 0 then
+        stack.head().draw(computedPosition)
+      end
+      if tile_overlay[tile] ~= nil then
+        tile_overlay[tile].draw(computedPosition)
+      end
+    end
+  end
+
+  self.onUpdate = function (dt)
+    --Update tiles & units (for animation)
+    local toUpdate = QueryTilesInViewport.ask(self.map, self.position, self.extent)
+    for i, tile in ipairs(toUpdate) do
+      local stack = QueryStackAtLocation.ask(self.map, tile)
+      local hex = QueryTileAtLocation.ask(self.map, tile)
+      hex.update(dt)
+      if stack.size() > 0 then
+        stack.update(dt)
+      end
+    end
+    --Keyboard Pan
+    if love.keyboard.isDown('w','a','s','d') then
+      if love.keyboard.isDown('w') then
+        self.position.y = self.position.y - (dt * self.keyboard_speed)
+      end
+      if love.keyboard.isDown('a') then
+        self.position.x = self.position.x - (dt * self.keyboard_speed)
+      end
+      if love.keyboard.isDown('s') then
+        self.position.y = self.position.y + (dt * self.keyboard_speed)
+      end
+      if love.keyboard.isDown('d') then
+        self.position.x = self.position.x + (dt * self.keyboard_speed)
+      end
+      self.boundsCheck()
+    end
+  end
+
+  self.focusOnTileByIdx = function(idx)
+    local hex = QueryTileAtLocation.ask(self.map, tile)
+    self.position.x = hex.location.x + self.ui_rect.x
+    self.position.y = hex.location.y + self.ui_rect.y
+    self.boundsCheck()
+  end
+
+  self.boundsCheck = function()
+    local tilemap = QueryTilemapById.ask(self.map)
+    local topEdge = self.position.y - self.extent.half_height;
+    local bottomEdge = self.position.y + self.extent.half_height;
+    local rightWorldEdge = self.target.num_cols * self.target.tilesize_x * 3 /4;
+    local leftWorldEdge = 0;
+
+
+    if topEdge < -tilemap.tilesize_y / 2 then self.position.y = self.extent.half_height - tilemap.tilesize_y /2 end
+    if bottomEdge > tilemap.num_rows * math.sqrt(3) * tilemap.hex_size then
+      self.position.y = tilemap.num_rows * math.sqrt(3) * tilemap.hex_size - self.extent.half_height
+    end
+    if self.position.x > rightWorldEdge then self.position.x = self.position.x - rightWorldEdge end
+    if self.position.x < leftWorldEdge then self.position.x = rightWorldEdge + self.position.x end
+    self.position.y = math.floor(self.position.y)
+    self.position.x = math.floor(self.position.x)
+  end
+
   self.getSeenMetadata = function ()
     local metadata = {}
 
@@ -31,7 +128,7 @@ PlanetsideTilemapCameraComponent.new = function (init)
 
       --TODO: On tall maps I can improve this with a more refined approach, but the performance
       isn't so bad/critical on that part yet.
-    ]]
+    ]]--
 
     local ul,ur,lIdx,rIdx --extremum of camera view, in hex coords
 
@@ -93,31 +190,6 @@ PlanetsideTilemapCameraComponent.new = function (init)
     return self.target.getTileAt(world_space_position)
   end
 
-  self.onMousePressed = function (x, y, button)
-    --Camera Pan
-    self.dragLocus = {x = x, y = y, camx = self.position.x, camy = self.position.y}
-    self.lastClick = os.time()
-  end
-
-  self.onMouseReleased = function (x, y)
-    --Camera Pan
-    self.dragLocus = nil
-    --Click done
-    local now = os.time()
-    if self.lastClick ~= nil and now - self.lastClick < 0.2 then self.doClick(x, y, button) end
-    lastClick = nil
-    now = nil
-  end
-
-  self.onMouseMoved = function (x, y)
-    --Mouse Pan
-    if self.dragLocus ~= nil then
-      self.position.x = self.dragLocus.camx + (self.dragLocus.x - x)
-      self.position.y = self.dragLocus.camy + (self.dragLocus.y - y)
-      moved = true
-    end
-  end
-
   self.setOverlay = function (tile_to_sprite_map)
     self.tile_overlay = tile_to_sprite_map
     for i, v in pairs(self.tile_overlay) do
@@ -168,69 +240,9 @@ PlanetsideTilemapCameraComponent.new = function (init)
     end
   end
 
-  self.focusOnTileByIdx = function(idx)
-    local tilePosition = {
-      x = self.target.tiles[idx].location.x,
-      y = self.target.tiles[idx].location.y
-    }
-    self.position.x = tilePosition.x + self.ui_rect.x
-    self.position.y = tilePosition.y + self.ui_rect.y
-
-    self.boundsCheck()
-  end
-
-  self.onUpdate = function (dt)
-    local moved = false
-    --Update tiles & units (for animation)
-    local seen = self.getSeen()
-    for i = 1, table.getn(seen.tiles) do
-      seen.tiles[i].update(dt)
-    end
-    for i = 1, table.getn(seen.units) do
-      seen.units[i].update(dt)
-    end
-
-    --Keyboard Pan
-    if love.keyboard.isDown('w','a','s','d') then
-      if love.keyboard.isDown('w') then
-        self.position.y = self.position.y - (dt * self.keyboard_speed)
-      end
-      if love.keyboard.isDown('a') then
-        self.position.x = self.position.x - (dt * self.keyboard_speed)
-      end
-      if love.keyboard.isDown('s') then
-        self.position.y = self.position.y + (dt * self.keyboard_speed)
-      end
-      if love.keyboard.isDown('d') then
-        self.position.x = self.position.x + (dt * self.keyboard_speed)
-      end
-      moved = true
-    end
-    --bounds check
-    if moved then
-      self.boundsCheck()
-    end
-  end
-
-  self.boundsCheck = function()
-    local topEdge = self.position.y - self.extent.half_height;
-    local bottomEdge = self.position.y + self.extent.half_height;
-    local rightWorldEdge = self.target.num_cols * self.target.tilesize_x * 3 /4;
-    local leftWorldEdge = 0;
-
-
-    if topEdge < -self.target.tilesize_y / 2 then self.position.y = self.extent.half_height - self.target.tilesize_y /2 end
-    if bottomEdge > self.target.num_rows * math.sqrt(3) * self.target.hex_size then
-      self.position.y = self.target.num_rows * math.sqrt(3) * self.target.hex_size - self.extent.half_height
-    end
-    if self.position.x > rightWorldEdge then self.position.x = self.position.x - rightWorldEdge end
-    if self.position.x < leftWorldEdge then self.position.x = rightWorldEdge + self.position.x end
-    self.position.y = math.floor(self.position.y)
-    self.position.x = math.floor(self.position.x)
-  end
-
   self.doClick = function (x, y, button)
     local clickable = self.getSeenAt(x,y)
+    print('Clicking on ' .. inspect(clickable,{depth=2}))
     self.super.clickHex(clickable)
   end
 

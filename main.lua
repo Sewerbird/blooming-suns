@@ -49,6 +49,10 @@ require('src/logic/mutate/RemovePlayerMutator');
 require('src/logic/mutate/SetPlayerOrderMutator');
 require('src/logic/order/AttackStackOrder');
 require('src/logic/order/MoveUnitOrder');
+require('src/logic/query/QueryStackAtLocation');
+require('src/logic/query/QueryTileAtLocation');
+require('src/logic/query/QueryTilemapById');
+require('src/logic/query/QueryTilesInViewport');
 
 require('src/ui/view/PlanetsideTilemapView');
   require('src/ui/component/PlanetsideTilemapCommandPanelComponent');

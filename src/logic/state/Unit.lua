@@ -34,10 +34,9 @@ Unit.new = function (init)
 
   self.draw = function (computed_position, centered)
     self.sprite.position = computed_position
-    if centered == true then
-      self.sprite.position.x = self.sprite.position.x - 24 --TODO: offset by sprite size
-      self.sprite.position.y = self.sprite.position.y - 20 --TODO: offset by sprite size
-    end
+    self.sprite.position.x = computed_position.x - 24 --TODO: offset by sprite size
+    self.sprite.position.y = computed_position.y - 20 --TODO: offset by sprite size
+    
     --Draw backing
     love.graphics.setColor(50,50,50)
     love.graphics.rectangle("fill",self.sprite.position.x-2 + 8, self.sprite.position.y-2 + 4,36,36)

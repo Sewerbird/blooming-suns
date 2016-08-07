@@ -13,12 +13,11 @@ PlanetsideMinimapComponent.new = function (init)
     super = init.super
   }
   self.onMousePressed = function (x, y, button)
+    --TODO: make it so I can click on the minimap and pan to the right spot
   end
 
   self.onMouseReleased = function (x, y)
-  end
-
-  self.onUpdate = function (dt)
+    --TODO: make it so I can click on the minimap and pan to the right spot
   end
 
   self.onDraw = function ()

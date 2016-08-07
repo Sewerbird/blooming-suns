@@ -15,16 +15,15 @@ Tile.new = function (init)
     terrain_type = init.terrain_type,
     construction_type = init.construction_type,
     owning_map = init.owning_map,
-    idx = init.idx,
-    stack = Stack.new()
+    idx = init.idx
   }
 
+  self.getStack = function ()
+    return GlobalGameState.getTilemap(self.location.map).getStackAt(self.location);
+  end
+
   self.update = function (dt)
-    if self.stack.headSelected() ~= nil then
-      self.stack.headSelected().update(dt)
-    elseif self.stack.head() ~= nil then
-      self.stack.head().update(dt)
-    end
+
   end
 
   self.draw = function (computed_position)
@@ -36,42 +35,17 @@ Tile.new = function (init)
       if self.slayers[v] ~= nil then
         self.slayers[v].position = computed_position
         self.slayers[v].draw()
-        --[[
-        local do_center = false
-        if v == "unit" then
-          if self.stack.hasSelection() then
-            self.stack.headSelected().setAnim('selected')
-          else
-            self.stack.head().setAnim('idle')
-          end
-          do_center = true
-          self.slayers[v].draw(center_position, do_center)
-          --Draw stack size
-          love.graphics.setColor({255,255,255})
-          love.graphics.print(self.stack.size(),center_position.x + 32 -9 + 8, center_position.y + 4)
-        else
-          ]]--
-          --[[ Debug sprite position
-          local hex = self.owning_map.pixel_to_hex({x = self.location.x, y = self.location.y})
-          love.graphics.print(
-           self.location.col..", "..self.location.row.."\n::"..self.idx,
-           computed_position.x + self.owning_map.tilesize_x / 4,
-           computed_position.y + self.owning_map.tilesize_y / 4)
-          ]]
-        --end
       end
     end
   end
 
   self.delocateUnit = function(unit)
-    local result = self.stack.removeUnit(unit)
-    --self.slayers.unit = self.stack.head()
+    local result = self.getStack().removeUnit(unit)
     return result
   end
 
   self.relocateUnit = function(unit)
-    self.stack.addUnit(unit)
-    --self.slayers.unit = self.stack.head()
+    self.getStack().addUnit(unit)
   end
 
   self.setTerrain = function (type)

@@ -63,7 +63,7 @@ PlanetsideTilemapInspectorComponent.new = function (init)
     self.uninspect()
     self.target = target
 
-    self.target.stack.forEach(function (unit)
+    self.target.getStack().forEach(function (unit)
       local selector_tile = PlanetsideTilemapInspectorUnitSelectorTileComponent.new({
         target = unit,
         ui_rect = {w = 32, h = 32},
@@ -73,9 +73,9 @@ PlanetsideTilemapInspectorComponent.new = function (init)
     end)
 
     for i, tile in ipairs(self.selector_tiles) do
-      if i == 1 and not self.target.stack.hasSelection() then
-        self.target.stack.selectUnit(self.selector_tiles[1].target.uid)
-        self.target.stack.growSelectionBasedOnMoveQueue(self.selector_tiles[1].target.uid)
+      if i == 1 and not self.target.getStack().hasSelection() then
+        self.target.getStack().selectUnit(self.selector_tiles[1].target.uid)
+        self.target.getStack().growSelectionBasedOnMoveQueue(self.selector_tiles[1].target.uid)
       end
       local xcoord = (((i-1) % self.selector_tile_array.cols) * self.selector_tiles[i].ui_rect.w) + self.ui_rect.x
       local ycoord = (math.floor((i-1) / self.selector_tile_array.cols) * self.selector_tiles[i].ui_rect.h) + self.ui_rect.y
@@ -88,7 +88,7 @@ PlanetsideTilemapInspectorComponent.new = function (init)
   self.uninspect = function ()
     self.selector_tiles = {}
     if self.target ~= nil then
-      self.target.stack.clearSelection()
+      self.target.getStack().clearSelection()
     end
     self.target = nil
   end
@@ -96,10 +96,10 @@ PlanetsideTilemapInspectorComponent.new = function (init)
   self.getOrderOverlay = function ()
     if self.target == nil then return {} end
 
-    if not self.target.stack.hasSelection() then return {} end
+    if not self.target.getStack().hasSelection() then return {} end
 
     local overlay = {}
-    local first = self.target.stack.headSelected()
+    local first = self.target.getStack().headSelected()
     first.orders.forEach(function (order)
       if order.kind == 'move' then
         overlay[order.dst.idx] = {sprite="MoveDot_UI"}
@@ -132,13 +132,13 @@ PlanetsideTilemapInspectorUnitSelectorTileComponent.new = function(init)
     love.graphics.rectangle("fill",self.ui_rect.x, self.ui_rect.y,32,32)
     love.graphics.reset()
     --Draw selection status
-    if self.super.target.stack.isUnitSelected(tgt_unit.uid) then
+    if self.super.target.getStack().isUnitSelected(tgt_unit.uid) then
       love.graphics.setColor({255,255,255,100})
       love.graphics.rectangle("fill",self.ui_rect.x, self.ui_rect.y, 32, 32)
       love.graphics.reset()
     end
     --Draw inactive status
-    if self.super.target.stack.isUnitInactive(tgt_unit.uid) then
+    if self.super.target.getStack().isUnitInactive(tgt_unit.uid) then
       love.graphics.setColor({0,0,0,100})
       love.graphics.rectangle("fill",self.ui_rect.x, self.ui_rect.y, 32, 32)
       love.graphics.reset()
@@ -154,7 +154,7 @@ PlanetsideTilemapInspectorUnitSelectorTileComponent.new = function(init)
   end
 
   self.onMouseReleased = function (x, y)
-    local tgt_stack = self.super.target.stack
+    local tgt_stack = self.super.target.getStack()
     local wants_to_set_active = false
     if love.keyboard.isDown('lshift') then
       wants_to_set_active = true
