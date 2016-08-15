@@ -28,7 +28,6 @@ Gamestate.new = function(init)
   end
 
   self.getTilemap = function (idx)
-    print('Getting tilemap' .. inspect(self.tilemaps,{depth=2}))
     return self.tilemaps[idx]
   end
 

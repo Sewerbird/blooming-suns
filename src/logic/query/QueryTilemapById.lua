@@ -1,4 +1,12 @@
 QueryTilemapById = {}
-QueryTilemapById.ask = function(mapId)
-	return {}
+QueryTilemapById.new = function(mapId)
+	local self = {
+		mapId = mapId
+	}
+
+	self.execute = function(gamestate)
+		return gamestate.getTilemap(self.mapId);
+	end
+
+	return self
 end

@@ -21,6 +21,7 @@ PlanetsideMinimapComponent.new = function (init)
   end
 
   self.onDraw = function ()
+    --[[
     --Background
     love.graphics.setColor(self.background_color)
     love.graphics.rectangle("fill", self.ui_rect.x, self.ui_rect.y, self.ui_rect.w, self.ui_rect.h, self.ui_rect.rx, self.ui_rect.ry)
@@ -61,7 +62,7 @@ PlanetsideMinimapComponent.new = function (init)
     love.graphics.setColor({20,20,20})
     love.graphics.rectangle("line", self.ui_rect.x, self.ui_rect.y, self.ui_rect.w, self.ui_rect.h)
     love.graphics.reset()
-
+  ]]
   end
 
   return self

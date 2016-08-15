@@ -49,8 +49,9 @@ require('src/logic/mutate/RemovePlayerMutator');
 require('src/logic/mutate/SetPlayerOrderMutator');
 require('src/logic/order/AttackStackOrder');
 require('src/logic/order/MoveUnitOrder');
-require('src/logic/query/QueryStackAtLocation');
-require('src/logic/query/QueryTileAtLocation');
+require('src/logic/query/AccessorBus');
+require('src/logic/query/QueryStackByTileIdx');
+require('src/logic/query/QueryTileByIdx');
 require('src/logic/query/QueryTilemapById');
 require('src/logic/query/QueryTilesInViewport');
 
@@ -96,9 +97,8 @@ function love.load()
 
   --Create Gamestate
   GlobalGameState = Populator.new().generateGameState()
-
-  --Load MutatorBus
   GlobalMutatorBus = MutatorBus.new({state = GlobalGameState})
+  GlobalAccessorBus = AccessorBus.new({state = GlobalGameState})
 
   GlobalMutatorBus.subscribe("mutation", GlobalViewManager.onMutation)
 
