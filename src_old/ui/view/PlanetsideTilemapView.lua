@@ -1,6 +1,4 @@
 --TilemapView
-local View = require('src/ui/View')
-local PlanetsideTilemapView = View:extend("PlanetsideTilemapView", {})
 PlanetsideTilemapView = {}
 
 PlanetsideTilemapView.new = function (init)

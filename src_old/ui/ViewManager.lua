@@ -1,6 +1,6 @@
 --ViewManager
-local ViewManager = class("ViewManager", {
-  activeView = nil,
+ViewManager = class("ViewManager", {
+  activeView = 0
   views = {}
 })
 
@@ -15,7 +15,7 @@ end
 
 function ViewManager:pop()
   local popped = self.views[#self.views]
-  self.activeView = #self.views - 1 or nil
+  self.activeView = #self.views - 1 or 0
   self.views[#self.views] = nil
 end
 
@@ -66,7 +66,7 @@ function ViewManager:draw()
 end
 
 function ViewManager:update(dt)
-  if self.activeView ~= nil then
+  if self.views[self.activeView] ~= nil then
     if self.views[self.activeView].onMouseMoved ~= nil then
       local x = love.mouse.getX()
       local y = love.mouse.getY()
@@ -75,5 +75,3 @@ function ViewManager:update(dt)
     self.views[self.activeView]:update(dt)
   end
 end
-
-return ViewManager

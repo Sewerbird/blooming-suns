@@ -24,121 +24,52 @@
                  佛祖保佑         永无BUG
 ]]--
 
---game classes
-require('src/logic/Populator');
-require('src/logic/state/Gamestate');
-  require('src/logic/state/Player');
-  require('src/logic/state/Spacemap');
-  require('src/logic/state/Tilemap');
-    require('src/logic/state/Tile');
-      require('src/logic/state/Stack');
-        require('src/logic/state/Unit');
-          require('src/logic/state/OrderQueue');
-            require('src/logic/state/Order');
+class = require 'src/lib/30log'
+inspect = require 'src/lib/inspect'
 
-require('src/logic/mutate/Mutator');
-require('src/logic/mutate/MutatorBus');
-require('src/logic/mutate/AddPlayerMutator');
-require('src/logic/mutate/BattleMutator');
-require('src/logic/mutate/CreateUnitMutator');
-require('src/logic/mutate/DestroyUnitMutator');
-require('src/logic/mutate/EndTurnMutator');
-require('src/logic/mutate/ModifyHexTerrainMutator');
-require('src/logic/mutate/MoveUnitMutator');
-require('src/logic/mutate/RemovePlayerMutator');
-require('src/logic/mutate/SetPlayerOrderMutator');
-require('src/logic/order/AttackStackOrder');
-require('src/logic/order/MoveUnitOrder');
-require('src/logic/query/AccessorBus');
-require('src/logic/query/QueryStackByTileIdx');
-require('src/logic/query/QueryTileByIdx');
-require('src/logic/query/QueryTilemapById');
-require('src/logic/query/QueryTilesInViewport');
+local ViewManager = require('src/ui/ViewManager')
+local MutateBus = require('src/logic/mutate/MutateBus')
+local AccessBus = require('src/logic/query/AccessBus')
 
-require('src/ui/view/PlanetsideTilemapView');
-  require('src/ui/component/PlanetsideTilemapCommandPanelComponent');
-  require('src/ui/component/PlanetsideTilemapInspectorComponent');
-  require('src/ui/component/PlanetsideTilemapCameraComponent');
-  require('src/ui/component/PlanetsideMinimapComponent');
-require('src/ui/view/SpacesideOrreryView');
-  require('src/ui/component/SpacesideOrreryCameraComponent');
-
-require('src/ui/component/LabelComponent');
-require('src/ui/component/PanelComponent');
-require('src/ui/component/ImmediateButtonComponent');
-require('src/ui/component/ViewComponent');
-
-require('src/ui/view/ConfirmationView');
-require('src/ui/view/AlertBoxView');
-require('src/ui/view/View');
-require('src/ui/ViewManager');
-
-
-require('src/resource/SpriteBank');
-require('src/resource/Sprite');
-require('src/resource/SpriteInstance');
-
---libs
-require('lib/astar');
-require('lib/pubsub');
-require('lib/const');
-require('lib/location');
-inspect = require('lib/inspect');
-__ = require('lib/underscore');
+local View = require('src/ui/View')
+local ViewComponent = require('src/ui/ViewComponent')
 
 function love.load()
 
-  --Load Tileset Sprites
-  GlobalSpriteBank = SpriteBank.new()
-  GlobalSpriteBank.loadAll()
+  GlobalViewManager = ViewManager:new()
+  GlobalMutateBus = MutateBus:new()
+  GlobalAccessBus = AccessBus:new()
 
-  --Load View Manager
-  GlobalViewManager = ViewManager.new()
+  --Default View
+  local def_view = View:new()
+  def_view:addComponent(ViewComponent:new())
+  GlobalViewManager:push(def_view)
 
-  --Create Gamestate
-  GlobalGameState = Populator.new().generateGameState()
-  GlobalMutatorBus = MutatorBus.new({state = GlobalGameState})
-  GlobalAccessorBus = AccessorBus.new({state = GlobalGameState})
-
-  GlobalMutatorBus.subscribe("mutation", GlobalViewManager.onMutation)
-
-  --Create Views
-  --
-  local def_view = PlanetsideTilemapView.new({
-    model = GlobalGameState.getTilemap(1),
-    rect = {x = 0, y = 0, w = love.graphics.getWidth(), h = love.graphics.getHeight()}
-  })
-  --[[
-  local def_view = SpacesideOrreryView.new({
-    model = GlobalGameState.getSpacemap(1)
-  })
-  --]]
-  GlobalViewManager.push(def_view)
 end
 
 function love.update(dt)
   --Debug mouse-to-hex output
   if not GLOBAL_PAUSE then
-    GlobalViewManager.update(dt)
+    GlobalViewManager:update(dt)
   end
 end
 
 function love.draw()
   if not GLOBAL_PAUSE then
-    GlobalViewManager.draw()
+    GlobalViewManager:draw()
   end
 end
 
 function love.mousepressed(x, y, button)
-  GlobalViewManager.onMousePressed(x,y,button)
+  GlobalViewManager:onMousePressed(x,y,button)
 end
 
 function love.mousereleased(x, y, button)
-  GlobalViewManager.onMouseReleased(x,y,button)
+  GlobalViewManager:onMouseReleased(x,y,button)
 end
 
 function love.keypressed(key)
-  GlobalViewManager.onKeyPressed(key)
+  GlobalViewManager:onKeyPressed(key)
 end
 
 function love.focus(f)
@@ -154,3 +85,4 @@ end
 function love.quit()
   print("Thanks for playing! Come back soon!")
 end
+

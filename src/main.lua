@@ -1,9 +1,8 @@
---[[
-    Re-Factor Ahoy!
-]]--
-
 function love.load()
   require('src2/imports');
+
+  GlobalViewManager = ViewManager()
+
 end
 
 function love.update(dt)
