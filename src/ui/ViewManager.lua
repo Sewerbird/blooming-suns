@@ -23,14 +23,13 @@ function ViewManager:peek()
   return self.views[#self.views]
 end
 
-
 function ViewManager:onMousePressed(x, y, button)
-  local tgt_view = self.getClickedView(x, y)
+  local tgt_view = self:getClickedView(x, y)
   if tgt_view ~= nil then tgt_view:onMousePressed(x, y, button) else print("Nothing clicked!")end
 end
 
 function ViewManager:onMouseReleased(x, y, button)
-  local tgt_view = self.getClickedView(x, y)
+  local tgt_view = self:getClickedView(x, y)
   if tgt_view ~= nil then tgt_view:onMouseReleased(x, y, button) else print("Nothing clicked!") end
 end
 

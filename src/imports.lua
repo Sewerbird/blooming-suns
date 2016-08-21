@@ -1,4 +1,3 @@
-
 importAll = function(root)
 	local paths = love.filesystem.getDirectoryItems(root)
 	for i, path in ipairs(paths) do

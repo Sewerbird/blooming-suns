@@ -33,6 +33,7 @@ local AccessBus = require('src/logic/query/AccessBus')
 
 local View = require('src/ui/View')
 local ViewComponent = require('src/ui/ViewComponent')
+local PlanetsideView = require('src/ui/view/PlanetsideView')
 
 function love.load()
 
@@ -41,10 +42,7 @@ function love.load()
   GlobalAccessBus = AccessBus:new()
 
   --Default View
-  local def_view = View:new()
-  def_view:addComponent(ViewComponent:new())
-  GlobalViewManager:push(def_view)
-
+  GlobalViewManager:push(PlanetsideView:new())
 end
 
 function love.update(dt)
