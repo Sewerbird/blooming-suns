@@ -10,11 +10,13 @@ function View:getClickedComponent(x, y)
   local topmostZ = -1
   local result = nil
   for i, component in ipairs(self.components) do
-    if component.ui_rect.x < x and component.ui_rect.x + component.ui_rect.w > x and component.ui_rect.y < y and component.ui_rect.y + component.ui_rect.h > y then
-      if component.ui_rect.z > topmostZ then
+    if component.ui_rect.x < x and 
+       component.ui_rect.x + component.ui_rect.w > x and 
+       component.ui_rect.y < y and 
+       component.ui_rect.y + component.ui_rect.h > y  and
+       component.ui_rect.z > topmostZ then
         result = component
         topmostZ = component.ui_rect.z
-      end
     end
   end
   return result

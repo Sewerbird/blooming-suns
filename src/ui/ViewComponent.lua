@@ -12,18 +12,29 @@ function ViewComponent:init(desc, rect, color)
   self.description = desc
 end
 
+function ViewComponent:addComponent(component)
+  table.insert(self.components, component)
+end
+
 function ViewComponent:getClickedComponent(x, y)
   local topmostZ = -1
   local result = nil
   for i, component in ipairs(self.components) do
-    if self.ui_rect.x + component.ui_rect.x < x and 
-      self.ui_rect.x + component.ui_rect.x + component.ui_rect.w > x and 
-      self.ui_rect.y + component.ui_rect.y < y and 
-      self.ui_rect.y + component.ui_rect.y + component.ui_rect.h > y and
+    if component.ui_rect.x - self.ui_rect.x < x and 
+      component.ui_rect.x - self.ui_rect.x + component.ui_rect.w > x and 
+      component.ui_rect.y - self.ui_rect.y < y and 
+      component.ui_rect.y - self.ui_rect.y + component.ui_rect.h > y and
       component.ui_rect.z > topmostZ then
         result = component
         topmostZ = component.ui_rect.z
     end
+  end
+  if result == nil and
+      self.ui_rect.x < x and 
+      self.ui_rect.x + self.ui_rect.w > x and 
+      self.ui_rect.y < y and 
+      self.ui_rect.y + self.ui_rect.h > y then 
+      result = self 
   end
   return result
 end
@@ -31,20 +42,25 @@ end
 function ViewComponent:onMousePressed(x, y, button)
   --Components can respond to mouse presses over themselves
   local tgt = self:getClickedComponent(x,y)
-  print(self.description .. ' clicked')
-  if tgt ~= nil and tgt.onMousePressed ~= nil then tgt:onMousePressed(x, y, button) end
+  if tgt ~= nil and tgt ~= self and tgt.onMousePressed ~= nil then 
+    tgt:onMousePressed(x, y, button) 
+  else
+    print(self.description .. ' clicked')
+  end
 end
 
 function ViewComponent:onMouseReleased(x, y)
   --Components can respond to mouse releases over themselves
   local tgt = self:getClickedComponent(x,y)
-  if tgt ~= nil and tgt.onMouseReleased ~= nil then tgt:onMouseReleased(x, y, button) end
+  if tgt ~= nil and tgt ~= self and tgt.onMouseReleased ~= nil then tgt:onMouseReleased(x, y, button) end
 end
 
 function ViewComponent:onMouseMoved(x, y, button)
   --Components can respond to mouse motions over themselves
   local tgt = self:getClickedComponent(x,y)
-  if tgt ~= nil and tgt.onMouseMoved ~= nil then tgt:onMouseMoved(x, y, button) end
+  if tgt ~= nil and tgt ~= self and tgt.onMouseMoved ~= nil then 
+    tgt:onMouseMoved(x, y, button) 
+  end
 end
 
 function ViewComponent:onUpdate(dt)
@@ -56,15 +72,17 @@ end
 
 function ViewComponent:onDraw()
   --Components must be able to draw themselves
-  for i, v in ipairs(self.components) do
-    v:onDraw(dt)
-  end
   --DEFAULT implementation. Just fills the background over the whole ui_rect with the background color
   love.graphics.setColor(self.background_color)
   love.graphics.rectangle("fill", self.ui_rect.x, self.ui_rect.y, self.ui_rect.w, self.ui_rect.h, self.ui_rect.rx, self.ui_rect.ry)
   love.graphics.setColor(255,255,255)
   love.graphics.print(self.description, self.ui_rect.x + self.ui_rect.w/2 - 30, self.ui_rect.y + self.ui_rect.h/2)
   love.graphics.reset()
+
+  --Draw subcomponents
+  for i, v in ipairs(self.components) do
+    v:onDraw()
+  end
 end
 
 return ViewComponent

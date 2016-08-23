@@ -1,7 +1,7 @@
 --TilemapView
 local View = require('src/ui/View')
 local ViewComponent = require('src/ui/ViewComponent')
-local PlanetsideCamera = require('src/ui/PlanetsideCamera')
+local PlanetsideCamera = require('src/ui/component/PlanetsideCamera')
 
 local PlanetsideView = View:extend("PlanetsideView", {})
 
@@ -13,7 +13,7 @@ function PlanetsideView:init()
             {90,90,90}
         ))
     self:addComponent(
-        PlanetsideView:new(
+        PlanetsideCamera:new(
             "Camera",
             {x = 0, y = 40, w = love.graphics.getWidth(), h = love.graphics.getHeight()-100-40, z = 0},
             {100,100,100}
