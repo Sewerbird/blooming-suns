@@ -2,7 +2,7 @@
 local ViewComponent = require('src/ui/ViewComponent')
 local PlanetsideTile = require('src/ui/component/PlanetsideTile')
 
-local PlanetsideCamera = ViewComponent:extend("ViewComponent", {
+local PlanetsideCamera = ViewComponent:extend("PlanetsideCamera", {
 	planet = nil
 })
 
