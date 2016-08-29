@@ -1,15 +1,17 @@
 --ViewComponent
+local UI_Poly = require('src/lib/ui_poly')
+
 local ViewComponent = class("ViewComponent",{
-  ui_rect = {x = 0, y = 0, h = 25, w = 25, z = 0},
+  ui_poly = UI_Poly:new(),
   background_color = {200, 150, 190},
   description = "EXAMPLE",
   components = {} --subcomponents
 })
 
-function ViewComponent:init(desc, rect, color)
-  self.ui_rect = rect
-  self.background_color = color
+function ViewComponent:init(desc, ui_poly, color)
   self.description = desc
+  self.ui_poly = UI_Poly:new(ui_poly)
+  self.background_color = color
 end
 
 function ViewComponent:addComponent(component)
@@ -20,20 +22,12 @@ function ViewComponent:getClickedComponent(x, y)
   local topmostZ = -1
   local result = nil
   for i, component in ipairs(self.components) do
-    if component.ui_rect.x - self.ui_rect.x < x and 
-      component.ui_rect.x - self.ui_rect.x + component.ui_rect.w > x and 
-      component.ui_rect.y - self.ui_rect.y < y and 
-      component.ui_rect.y - self.ui_rect.y + component.ui_rect.h > y and
-      component.ui_rect.z > topmostZ then
+    if component.ui_poly:containsPoint(x - component.ui_poly.x,y - component.ui_poly.y) and component.ui_poly.z > topmostZ then
         result = component
-        topmostZ = component.ui_rect.z
+        topmostZ = component.ui_poly.z
     end
   end
-  if result == nil and
-      self.ui_rect.x < x and 
-      self.ui_rect.x + self.ui_rect.w > x and 
-      self.ui_rect.y < y and 
-      self.ui_rect.y + self.ui_rect.h > y then 
+  if result == nil then
       result = self 
   end
   return result
@@ -44,7 +38,7 @@ function ViewComponent:onMousePressed(x, y, button)
   local tgt = self:getClickedComponent(x,y)
   if tgt ~= nil and tgt ~= self and tgt.onMousePressed ~= nil then 
     tgt:onMousePressed(x, y, button) 
-  else
+  elseif tgt == self then
     print(self.description .. ' clicked')
   end
 end
@@ -72,12 +66,26 @@ end
 
 function ViewComponent:onDraw()
   --Components must be able to draw themselves
-  --DEFAULT implementation. Just fills the background over the whole ui_rect with the background color
+  --DEFAULT implementation. Just fills the background over the whole ui_poly with the background color
   love.graphics.setColor(self.background_color)
-  love.graphics.rectangle("fill", self.ui_rect.x, self.ui_rect.y, self.ui_rect.w, self.ui_rect.h, self.ui_rect.rx, self.ui_rect.ry)
+  love.graphics.rectangle("fill", self.ui_poly.x, self.ui_poly.y, self.ui_poly.w, self.ui_poly.h, self.ui_poly.rx, self.ui_poly.ry)
   love.graphics.setColor(255,255,255)
-  love.graphics.print(self.description, self.ui_rect.x + self.ui_rect.w/2 - 30, self.ui_rect.y + self.ui_rect.h/2)
+  love.graphics.print(self.description, self.ui_poly.x + self.ui_poly.w/2 - 30, self.ui_poly.y + self.ui_poly.h/2)
   love.graphics.reset()
+
+  if self.ui_poly.vertices and #self.ui_poly.vertices > 0 then
+    local increment = 255 / #self.ui_poly.vertices
+    local j = #self.ui_poly.vertices
+    for i = 1, #self.ui_poly.vertices do
+        local vtx = self.ui_poly.vertices[i]
+        local jtx = self.ui_poly.vertices[j]
+        love.graphics.setColor(255,0,math.floor((i - 1) * increment) % 255)
+        love.graphics.circle("fill", self.ui_poly.x + vtx[1]-2, self.ui_poly.y + vtx[2]-2, 4, 4, 16)
+        love.graphics.line(jtx[1] + self.ui_poly.x ,jtx[2] + self.ui_poly.y,vtx[1] + self.ui_poly.x ,vtx[2] + self.ui_poly.y)
+        love.graphics.reset()
+        j = i
+    end
+  end
 
   --Draw subcomponents
   for i, v in ipairs(self.components) do

@@ -6,15 +6,15 @@ local PlanetsideTile = ViewComponent:extend("ViewComponent", {
 })
 
 function PlanetsideTile:init(tile_spec)
-	PlanetsideTile.super.init(self,tile_spec.description,tile_spec.ui_rect, {0,0,0})
+	PlanetsideTile.super.init(self,tile_spec.description,tile_spec.ui_poly, {0,0,0})
 end
 
 function PlanetsideTile:onDraw()
-  --DEFAULT implementation. Just fills the background over the whole ui_rect with the background color
+  --DEFAULT implementation. Just fills the background over the whole ui_poly with the background color
   love.graphics.setColor(self.background_color)
-  love.graphics.rectangle("fill", self.ui_rect.x, self.ui_rect.y, self.ui_rect.w, self.ui_rect.h, self.ui_rect.rx, self.ui_rect.ry)
+  love.graphics.rectangle("fill", self.ui_poly.x, self.ui_poly.y, self.ui_poly.w, self.ui_poly.h, self.ui_poly.rx, self.ui_poly.ry)
   love.graphics.setColor(255,255,255)
-  love.graphics.print(self.description, self.ui_rect.x + self.ui_rect.w/2 - 30, self.ui_rect.y + self.ui_rect.h/2)
+  love.graphics.print(self.description, self.ui_poly.x + self.ui_poly.w/2 - 30, self.ui_poly.y + self.ui_poly.h/2)
   love.graphics.reset()
 end
 

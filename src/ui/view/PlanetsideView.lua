@@ -5,7 +5,9 @@ local PlanetsideCamera = require('src/ui/component/PlanetsideCamera')
 
 local PlanetsideView = View:extend("PlanetsideView", {})
 
-function PlanetsideView:init()
+function PlanetsideView:init(ui_poly, color)
+    self.super.init(self, ui_poly, color)
+
     self:addComponent(
         ViewComponent:new(
             "Titlebar",

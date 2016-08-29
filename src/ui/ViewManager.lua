@@ -49,7 +49,7 @@ function ViewManager:getClickedView(x, y)
   local result = nil
   for i = 1 , #self.views do
     local v = self.views[#self.views - (i - 1)]
-    local rect = v.ui_rect
+    local rect = v.ui_poly
     if x <= rect.x + rect.w and x >= rect.x and y <= rect.y + rect.h and y > rect.y then
       result = #self.views - (i - 1)
       break
@@ -69,7 +69,7 @@ function ViewManager:update(dt)
     if self.views[self.activeView].onMouseMoved ~= nil then
       local x = love.mouse.getX()
       local y = love.mouse.getY()
-      self.views[self.activeView]:onMouseMoved(x - self.views[self.activeView].ui_rect.x,y - self.views[self.activeView].ui_rect.y)
+      self.views[self.activeView]:onMouseMoved(x - self.views[self.activeView].ui_poly.x,y - self.views[self.activeView].ui_poly.y)
     end
     self.views[self.activeView]:update(dt)
   end

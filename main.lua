@@ -42,7 +42,7 @@ function love.load()
   GlobalAccessBus = AccessBus:new()
 
   --Default View
-  GlobalViewManager:push(PlanetsideView:new())
+  GlobalViewManager:push(PlanetsideView:new({x=0,y=0,w=love.graphics.getWidth(),h=love.graphics.getHeight()},{255,0,255}))
 end
 
 function love.update(dt)
